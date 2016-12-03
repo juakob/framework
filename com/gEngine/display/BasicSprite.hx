@@ -216,7 +216,7 @@ class BasicSprite implements IDraw
 	  
 	   
 	}
-	public function frameDiferent():Bool
+	public inline function frameDiferent():Bool
 	{
 		return previousFrame != CurrentFrame;
 	}

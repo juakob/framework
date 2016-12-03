@@ -11,4 +11,5 @@ interface IPainter
    function render(clear:Bool = false ):Void;
    function validateBatch(aTexture:Int, aSize:Int, aAlpha:Bool, aColorTransform:Bool,aMask:Bool):Void;
    function vertexCount():Int;
+   var textureID:Int;
 }

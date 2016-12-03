@@ -3,6 +3,7 @@ import com.helpers.Point;
 import kha.Key;
 import kha.input.Keyboard;
 import kha.input.Mouse;
+import kha.input.Surface;
 
 
 
@@ -32,7 +33,13 @@ class Input
 	private var mKeysPressed:Array<Int>;
 	private var mKeysReleased:Array<Int>;
 	
+	private var mTouchPos:Array <Int>;
+	private var mTouchActive:Array <Bool>;
+	public var activeTouchSpots(default,null):Int;
+	
+	
 	private var mMousePosition:Point;
+	static public inline var TOUCH_MAX:Float = 6;
 	
 	public var screenScale(default, null):Point;
 	
@@ -48,6 +55,16 @@ class Input
 		mKeysPressed = new Array();
 		mKeysReleased = new Array();
 		
+		activeTouchSpots = 0;
+		mTouchActive = new Array();
+		mTouchPos = new Array();
+		for (i in 0...TOUCH_MAX)
+		{
+			mTouchPos.push(0);
+			mTouchPos.push(0);
+			mTouchActive.push(false);
+		}
+		
 		mMousePosition = new Point();
 	}
 	
@@ -55,7 +72,31 @@ class Input
 	{
 		Keyboard.get().notify(onKeyDown, onKeyUp);
 		Mouse.get().notify(onMouseDown, onMouseUp, onMouseMove, null);
-		
+		var surface = Surface.get();
+		if (surface != null)
+		{
+		surface.notify(onTouchStart, onTouchEnd, onTouchMove);
+		}
+	}
+	
+	function onTouchMove(id:Int,x:Int,y:Int) 
+	{
+		mTouchPos[id * 2] = x;
+		mTouchPos[id*2+1] = y;
+	}
+	
+	function onTouchEnd(id:Int,x:Int,y:Int) 
+	{
+		mTouchActive[id] = false;
+		--activeTouchSpots;
+	}
+	
+	function onTouchStart(id:Int,x:Int,y:Int) 
+	{
+		++activeTouchSpots;
+		mTouchActive[id] = true;
+		mTouchPos[id * 2] = x;
+		mTouchPos[id*2+1] = y;
 	}
 	
 	function onMouseMove(x:Int,y:Int,speedX:Int,speedY:Int):Void 
@@ -116,7 +157,8 @@ class Input
 		mMouseReleased = false;
 		
 		mKeysPressed.splice(0,mKeysPressed.length);
-		mKeysReleased.splice(0, mKeysPressed.length);
+		mKeysReleased.splice(0, mKeysReleased.length);
+		
 	}
 		/// Keyboard functions that operate on strings of length 1
 	public function isKeyDown(aCharacter:String):Bool {
@@ -158,6 +200,22 @@ class Input
 	}
 	public inline function getMouseY():Float {
 		return mMousePosition.y*screenScale.y;
+	}
+	
+	
+	// Touch functions
+
+	public inline function touchX(id:Int):Float
+	{
+		return mTouchPos[id * 2] * screenScale.x;
+	}
+	public inline function touchY(id:Int):Float
+	{
+		return mTouchPos[id * 2+1] * screenScale.y;
+	}
+	public inline function touchActive(id:Int):Bool
+	{
+		return mTouchActive[id];
 	}
 	
 	

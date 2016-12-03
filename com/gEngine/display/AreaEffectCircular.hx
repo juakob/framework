@@ -1,6 +1,6 @@
 package com.gEngine.display;
+import com.gEngine.painters.IPainter;
 import com.helpers.Matrix;
-import com.gEngine.painters.Painter;
 import com.gEngine.display.IDraw;
 import com.helpers.Point;
 import kha.math.FastMatrix3;
@@ -13,7 +13,7 @@ import kha.math.FastVector2;
 class AreaEffectCircular implements IDraw
 {
 	@:access(com.gEngine.GEngine.mPainter)
-	public function new(aSnapShotShader:Painter,aPrintShader:Painter) 
+	public function new(aSnapShotShader:IPainter,aPrintShader:IPainter) 
 	{
 		screenScaleX = 1/GEngine.i.scaleWidth;
 		screenScaleY = 1/GEngine.i.scaleHeigth;
@@ -32,8 +32,8 @@ class AreaEffectCircular implements IDraw
 	}
 	
 	/* INTERFACE com.gEngine.display.IDraw */
-	private var snapShotShader:Painter;
-	private var printShader:Painter;
+	private var snapShotShader:IPainter;
+	private var printShader:IPainter;
 	
 	public var parent:IDrawContainer;
 	
@@ -42,7 +42,7 @@ class AreaEffectCircular implements IDraw
 	private var screenScaleX:Float = 1;
 	private var screenScaleY:Float=1;
 	
-	public function render(aPainter:Painter, transform:Matrix):Void 
+	public function render(aPainter:IPainter, transform:Matrix):Void 
 	{
 		if (!visible)
 		{
@@ -77,7 +77,7 @@ class AreaEffectCircular implements IDraw
 		
 	}
 	
-	function createFullRectangle(aPainter:Painter) 
+	function createFullRectangle(aPainter:IPainter) 
 	{
 		
 		aPainter.write(0);
@@ -102,7 +102,7 @@ class AreaEffectCircular implements IDraw
 		
 	}
 	
-	private inline function createDrawInitialRectangle(aPainter:Painter):Void
+	private inline function createDrawInitialRectangle(aPainter:IPainter):Void
 	{
 		var screenWidth = GEngine.i.realWidth *screenScaleX;
 		var screenHeight = GEngine.i.realHeight * screenScaleY;
@@ -130,7 +130,7 @@ class AreaEffectCircular implements IDraw
 		x += width / 2;
 		y += height / 2;
 	}
-	private  function createDrawFinishRectangle(aPainter:Painter):Void
+	private  function createDrawFinishRectangle(aPainter:IPainter):Void
 	{
 		var screenWidth = GEngine.i.realWidth *screenScaleX;
 		var screenHeight = GEngine.i.realHeight * screenScaleY;

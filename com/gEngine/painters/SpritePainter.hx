@@ -15,6 +15,7 @@ class SpritePainter implements IPainter
 	var usingAlpha:Bool;
 	var usingColor:Bool;
 	var usingMask:Bool;
+	public var textureID:Int = 0;
 	
 	public function new(aAutoDelete:Bool) 
 	{

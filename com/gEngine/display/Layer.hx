@@ -76,12 +76,23 @@ class Layer implements IDrawContainer
 		
 		
 	}
-	
+	var mPlay:Bool = true;
+	public function stop():Void
+	{
+		mPlay = false;
+	}
+	public function play():Void
+	{
+		mPlay = true;
+	}
 	public function update(passedTime:Float):Void 
 	{
-		for (child in mChildren) 
+		if (mPlay)
 		{
-			child.update(passedTime);
+			for (child in mChildren) 
+			{
+				child.update(passedTime);
+			}
 		}
 	}
 	

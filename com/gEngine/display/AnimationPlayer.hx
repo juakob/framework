@@ -33,7 +33,6 @@ class AnimationPlayer
 	{
 		if (mNextEvent <= mDisplay.CurrentFrame)
 		{
-			trace(mEvent);
 			if (onEvent!=null)
 			{
 				onEvent(mEvent); 
@@ -98,7 +97,7 @@ class AnimationPlayer
 	}
 	public inline function isComplete():Bool
 	{
-		return !mDisplay.Playing||mLoop;
+		return !mDisplay.Playing&&!mLoop;
 	}
 	public function destroy():Void 
 	{

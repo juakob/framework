@@ -1,6 +1,7 @@
 package com.gEngine.display;
+import com.gEngine.painters.IPainter;
 import com.helpers.Matrix;
-import com.gEngine.painters.Painter;
+
 import com.gEngine.display.IDraw;
 import kha.math.FastMatrix3;
 
@@ -11,7 +12,7 @@ import kha.math.FastMatrix3;
 class AreaEffectMatrix implements IDraw
 {
 	@:access(com.gEngine.GEngine.mPainter)
-	public function new(aSnapShotShader:Painter,aPrintShader:Painter) 
+	public function new(aSnapShotShader:IPainter,aPrintShader:IPainter) 
 	{
 		screenScaleX = 1/GEngine.i.scaleWidth;
 		screenScaleY = 1/GEngine.i.scaleHeigth;
@@ -30,8 +31,8 @@ class AreaEffectMatrix implements IDraw
 	}
 	
 	/* INTERFACE com.gEngine.display.IDraw */
-	private var snapShotShader:Painter;
-	private var printShader:Painter;
+	private var snapShotShader:IPainter;
+	private var printShader:IPainter;
 	
 	public var parent:IDrawContainer;
 	
@@ -40,7 +41,7 @@ class AreaEffectMatrix implements IDraw
 	private var screenScaleX:Float = 1;
 	private var screenScaleY:Float=1;
 	
-	public function render(aPainter:Painter, transform:Matrix):Void 
+	public function render(aPainter:IPainter, transform:Matrix):Void 
 	{
 		if (!visible)
 		{
@@ -75,7 +76,7 @@ class AreaEffectMatrix implements IDraw
 		
 	}
 	
-	function createFullRectangle(aPainter:Painter) 
+	function createFullRectangle(aPainter:IPainter) 
 	{
 		
 		aPainter.write(0);
