@@ -377,7 +377,7 @@ import kha.System;
 			renderCustomBuffer = true;
 			customBuffer = aTarget;
 		}
-		private function currentCanvas():Canvas
+		public function currentCanvas():Canvas
 		{
 			
 			if (renderCustomBuffer)
@@ -419,7 +419,7 @@ import kha.System;
 			}
 			return modelViewMatrix;
 		}
-		private function renderTempToFrameBuffer(aPainter:Painter,x:Float,y:Float,sx:Float,sy:Float,sw:Float,sh:Float)
+		public function renderTempToFrameBuffer(aPainter:Painter,x:Float,y:Float,sx:Float,sy:Float,sw:Float,sh:Float)
 		{
 			changeToBuffer();
 			aPainter.textureID = mTempTargetID;
@@ -430,18 +430,18 @@ import kha.System;
 				aPainter.write(0);
 				aPainter.write(realV);
 				
-				aPainter.write(x+width);
+				aPainter.write(x+sw);
 				aPainter.write(y);
 				aPainter.write(realU);
 				aPainter.write(realV);
 				
 				aPainter.write(x);
-				aPainter.write(y+height);
+				aPainter.write(y+sh);
 				aPainter.write(0);
 				aPainter.write(0);
 				
-				aPainter.write(x+width);
-				aPainter.write(y+height);
+				aPainter.write(x+sw);
+				aPainter.write(y+sh);
 				aPainter.write(realU);
 				aPainter.write(0);
 			}else
@@ -451,18 +451,18 @@ import kha.System;
 				aPainter.write(0);
 				aPainter.write(0);
 				
-				aPainter.write(x+width);
+				aPainter.write(x+sw);
 				aPainter.write(y);
 				aPainter.write(realU);
 				aPainter.write(0);
 				
 				aPainter.write(x);
-				aPainter.write(y+height);
+				aPainter.write(y+sh);
 				aPainter.write(0);
 				aPainter.write(realV);
 				
-				aPainter.write(x+width);
-				aPainter.write(y+height);
+				aPainter.write(x+sw);
+				aPainter.write(y+sh);
 				aPainter.write(realU);
 				aPainter.write(realV);
 			}

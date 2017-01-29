@@ -27,7 +27,7 @@ class Layer implements IDrawContainer
 	
 	public var parent:IDrawContainer;
 	public var visible:Bool = true;
-	public var painter:Painter;
+	public var painter:IPainter;
 	
 	public function new() 
 	{
@@ -63,7 +63,7 @@ class Layer implements IDrawContainer
 			}
 		}else {
 			aPainter.render();
-		//	aPainter.finish();
+			aPainter.finish();
 			aPainter = painter;	
 			aPainter.start();
 			for (child in mChildren) 
@@ -76,18 +76,18 @@ class Layer implements IDrawContainer
 		
 		
 	}
-	var mPlay:Bool = true;
+	public var playing(default,default):Bool = true;
 	public function stop():Void
 	{
-		mPlay = false;
+		playing = false;
 	}
 	public function play():Void
 	{
-		mPlay = true;
+		playing = true;
 	}
 	public function update(passedTime:Float):Void 
 	{
-		if (mPlay)
+		if (playing)
 		{
 			for (child in mChildren) 
 			{
@@ -167,7 +167,10 @@ class Layer implements IDrawContainer
 	
 	public function removeFromParent():Void 
 	{
-		parent.remove(this);
+		if (parent != null)
+		{
+			parent.remove(this);
+		}
 	}
 	
 	public function sortY():Void

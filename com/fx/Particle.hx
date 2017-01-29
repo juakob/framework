@@ -32,6 +32,8 @@ class Particle extends Entity
 	public function setAnimation(animation:String):Void
 	{
 		mAnimation = GEngine.i.getNewAnimation(animation);
+		//mAnimation.frameRate = 1 / 60;
+		mAnimation.Loop = false;
 	}
 	public function reset(x:Float, y:Float, life:Float,speedX:Float,speedY:Float,layer:Layer,angularVelocity:Float,scale:Float=1):Void
 	{
@@ -44,7 +46,9 @@ class Particle extends Entity
 		mAnimation.x = x;
 		mAnimation.y = y;
 		mAngularVelocity = angularVelocity;
-		mAnimation.scaleX = mAnimation.scaleY =mInitialScale=  scale;
+		mAnimation.scaleX = mAnimation.scaleY = mInitialScale =  scale;
+		mAnimation.goToAndPlay(0);
+		mAnimation.Loop = false;
 	}
 	override private function limboStart():Void 
 	{
@@ -72,9 +76,9 @@ class Particle extends Entity
 		mAnimation.y = mY;
 		mAnimation.rotation += mAngularVelocity * aDt;
 		
-		if (mAnimation.TotalFrames > 0)
+		//if (mAnimation.TotalFrames > 0)
 		{
-			mAnimation.goToAndStop(Std.int((mAnimation.TotalFrames - 1) * (1-mLife / mTotalLife)));
+			//mAnimation.goToAndStop(Std.int((mAnimation.TotalFrames - 1) * (1-mLife / mTotalLife)));
 		}
 	}
 	

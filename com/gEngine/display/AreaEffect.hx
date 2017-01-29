@@ -165,6 +165,7 @@ class AreaEffect implements IDraw
 	public function removeFromParent():Void 
 	{
 		parent.remove(this);
+		parent = null;
 	}
 	
 	/* INTERFACE com.gEngine.display.IDraw */
@@ -178,10 +179,10 @@ class AreaEffect implements IDraw
 		throw "not implemented copy code from basicsprite";
 	}
 	
-	public var x:Float;
+	public var x:Float=0;
 	
-	public var y:Float;
-	public var width:Float;
-	public var height:Float;
+	public var y:Float=0;
+	public var width:Float=1280;
+	public var height:Float=720;
 	
 }
