@@ -1,5 +1,6 @@
 package com.entitySystem.properties;
 
+import com.entitySystem.operators.Operation;
 import entitySystem.Property;
 
 /**
@@ -10,11 +11,7 @@ class PrRecDebugDisplay implements Property
 {
 	
 	@ignore
-	public var propertysSource:Array<Int>;
-	@ignore
-	public var varsDestination:Array<Int>;
-	@ignore
-	public var varsSource:Array<Int>;
+	public var operations:Array<Operation>;
 
 	public var x:Float=0;
 	public var y:Float=0;
@@ -28,9 +25,7 @@ class PrRecDebugDisplay implements Property
 	
 	public function new() 
 	{
-		propertysSource = new Array();
-		varsDestination = new Array();
-		varsSource = new Array();
+		operations = new Array();
 	}
 	
 	public function serialize():String 

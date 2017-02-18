@@ -19,22 +19,14 @@ class EsRecDebugDisplay extends EntitySystem<NdRecDebugDisplay>
 		super();
 		
 	}
-	override function onAdd(item:NdRecDebugDisplay):Void 
-	{
-		var properties:Array<Property> = new Array();
-		for (property in item.displayData.propertysSource) 
-		{
-			properties.push(item.owner.get(property));
-		}
-		item.properties = properties;
-	}
+
 	override public function process(item:NdRecDebugDisplay):Void 
 	{
 		var displayData:PrRecDebugDisplay = item.displayData;
 		var sprite:AnimationSprite = item.display.sprite;
-		for (i in 0...displayData.varsDestination.length)
+		for (op in displayData.operations)
 		{
-			displayData.setValue(displayData.varsDestination[i], item.properties[i].getValue(displayData.varsSource[i]));
+			op.process(displayData);
 		}
 		sprite.x = displayData.x;
 		sprite.y = displayData.y;
