@@ -57,7 +57,7 @@ class Panel extends Entity
 				if (command == "BUTTON")
 				{
 					var button:SimpleButton = new SimpleButton(null,animation);
-					button.userData = name.substr(0,name.length-"_button_".length);
+					button.userData = name.substr(0, name.length - "_button_".length);
 					button.onClick = onEvent;
 					addChild(button);
 					continue;
@@ -78,15 +78,11 @@ class Panel extends Entity
 				
 			}
 			
-			//animation.goToAndStop(Math.random() * (animation.totalFrames - 1));
 			if(display.parent==null) mContainer.addChild(display);
 		}
 	}
 	
-	//private function onClick(e:Event):Void 
-	//{
-		//onEvent(PanelEvent.weak(DisplayObject(e.target).name));
-	//}
+
 	public function getComponent(name:String):IDraw
 	{
 		return mComponents.get(name);

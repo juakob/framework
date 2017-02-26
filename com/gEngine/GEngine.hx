@@ -7,6 +7,7 @@ import com.gEngine.display.AnimationSprite;
 import com.gEngine.display.BasicSprite;
 import com.gEngine.display.Batch;
 import com.gEngine.display.BatchProxy;
+import com.gEngine.display.ComplexSprite;
 import com.gEngine.painters.Painter;
 import com.gEngine.painters.PainterAlpha;
 import com.gEngine.painters.SpritePainter;
@@ -231,6 +232,11 @@ import kha.System;
 		public function getNewAnimation(name:String):AnimationSprite
 		{
 			var animation:AnimationSprite = new AnimationSprite(mResources.getAnimationData(name));
+			return animation;
+		}
+		public function getNewComplexSprite(name:String):ComplexSprite
+		{
+			var animation:ComplexSprite = new ComplexSprite(mResources.getAnimationData(name));
 			return animation;
 		}
 		

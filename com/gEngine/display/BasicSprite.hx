@@ -37,10 +37,6 @@ class BasicSprite implements IDraw
 	public var TotalFrames(default, null):Int;
 	private var mTileSheetId:Int;
 	
-	private var mChildren:MyList<AnimationSprite>;
-	private var mDummyToReplace:String;
-	
-	private var mTdummyLinker:MyList<Int>;
 	
 	public var Blend:Int;
 	
@@ -83,9 +79,6 @@ class BasicSprite implements IDraw
 		rotation = 0;
 		cosAng = Math.cos(rotation);
 		sinAng = Math.sin(rotation);
-		
-		mChildren = new MyList();
-		mTdummyLinker = new MyList();
 		
 		mTextureId = aAnimationData.texturesID;
 	}
@@ -148,10 +141,6 @@ class BasicSprite implements IDraw
 	public function update(passedTime:Float):Void
 	{
 		previousFrame = CurrentFrame;
-		for (child in mChildren) 
-		{
-			child.update(passedTime);
-		}
 		var finalFrame:Int;
 
 		var breakAfterFrame:Bool = false;
@@ -272,12 +261,6 @@ class BasicSprite implements IDraw
 		Playing = true;
 	}
 	
-	public function addChildAt(dummyName:String, child:AnimationSprite):Void
-	{
-		child.mDummyToReplace = dummyName;
-		mChildren.push(child);
-	}
-	
 	public function hasDummy(name:String):Bool 
 	{
 		
@@ -349,6 +332,7 @@ class BasicSprite implements IDraw
 				if (Lables[i + 1].name.charAt(0) == "[") return labelEnd(Lables[i + 1].name, i + 1);
 				
 				return Lables[i + 1].frame-1;
+				
 			}
 		}
 		if (Lables[Lables.length - 1].name == label)
@@ -420,13 +404,13 @@ class BasicSprite implements IDraw
 	}
 	public function render(painter:IPainter,transform:Matrix):Void
 	{
-		x += offsetX+pivotX;
-		y += offsetY+pivotY;
-		
 		if (!visible)
 		{
 			return;
-		}
+		}	
+		x += offsetX+pivotX;
+		y += offsetY+pivotY;
+		
 		
 		var _1t = scaleX * cosAng-sinAng*tanSkewY*scaleX;
 		var _2t = scaleX * sinAng+cosAng*tanSkewY*scaleX;
@@ -676,8 +660,8 @@ class BasicSprite implements IDraw
 					}
 		
 			}
-			staffToDraw -= counter;
-			normalCounter += counter;
+			staffToDraw -= counter-normalCounter;
+			normalCounter += counter-normalCounter;
 		}while (staffToDraw > 0);
 		x -= offsetX+pivotX;
 		y -= offsetY+pivotY;
@@ -762,13 +746,6 @@ class BasicSprite implements IDraw
 		return null;
 	}
 	/* INTERFACE com.gEngine.display.IDraw */
-	
-	
-	private var mTmatrix:Matrix = new Matrix();
-	
-	
-	private var extraData:Int = 1;
-	
 	
 }
 

@@ -40,7 +40,7 @@ class AnimationPlayer
 			}
 			findNextEvent();
 		}
-		if (mDisplay.CurrentFrame<lastFrame&&mDisplay.CurrentFrame>=firtsFrame) return;
+		if (mDisplay.CurrentFrame<=lastFrame&&mDisplay.CurrentFrame>=firtsFrame) return;
 		if ( currentAnimation!=null)
 		{
 			//if (currentLabel.charAt(0) == "[")
@@ -54,7 +54,8 @@ class AnimationPlayer
 			if(mLoop){
 				mDisplay.goToAndPlay(firtsFrame);
 				findNextEvent();
-			}else {
+			}else 
+			{
 				
 				mDisplay.goToAndStop(lastFrame);
 			}
