@@ -51,59 +51,33 @@ class AreaEffect implements IDraw
 		aPainter = snapShotShader;	
 		var lastTarger:Int = GEngine.i.currentCanvasId();
 		aPainter.textureID = 0;//tempBuffer
-		var renderTarger:Int = GEngine.i.getRenderTarget();
-		GEngine.i.setCanvas(renderTarger);
-		//GEngine.i.changeToTemp();
-		//GEngine.i.manualUnMirror = true;
+		var renderTarget:Int = GEngine.i.getRenderTarget();
+		GEngine.i.setCanvas(renderTarget);
 		
 		aPainter.start();
 		createDrawInitialRectangle(aPainter);
 
 		aPainter.render(true);
 		aPainter.finish();
-		//GEngine.i.temp = true;
-		//GEngine.i.manualUnMirror = false;
-		//GEngine.i.manualUnMirror = true;
+	
 		aPainter = printShader;
-		aPainter.textureID = renderTarger;//tempBuffer
+		aPainter.textureID = renderTarget;//tempBuffer
 		GEngine.i.setCanvas(lastTarger);
 		aPainter.start();
-		//createFullRectangle(aPainter);
+
 		createDrawFinishRectangle(aPainter);
-		//createDrawInverseRectangle(aPainter);
-		//GEngine.i.manualMirror = true;
+
 		aPainter.render();
 		aPainter.finish();
-		GEngine.i.releaseRenderTarget(renderTarger);
-		GEngine.i.temp = false;
+		GEngine.i.releaseRenderTarget(renderTarget);
+
 		
 		
 	}
 	
-	function createFullRectangle(aPainter:IPainter) 
-	{
-		aPainter.write(0);
-		aPainter.write(0);
-		aPainter.write(0);
-		aPainter.write(0);
-		
-		aPainter.write(1280);
-		aPainter.write(0);
-		aPainter.write(1);
-		aPainter.write(0);
-		
-		aPainter.write(0);
-		aPainter.write(720);
-		aPainter.write(0);
-		aPainter.write(1);
-		
-		aPainter.write(1280);
-		aPainter.write(720);
-		aPainter.write(1);
-		aPainter.write(1);
-	}
 	
-	private inline function createDrawInitialRectangle(aPainter):Void
+	
+	private  function createDrawInitialRectangle(aPainter:IPainter):Void
 	{
 		var screenWidth = GEngine.i.realWidth *screenScaleX;
 		var screenHeight = GEngine.i.realHeight*screenScaleY;
@@ -127,7 +101,7 @@ class AreaEffect implements IDraw
 		aPainter.write(((x+width))/screenWidth);
 		aPainter.write((y+height)/screenHeight);
 	}
-	private inline function createDrawFinishRectangle(aPainter):Void
+	private function createDrawFinishRectangle(aPainter:IPainter):Void
 	{
 		var screenWidth = GEngine.i.realWidth *screenScaleX;
 		var screenHeight = GEngine.i.realHeight*screenScaleY;
