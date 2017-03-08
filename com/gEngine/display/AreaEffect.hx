@@ -49,8 +49,11 @@ class AreaEffect implements IDraw
 	
 		aPainter.render();
 		aPainter = snapShotShader;	
+		var lastTarger:Int = GEngine.i.currentCanvasId();
 		aPainter.textureID = 0;//tempBuffer
-		GEngine.i.changeToTemp();
+		var renderTarger:Int = GEngine.i.getRenderTarget();
+		GEngine.i.setCanvas(renderTarger);
+		//GEngine.i.changeToTemp();
 		//GEngine.i.manualUnMirror = true;
 		
 		aPainter.start();
@@ -62,8 +65,8 @@ class AreaEffect implements IDraw
 		//GEngine.i.manualUnMirror = false;
 		//GEngine.i.manualUnMirror = true;
 		aPainter = printShader;
-		aPainter.textureID = 1;//tempBuffer
-		GEngine.i.changeToBuffer();
+		aPainter.textureID = renderTarger;//tempBuffer
+		GEngine.i.setCanvas(lastTarger);
 		aPainter.start();
 		//createFullRectangle(aPainter);
 		createDrawFinishRectangle(aPainter);
@@ -71,7 +74,9 @@ class AreaEffect implements IDraw
 		//GEngine.i.manualMirror = true;
 		aPainter.render();
 		aPainter.finish();
+		GEngine.i.releaseRenderTarget(renderTarger);
 		GEngine.i.temp = false;
+		
 		
 	}
 	

@@ -1,4 +1,5 @@
 package com.gEngine.display;
+import com.gEngine.Filter;
 import com.gEngine.painters.IPainter;
 import com.gEngine.painters.Painter;
 import com.gEngine.display.IDraw;
@@ -27,7 +28,7 @@ class Layer implements IDrawContainer
 	
 	public var parent:IDrawContainer;
 	public var visible:Bool = true;
-	public var painter:IPainter;
+	public var filter:Filter;
 	
 	public function new() 
 	{
@@ -55,23 +56,15 @@ class Layer implements IDrawContainer
 		}else {
 			mHlpMatrix.setTo(mTransformation.a, mTransformation.b, mTransformation.c, mTransformation.d, mTransformation.tx, mTransformation.ty);
 		}
-		if (painter == null)
+		if (filter == null)
 		{
 			for (child in mChildren) 
 			{
 				child.render(aPainter,mHlpMatrix);
 			}
 		}else {
-			aPainter.render();
-			aPainter.finish();
-			aPainter = painter;	
-			aPainter.start();
-			for (child in mChildren) 
-			{
-				child.render(aPainter,mHlpMatrix);
-			}
-			aPainter.render();
-			aPainter.finish();
+			
+			filter.render(mChildren, aPainter, mHlpMatrix);
 		}
 		
 		

@@ -8,6 +8,7 @@ import com.gEngine.display.BasicSprite;
 import com.gEngine.display.Batch;
 import com.gEngine.display.BatchProxy;
 import com.gEngine.display.ComplexSprite;
+import com.gEngine.painters.IPainter;
 import com.gEngine.painters.Painter;
 import com.gEngine.painters.PainterAlpha;
 import com.gEngine.painters.SpritePainter;
@@ -15,6 +16,7 @@ import com.gEngine.tempStructures.Bitmap;
 import com.gEngine.tempStructures.UVLinker;
 import com.gEngine.tempStructures.UVLinker;
 import com.MyList;
+import com.helpers.RenderTargetPool;
 import com.imageAtlas.ImageTree;
 import com.gEngine.display.Stage; 
 import haxe.io.Bytes;
@@ -74,9 +76,15 @@ import kha.System;
 		inline static var initialIndex:Int = 2;
 		var currentIndex:Int = initialIndex;
 		
+		var renderTargetPool:RenderTargetPool;
+		
+		var mCurrentRenderTargetId:Int=-1;
+		
 		private function new() 
 		{
 			PainterGarbage.init();
+			
+			renderTargetPool = new RenderTargetPool();
 			
 			mResources = new EngineResources();
 			mTextures = new MyList();
@@ -84,16 +92,12 @@ import kha.System;
 			width = System.windowWidth();
 			height = System.windowHeight();
 			
-			mTempBuffer = Image.createRenderTarget(width, height,null,DepthStencilFormat.NoDepthAndStencil,1);
-			mTempBufferID = mTextures.push(mTempBuffer) - 1;
+			mTempBuffer = Image.createRenderTarget(width, height, null, DepthStencilFormat.NoDepthAndStencil, 1);
+			mCurrentRenderTargetId=mTempBufferID = mTextures.push(mTempBuffer) - 1;
 			
-			mTempTarget = Image.createRenderTarget(width, height,null,DepthStencilFormat.NoDepthAndStencil,1);
-			mTempTargetID = mTextures.push(mTempTarget) - 1;
 			mPainter = new Painter(false);
-			
 			mSpritePainter = new SpritePainter(false);
 			
-		
 			width = Std.int(width);
 			height = Std.int(height);
 			
@@ -356,9 +360,7 @@ import kha.System;
 		private var mFrameBuffer:Framebuffer;
 		private var mTempBuffer:Image;
 		public var mTempBufferID:Int;
-		private var mTempTarget:Image;
-		public var mTempTargetID:Int;
-		private var renderToTemp:Bool;
+
 		public var renderFinal:Bool;
 		private var renderCustomBuffer:Bool;
 		private var customBuffer:Image;
@@ -366,33 +368,35 @@ import kha.System;
 		public var scaleWidth:Float=1;
 		public var scaleHeigth:Float=1;
 		
-		public function changeToTemp()
-		{
-			renderToTemp = true;
-			renderCustomBuffer = false;
-		}
 	
 		public function changeToBuffer()
 		{
-			renderToTemp = false;
+			mCurrentRenderTargetId = mTempBufferID;
 			renderCustomBuffer = false;
 		}
 	
-		public function setCanvas(aTarget:Image):Void
+		public function setCanvas(aId:Int):Void
 		{
+			mCurrentRenderTargetId = aId;
+			if (mCurrentRenderTargetId != mTempBufferID)
+			{
 			renderCustomBuffer = true;
-			customBuffer = aTarget;
+			customBuffer = mTextures[aId];
+			}else
+			{
+				changeToBuffer();
+			}
+			
+		}
+		public inline function currentCanvasId():Int
+		{
+			return mCurrentRenderTargetId;
 		}
 		public function currentCanvas():Canvas
 		{
-			
 			if (renderCustomBuffer)
 			{
 				return customBuffer;
-			}
-			if (renderToTemp)
-			{
-					return mTempTarget;
 			}
 			if (renderFinal)
 			{
@@ -425,11 +429,10 @@ import kha.System;
 			}
 			return modelViewMatrix;
 		}
-		public function renderTempToFrameBuffer(aPainter:Painter,x:Float,y:Float,sx:Float,sy:Float,sw:Float,sh:Float)
+		public function renderBuffer(aSource:Int,aPainter:IPainter,x:Float,y:Float,sx:Float,sy:Float,sw:Float,sh:Float,aClear:Bool)
 		{
-			changeToBuffer();
-			aPainter.textureID = mTempTargetID;
-			if (renderToTemp&&mFrameBuffer.g4.renderTargetsInvertedY()) 
+			aPainter.textureID = aSource;
+			if (mFrameBuffer.g4.renderTargetsInvertedY()) 
 			{
 				aPainter.write(x);
 				aPainter.write(y);
@@ -472,7 +475,7 @@ import kha.System;
 				aPainter.write(realU);
 				aPainter.write(realV);
 			}
-			aPainter.render();
+			aPainter.render(aClear);
 			
 			
 		}
@@ -582,6 +585,18 @@ import kha.System;
 			return images;
 		}
 		
+		public function getRenderTarget():Int
+		{
+			var id:Int = renderTargetPool.getFreeImageId();
+			if (id ==-1)
+			{
+				var target:Image = Image.createRenderTarget(width, height,null,DepthStencilFormat.NoDepthAndStencil,1);
+				id = mTextures.push(target) - 1;
+				renderTargetPool.addRenderTarget(id);
+			}
+			return id;
+		}
+		
 	
 		private function sortArea(b1:Bitmap, b2:Bitmap):Int
 		{
@@ -595,6 +610,11 @@ import kha.System;
 			mStage = new Stage();
 			currentIndex = initialIndex;
 			PainterGarbage.i.clear();
+		}
+		
+		public function releaseRenderTarget(aId:Int) 
+		{
+			renderTargetPool.release(aId);
 		}
 	}
 
