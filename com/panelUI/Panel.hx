@@ -103,9 +103,7 @@ class Panel extends Entity
 	}
 	public function onEvent(event:SimpleButton):Void
 	{
-		#if debug
-		trace(event.userData);
-		#end
+
 		if (mOnEvent != null)
 		{
 			mOnEvent(event);

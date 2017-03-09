@@ -44,11 +44,13 @@ class Filter
 			workTargetId = GEngine.i.getRenderTarget();
 			
 			GEngine.i.setCanvas(workTargetId);
-			GEngine.i.renderBuffer(sourceImg, filters[i], 0, 0, 0, 0, 1280, 720, true);
-			GEngine.i.releaseRenderTarget(sourceImg);
+			var filter:IPainter = filters[i];
+			GEngine.i.renderBuffer(sourceImg, filter, 0, 0, 0, 0, 1280, 720, true);
+			if (filter.releaseTexture()) GEngine.i.releaseRenderTarget(sourceImg);
 		}
 		GEngine.i.setCanvas(finishTarget);
-		GEngine.i.renderBuffer(workTargetId, filters[filters.length - 1], 0, 0, 0, 0, 1280, 720, false);
-		GEngine.i.releaseRenderTarget(workTargetId);
+		var filter:IPainter = filters[filters.length - 1];
+		GEngine.i.renderBuffer(workTargetId, filter, 0, 0, 0, 0, 1280, 720, false);
+		if (filter.releaseTexture())GEngine.i.releaseRenderTarget(workTargetId);
 	}
 }

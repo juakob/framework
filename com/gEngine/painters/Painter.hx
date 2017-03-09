@@ -229,5 +229,12 @@ class Painter implements IPainter
 			}
 		}
 		
+		/* INTERFACE com.gEngine.painters.IPainter */
+		
+		public function releaseTexture():Bool 
+		{
+			return true;
+		}
+		
 		
 }

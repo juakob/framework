@@ -106,7 +106,7 @@ class SimpleButton extends Entity
 			//}
 			//return false;
 		//}
-		if (Input.inst.isMousePressed())
+		if (Input.inst.isMouseReleased())
 		{
 			var matrix = display.getTransformation().inverse();
 		var mousePos = matrix.multvec(new FastVector2(Input.inst.getMouseX(), Input.inst.getMouseY()));

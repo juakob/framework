@@ -146,4 +146,12 @@ class TouchSliderH extends Entity
 	{
 		return -display.x;
 	}
+	public function index():Int
+	{
+		return Std.int(-display.x / slotSize);
+	}
+	public function isPositionLock():Bool
+	{
+		return (-display.x / slotSize)-index()==0;
+	}
 }

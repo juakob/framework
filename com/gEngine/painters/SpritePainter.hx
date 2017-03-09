@@ -94,4 +94,11 @@ class SpritePainter implements IPainter
 		return currentPainter.vertexCount();
 	}
 	
+	/* INTERFACE com.gEngine.painters.IPainter */
+	
+	public function releaseTexture():Bool 
+	{
+		return true;
+	}
+	
 }
