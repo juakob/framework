@@ -37,8 +37,6 @@ import kha.Blob;
 import kha.Image;
 import kha.System;
 
-
-
 	/**
 	 * ...
 	 * @author joaquin
@@ -124,15 +122,6 @@ import kha.System;
 			modelViewMatrixMirrorY = modelViewMatrixMirrorY.multmat(FastMatrix4.scale(1, -1, 1));
 		
 			
-			//tempToTempBuffMatrix = FastMatrix4.identity();
-			//tempToTempBuffMatrix=tempToTempBuffMatrix.multmat(FastMatrix4.scale((2.0*renderScale) / width, -(2.0*renderScale) / height, 1));
-			//tempToTempBuffMatrix = tempToTempBuffMatrix.multmat(FastMatrix4.translation( -width  / (2*renderScale), -height  / (2*renderScale), 0));
-			//
-			//tempToTempBuffMatrixMirrorY = FastMatrix4.identity();
-			//tempToTempBuffMatrixMirrorY=tempToTempBuffMatrixMirrorY.multmat(FastMatrix4.scale((2.0*renderScale) / width, -(2.0*renderScale) / height, 1));
-			//tempToTempBuffMatrixMirrorY = tempToTempBuffMatrixMirrorY.multmat(FastMatrix4.translation( -width / (2.0*renderScale), height/(2.0*renderScale), 0));
-			//tempToTempBuffMatrixMirrorY = tempToTempBuffMatrixMirrorY.multmat(FastMatrix4.scale(1, -1, 1));
-			
 			width = Std.int(System.windowWidth());
 			height = Std.int(System.windowHeight());
 			
@@ -145,14 +134,7 @@ import kha.System;
 			finalViewMatrixMirrorY = finalViewMatrixMirrorY.multmat(FastMatrix4.translation( -width / 2, height / 2, 0));
 			finalViewMatrixMirrorY = finalViewMatrixMirrorY.multmat(FastMatrix4.scale(1, -1, 1));
 			
-			
-			
-			
-			//modelViewMatrixMirrorY = modelViewMatrix;
-			
 
-			//width = System.windowWidth();
-			//height = System.windowHeight();
 			
 			realU =  width*renderScale / realWidth ;
 			realV =  height*renderScale /realHeight ;
@@ -174,16 +156,6 @@ import kha.System;
 		{
 			var width:Int = System.windowWidth();
 			var height:Int = System.windowHeight();
-			
-		//	Input.inst.screenScale.setTo(1280 / width, 720/height);
-			//if (mSprite!=null)
-			//{
-				//
-			//	GEngine.i.width = width;
-			//	GEngine.i.height = height ;
-				//mSprite.scaleX = width/1280;
-				//mSprite.scaleY = height/ 720;
-			//}
 		}
 	
 		public function addResources(data:Blob):Array<String>
@@ -404,17 +376,8 @@ import kha.System;
 			}
 			return mTempBuffer;
 		}
-		public var temp:Bool;
 		private function getMatrix():FastMatrix4
 		{
-			if (temp)
-			{
-				if (mFrameBuffer.g4.renderTargetsInvertedY())
-				{
-					return tempToTempBuffMatrixMirrorY;
-				}
-				return tempToTempBuffMatrix;
-			}
 			if (renderFinal)
 			{
 				if (mFrameBuffer.g4.renderTargetsInvertedY())
@@ -509,10 +472,6 @@ import kha.System;
 			g.end();
 			mStage.render(mSpritePainter);
 			
-			//g = aFrameBuffer.g4;
-			//g.begin();
-			//if(clear)g.clear(Color.fromFloats(0.0, 0.0, 0.0,0), 0.0);
-			//g.end();
 			mPainter.textureID = mTempBufferID;
 			renderFinal = true;
 			if (mFrameBuffer.g4.renderTargetsInvertedY())
@@ -537,25 +496,25 @@ import kha.System;
 				mPainter.write(realU);
 				mPainter.write(0);
 			}else{
-			mPainter.write(0);
-			mPainter.write(0);
-			mPainter.write(0);
-			mPainter.write(0);
-				
-			mPainter.write(width);
-			mPainter.write(0);
-			mPainter.write(realU);
-			mPainter.write(0);
-				
-			mPainter.write(0);
-			mPainter.write(height);
-			mPainter.write(0);
-			mPainter.write(realV);
-				
-			mPainter.write(width);
-			mPainter.write(height);
-			mPainter.write(realU);
-			mPainter.write(realV);
+				mPainter.write(0);
+				mPainter.write(0);
+				mPainter.write(0);
+				mPainter.write(0);
+					
+				mPainter.write(width);
+				mPainter.write(0);
+				mPainter.write(realU);
+				mPainter.write(0);
+					
+				mPainter.write(0);
+				mPainter.write(height);
+				mPainter.write(0);
+				mPainter.write(realV);
+					
+				mPainter.write(width);
+				mPainter.write(height);
+				mPainter.write(realU);
+				mPainter.write(realV);
 			}
 			mPainter.render(true);
 			renderFinal = false;

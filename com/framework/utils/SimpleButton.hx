@@ -55,6 +55,7 @@ class SimpleButton extends Entity
 	}
 	
 	private var oneFrameDelay:Bool;
+	var touchInside:Bool;
 	override public function update(aDt:Float):Void 
 	{
 		isPress = false;
@@ -68,10 +69,18 @@ class SimpleButton extends Entity
 		}
 		if (press())
 		{
-			isPress = true;
-			display.scaleX = 2;
-			display.scaleY = 2;
-			oneFrameDelay = true;
+			touchInside = true;
+		}
+		if (Input.inst.isMouseReleased())
+		{
+			if(touchInside&& mouseInsideArea())
+			{
+				isPress = true;
+				display.scaleX = 2;
+				display.scaleY = 2;
+				oneFrameDelay = true;
+			}
+			touchInside = false;
 		}
 		
 		super.update(aDt);
@@ -83,39 +92,20 @@ class SimpleButton extends Entity
 	//var touchPoint:TouchInfo;
 	var isTouching:Bool;
 	var touchId:Int;
+
 	function press():Bool
 	{
-		//if (multitouch)
-		//{
-			//if (isTouching && touchPoint.inUse && touchPoint.id == touchId)
-			//{
-				//return false;
-			//}
-			//isTouching = false;
-			//
-			//var numClicks = Input.inst.numberClicks() ;
-			//for (i in 0...numClicks)
-			//{
-				//touchPoint = Input.inst.getTouchPoint(i);
-				//if (mArea.contains(touchPoint.x, touchPoint.y))
-				//{
-					//isTouching = true;
-					//touchId = touchPoint.id ;
-					//return true;
-				//}
-			//}
-			//return false;
-		//}
-		if (Input.inst.isMouseReleased())
+		if (Input.inst.isMousePressed())
 		{
-			var matrix = display.getTransformation().inverse();
-		var mousePos = matrix.multvec(new FastVector2(Input.inst.getMouseX(), Input.inst.getMouseY()));
-	//	if (camera == null)
-		
-		return  mArea.contains(mousePos.x, mousePos.y);
+			return mouseInsideArea();
 		}
 		return false;
-	//	return Input.inst.isMousePressed() && mArea.contains(camera.screenToWorldX(Input.inst.getMouseX()), camera.screenToWorldY(Input.inst.getMouseY()));
+	}
+	function mouseInsideArea():Bool
+	{
+		var matrix = display.getTransformation().inverse();
+		var mousePos = matrix.multvec(new FastVector2(Input.inst.getMouseX(), Input.inst.getMouseY()));
+		return  mArea.contains(mousePos.x, mousePos.y);
 	}
 	
 	
