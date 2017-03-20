@@ -1,9 +1,11 @@
 package com.gEngine.display;
+import com.gEngine.DrawArea;
 import com.gEngine.Filter;
 import com.gEngine.painters.IPainter;
 import com.gEngine.painters.Painter;
 import com.gEngine.display.IDraw;
 import com.helpers.Matrix;
+import com.helpers.MinMax;
 import kha.math.FastMatrix3;
 
 
@@ -29,6 +31,8 @@ class Layer implements IDrawContainer
 	public var parent:IDrawContainer;
 	public var visible:Bool = true;
 	public var filter:Filter;
+	
+	var drawArea:MinMax;
 	
 	public function new() 
 	{
@@ -68,6 +72,21 @@ class Layer implements IDrawContainer
 		}
 		
 		
+	}
+	
+	public function getDrawArea(aValue:MinMax):Void
+	{
+		drawArea.reset();
+		for (child in mChildren) 
+		{
+			child.getDrawArea(drawArea);
+		}
+		mTransformation.tx = x;
+		mTransformation.ty = y;
+		mTransformation.a = scaleX;
+		mTransformation.d = scaleY;
+		drawArea.transform(mTransformation);
+		aValue.merge(drawArea);
 	}
 	public var playing(default,default):Bool = true;
 	public function stop():Void

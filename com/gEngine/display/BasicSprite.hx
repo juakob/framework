@@ -9,8 +9,11 @@ import com.gEngine.Dummy;
 import com.gEngine.Label;
 import com.helpers.Matrix;
 import com.MyList;
+import com.helpers.MinMax;
 import com.helpers.Rectangle;
 import kha.math.FastMatrix3;
+import kha.math.FastVector2;
+import kha.math.Vector2;
 
 
 
@@ -744,6 +747,26 @@ class BasicSprite implements IDraw
 			}
 		}
 		return null;
+	}
+	
+	/* INTERFACE com.gEngine.display.IDraw */
+	
+	public function getDrawArea(aValue:MinMax):Void 
+	{
+		var drawArea = mAnimationData.frames[CurrentFrame].drawArea;
+		var a = scaleX * cosAng-sinAng*tanSkewY*scaleX;
+		var b = scaleX * sinAng+cosAng*tanSkewY*scaleX;
+		var c = -scaleY * sinAng+cosAng*tanSkewX*scaleY;
+		var d = scaleY * cosAng + sinAng * tanSkewX * scaleY;
+		
+		var x = this.x+offsetX+pivotX;
+		var y =this.y+offsetY+pivotY;
+	
+		var matrix:FastMatrix3 = new FastMatrix3(a, c, x, b, d, y, 0, 0, 1);
+		aValue.mergeVec(matrix.multvec(new FastVector2(   drawArea.x, drawArea.y)));
+		aValue.mergeVec(matrix.multvec(new FastVector2(  drawArea.side,   drawArea.y)));
+		aValue.mergeVec(matrix.multvec(new FastVector2( drawArea.x,  drawArea.up)));
+		aValue.mergeVec(matrix.multvec(new FastVector2(  drawArea.side,   drawArea.up)));
 	}
 	/* INTERFACE com.gEngine.display.IDraw */
 	

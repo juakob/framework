@@ -12,6 +12,7 @@ class Frame
 	public var alphas:MyList<Float>;
 	public var colortTransform:MyList<Float>;
 	public var maskBatchs:MyList<MaskBatch>;
+	public var drawArea:DrawArea;
 	public function new() 
 	{
 		

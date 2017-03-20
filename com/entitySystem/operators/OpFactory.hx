@@ -11,6 +11,7 @@ class OpFactory
 	
 	static public function decode(link:String, displayData:PrRecDebugDisplay,owner:Entity) 
 	{
+		#if expose
 		var linkComponents:Array<String> = link.split(",");
 		if (linkComponents.length == 2)
 		{
@@ -55,6 +56,7 @@ class OpFactory
 			}
 			
 		}
+		#end
 	}
 	
 }

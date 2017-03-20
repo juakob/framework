@@ -2,6 +2,7 @@ package com.gEngine.display;
 import com.gEngine.painters.IPainter;
 import com.gEngine.painters.Painter;
 import com.helpers.Matrix;
+import com.helpers.MinMax;
 import kha.math.FastMatrix3;
 
 
@@ -22,6 +23,7 @@ interface IDraw
 	public var y:Float;
 	public var scaleX:Float;
 	public var scaleY:Float;
+	public function getDrawArea(aValue:MinMax):Void;
 	public function getTransformation(aMatrix:FastMatrix3=null):FastMatrix3;
 	
 }

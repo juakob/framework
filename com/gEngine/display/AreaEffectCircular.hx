@@ -2,6 +2,7 @@ package com.gEngine.display;
 import com.gEngine.painters.IPainter;
 import com.helpers.Matrix;
 import com.gEngine.display.IDraw;
+import com.helpers.MinMax;
 import com.helpers.Point;
 import kha.math.FastMatrix3;
 import kha.math.FastVector2;
@@ -119,6 +120,10 @@ class AreaEffectCircular extends AreaEffect
 			
 		}
 		
+	}
+	override public function getDrawArea(aValue:MinMax):Void 
+	{
+		aValue.mergeRec(x-width/2, y-height/2, width, height);
 	}
 	
 	public var radio:Float=100;

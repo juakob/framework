@@ -20,7 +20,6 @@ package com.gEngine ;
 		public var frameData:MyList<MyList<Frame>>;
 		public var textures:MyList<MyList<MyList<String>>>;
 		public var maskTextures:MyList<String>;
-		
 		public var masksBatchs:MyList<MyList<MaskBatch>>;
 		
 		public function new() 
@@ -97,9 +96,12 @@ package com.gEngine ;
 			var currentMaskBatchs:MyList<MaskBatch> = new MyList();
 			for ( i in 0...length) 
 			{
-				frames.position += 4 * 4;//offset max min size
-				frameLength = frames.readInt();
 				var currentFrame = new Frame();
+				var drawArea:DrawArea = new DrawArea(frames.readFloat(), frames.readFloat(), frames.readFloat(), frames.readFloat());
+				currentFrame.drawArea = drawArea;
+				
+				frameLength = frames.readInt();
+				
 				currentFrame.vertexs = new MyList();
 				currentFrame.alphas = new MyList();
 				currentFrame.colortTransform = new MyList();

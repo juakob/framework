@@ -33,6 +33,12 @@ class Resource
 		public function addAnimation(aAnimation:String,textureId:Int=1):Void
 		{
 			mAnimationsResources.push(aAnimation);
+			#if debug
+			if (mTexture.length == 0)
+			{
+				throw "Call startTexture before adding an animation";
+			}
+			#end
 			mTexture[mTexture.length-1].push(aAnimation);
 		}
 		public function startTexture(aWidth:Int, aHeight:Int):Void

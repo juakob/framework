@@ -4,6 +4,7 @@ import com.gEngine.display.IDraw;
 import com.gEngine.painters.IPainter;
 import com.gEngine.painters.Painter;
 import com.helpers.Matrix;
+import com.helpers.MinMax;
 
 /**
  * ...
@@ -32,12 +33,16 @@ class Filter
 		GEngine.i.setCanvas(workTargetId);
 		GEngine.i.currentCanvas().g2.begin(true,0);
 		GEngine.i.currentCanvas().g2.end();
+		var drawArea:MinMax = new MinMax();
+		drawArea.reset();
 		for (display in aDisplay) 
 		{
 			display.render(aPainter, aMatrix);
+			display.getDrawArea(drawArea);
 		}
 		aPainter.render();
 		aPainter.finish();
+		
 		for (i in 0...(filters.length-1)) //dont iterate over the last one
 		{
 			var sourceImg = workTargetId;
@@ -45,12 +50,12 @@ class Filter
 			
 			GEngine.i.setCanvas(workTargetId);
 			var filter:IPainter = filters[i];
-			GEngine.i.renderBuffer(sourceImg, filter, 0, 0, 0, 0, 1280, 720, true);
+			GEngine.i.renderBuffer(sourceImg, filter, drawArea.min.x, drawArea.min.y, drawArea.max.x-drawArea.min.x, drawArea.max.y-drawArea.min.y, 1280, 720,true);
 			if (filter.releaseTexture()) GEngine.i.releaseRenderTarget(sourceImg);
 		}
 		GEngine.i.setCanvas(finishTarget);
 		var filter:IPainter = filters[filters.length - 1];
-		GEngine.i.renderBuffer(workTargetId, filter, 0, 0, 0, 0, 1280, 720, false);
+		GEngine.i.renderBuffer(workTargetId, filter,drawArea.min.x, drawArea.min.y, drawArea.max.x-drawArea.min.x, drawArea.max.y-drawArea.min.y, 1280, 720, false);
 		if (filter.releaseTexture())GEngine.i.releaseRenderTarget(workTargetId);
 	}
 }

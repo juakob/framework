@@ -2,6 +2,7 @@ package com.gEngine.display;
 import com.gEngine.painters.IPainter;
 import com.helpers.Matrix;
 import com.gEngine.display.IDraw;
+import com.helpers.MinMax;
 import kha.math.FastMatrix3;
 
 /**
@@ -156,6 +157,13 @@ class AreaEffect implements IDraw
 	public function getTransformation(aMatrix:FastMatrix3 = null):FastMatrix3 
 	{
 		throw "not implemented copy code from basicsprite";
+	}
+	
+	/* INTERFACE com.gEngine.display.IDraw */
+	
+	public function getDrawArea(aValue:MinMax):Void 
+	{
+		aValue.mergeRec(x, y, width, height);
 	}
 	
 	public var x:Float=0;

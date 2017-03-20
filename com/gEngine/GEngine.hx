@@ -392,55 +392,65 @@ import kha.System;
 			}
 			return modelViewMatrix;
 		}
-		public function renderBuffer(aSource:Int,aPainter:IPainter,x:Float,y:Float,sx:Float,sy:Float,sw:Float,sh:Float,aClear:Bool)
+		public function renderBuffer(aSource:Int,aPainter:IPainter,x:Float,y:Float,aWidth:Float,aHeight:Float,aTexWidth:Float,aTexHeight:Float,aClear:Bool)
 		{
 			aPainter.textureID = aSource;
 			if (mFrameBuffer.g4.renderTargetsInvertedY()) 
 			{
-				aPainter.write(x);
-				aPainter.write(y);
-				aPainter.write(0);
-				aPainter.write(realV);
-				
-				aPainter.write(x+sw);
-				aPainter.write(y);
-				aPainter.write(realU);
-				aPainter.write(realV);
-				
-				aPainter.write(x);
-				aPainter.write(y+sh);
-				aPainter.write(0);
-				aPainter.write(0);
-				
-				aPainter.write(x+sw);
-				aPainter.write(y+sh);
-				aPainter.write(realU);
-				aPainter.write(0);
+				//aPainter.write(x);
+				//aPainter.write(y);
+				//aPainter.write();
+				//aPainter.write(realV);
+				//
+				//aPainter.write(x+aWidth);
+				//aPainter.write(y);
+				//aPainter.write(realU);
+				//aPainter.write(realV);
+				//
+				//aPainter.write(x);
+				//aPainter.write(y+aHeight);
+				//aPainter.write(0);
+				//aPainter.write(0);
+				//
+				//aPainter.write(x+aWidth);
+				//aPainter.write(y+aHeight);
+				//aPainter.write(realU);
+				//aPainter.write(0);
 			}else
 			{
-				aPainter.write(x);
-				aPainter.write(y);
-				aPainter.write(0);
-				aPainter.write(0);
+				//aPainter.write(x);
+				//aPainter.write(y);
+				//aPainter.write(0);
+				//aPainter.write(0);
+				writeVertex(aPainter,x, y,aTexWidth,aTexHeight);
 				
-				aPainter.write(x+sw);
-				aPainter.write(y);
-				aPainter.write(realU);
-				aPainter.write(0);
+				//aPainter.write(x+aWidth);
+				//aPainter.write(y);
+				//aPainter.write(realU);
+				//aPainter.write(0);
+				writeVertex(aPainter,x+aWidth, y,aTexWidth,aTexHeight);
 				
-				aPainter.write(x);
-				aPainter.write(y+sh);
-				aPainter.write(0);
-				aPainter.write(realV);
+				//aPainter.write(x);
+				//aPainter.write(y+aHeight);
+				//aPainter.write(0);
+				//aPainter.write(realV);
+				writeVertex(aPainter,x, y+aHeight,aTexWidth,aTexHeight);
 				
-				aPainter.write(x+sw);
-				aPainter.write(y+sh);
-				aPainter.write(realU);
-				aPainter.write(realV);
+				//aPainter.write(x+aWidth);
+				//aPainter.write(y+aHeight);
+				//aPainter.write(realU);
+				//aPainter.write(realV);
+				writeVertex(aPainter,x+aWidth, y+aHeight,aTexWidth,aTexHeight);
 			}
 			aPainter.render(aClear);
 			
 			
+		}
+		inline function  writeVertex(aPainter:IPainter,aX:Float,aY:Float,aSWidth:Float,aSHeight:Float) {
+				aPainter.write(aX);
+				aPainter.write(aY);
+				aPainter.write(aX/aSWidth);
+				aPainter.write(aY/aSHeight);	
 		}
 	
 		private function getTexture(aId:Int):Image
