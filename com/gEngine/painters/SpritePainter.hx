@@ -1,4 +1,5 @@
 package com.gEngine.painters;
+import com.helpers.MinMax;
 
 /**
  * ...
@@ -99,6 +100,13 @@ class SpritePainter implements IPainter
 	public function releaseTexture():Bool 
 	{
 		return true;
+	}
+	
+	/* INTERFACE com.gEngine.painters.IPainter */
+	
+	public function adjustRenderArea(aArea:MinMax):Void 
+	{
+		
 	}
 	
 }

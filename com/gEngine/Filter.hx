@@ -1,6 +1,7 @@
 package com.gEngine;
 import com.MyList;
 import com.gEngine.display.IDraw;
+import com.gEngine.display.Layer;
 import com.gEngine.painters.IPainter;
 import com.gEngine.painters.Painter;
 import com.helpers.Matrix;
@@ -18,7 +19,7 @@ class Filter
 		filters = aFilters;
 	}
 	
-	public function render(aDisplay:MyList<IDraw>,aPainter:IPainter,aMatrix:Matrix):Void
+	public function render(aLayer:Layer,aDisplay:MyList<IDraw>,aPainter:IPainter,aMatrix:Matrix):Void
 	{
 		if (filters.length == 0)
 		{
@@ -38,8 +39,8 @@ class Filter
 		for (display in aDisplay) 
 		{
 			display.render(aPainter, aMatrix);
-			display.getDrawArea(drawArea);
 		}
+		aLayer.getDrawArea(drawArea);
 		aPainter.render();
 		aPainter.finish();
 		

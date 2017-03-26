@@ -1,5 +1,6 @@
 package com.helpers;
 import com.helpers.Matrix;
+import kha.math.FastMatrix3;
 import kha.math.FastVector2;
 
 /**
@@ -41,9 +42,15 @@ class MinMax
 		}
 	}
 	
-	public function transform(mTransformation:Matrix) 
+	public function transform(ts:Matrix) 
 	{
-		//mTransformation.
+		var matrix:FastMatrix3 = new FastMatrix3(ts.a, ts.c, ts.tx, ts.b, ts.d, ts.ty, 0, 0, 1);
+		var fMin:FastVector2 = new FastVector2(min.x, min.y);
+		var fMax:FastVector2 = new FastVector2(max.x, max.y);
+		fMin = matrix.multvec(fMin);
+		fMax = matrix.multvec(fMax);
+		min.setTo(fMin.x, fMin.y);
+		max.setTo(fMax.x, fMax.y);
 	}
 	public function mergeRec(x:Float,y:Float,width:Float,height:Float):Void
 	{
@@ -84,6 +91,18 @@ class MinMax
 			max.y = multvec.y;
 		}
 		
+	}
+	
+	public function addBorderWidth(aValue:Float) 
+	{
+		min.x -= aValue;
+		max.x += aValue;
+	}
+	
+	public function addBorderHeight(aValue:Float) 
+	{
+		min.y -= aValue;
+		max.y += aValue;
 	}
 	
 }

@@ -1,4 +1,5 @@
 package com.gEngine.painters;
+import com.helpers.MinMax;
 
 /**
  * @author Joaquin
@@ -12,5 +13,6 @@ interface IPainter
    function validateBatch(aTexture:Int, aSize:Int, aAlpha:Bool, aColorTransform:Bool,aMask:Bool):Void;
    function vertexCount():Int;
    function releaseTexture():Bool;
+   function adjustRenderArea(aArea:MinMax):Void;
    var textureID:Int;
 }

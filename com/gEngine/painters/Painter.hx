@@ -1,4 +1,5 @@
 package com.gEngine.painters;
+import com.helpers.MinMax;
 import kha.Color;
 import kha.Shaders;
 import kha.arrays.Float32Array;
@@ -234,6 +235,13 @@ class Painter implements IPainter
 		public function releaseTexture():Bool 
 		{
 			return true;
+		}
+		
+		/* INTERFACE com.gEngine.painters.IPainter */
+		
+		public function adjustRenderArea(aArea:MinMax):Void 
+		{
+			
 		}
 		
 		

@@ -38,6 +38,7 @@ class Layer implements IDrawContainer
 	{
 		mChildren = new MyList();
 		mTransformation = new Matrix();
+		drawArea = new MinMax();
 	}
 	
 	
@@ -68,7 +69,7 @@ class Layer implements IDrawContainer
 			}
 		}else {
 			
-			filter.render(mChildren, aPainter, mHlpMatrix);
+			filter.render(this,mChildren, aPainter, mHlpMatrix);
 		}
 		
 		

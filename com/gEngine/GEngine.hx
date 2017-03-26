@@ -395,56 +395,16 @@ import kha.System;
 		public function renderBuffer(aSource:Int,aPainter:IPainter,x:Float,y:Float,aWidth:Float,aHeight:Float,aTexWidth:Float,aTexHeight:Float,aClear:Bool)
 		{
 			aPainter.textureID = aSource;
-			if (mFrameBuffer.g4.renderTargetsInvertedY()) 
-			{
-				//aPainter.write(x);
-				//aPainter.write(y);
-				//aPainter.write();
-				//aPainter.write(realV);
-				//
-				//aPainter.write(x+aWidth);
-				//aPainter.write(y);
-				//aPainter.write(realU);
-				//aPainter.write(realV);
-				//
-				//aPainter.write(x);
-				//aPainter.write(y+aHeight);
-				//aPainter.write(0);
-				//aPainter.write(0);
-				//
-				//aPainter.write(x+aWidth);
-				//aPainter.write(y+aHeight);
-				//aPainter.write(realU);
-				//aPainter.write(0);
-			}else
-			{
-				//aPainter.write(x);
-				//aPainter.write(y);
-				//aPainter.write(0);
-				//aPainter.write(0);
-				writeVertex(aPainter,x, y,aTexWidth,aTexHeight);
+			
+			writeVertex(aPainter,x, y,aTexWidth,aTexHeight);
+
+			writeVertex(aPainter,x+aWidth, y,aTexWidth,aTexHeight);
 				
-				//aPainter.write(x+aWidth);
-				//aPainter.write(y);
-				//aPainter.write(realU);
-				//aPainter.write(0);
-				writeVertex(aPainter,x+aWidth, y,aTexWidth,aTexHeight);
-				
-				//aPainter.write(x);
-				//aPainter.write(y+aHeight);
-				//aPainter.write(0);
-				//aPainter.write(realV);
-				writeVertex(aPainter,x, y+aHeight,aTexWidth,aTexHeight);
-				
-				//aPainter.write(x+aWidth);
-				//aPainter.write(y+aHeight);
-				//aPainter.write(realU);
-				//aPainter.write(realV);
-				writeVertex(aPainter,x+aWidth, y+aHeight,aTexWidth,aTexHeight);
-			}
+			writeVertex(aPainter,x, y+aHeight,aTexWidth,aTexHeight);
+
+			writeVertex(aPainter,x+aWidth, y+aHeight,aTexWidth,aTexHeight);
+			
 			aPainter.render(aClear);
-			
-			
 		}
 		inline function  writeVertex(aPainter:IPainter,aX:Float,aY:Float,aSWidth:Float,aSHeight:Float) {
 				aPainter.write(aX);
