@@ -392,23 +392,23 @@ import kha.System;
 			}
 			return modelViewMatrix;
 		}
-		public function renderBuffer(aSource:Int,aPainter:IPainter,x:Float,y:Float,aWidth:Float,aHeight:Float,aTexWidth:Float,aTexHeight:Float,aClear:Bool)
+		public function renderBuffer(aSource:Int,aPainter:IPainter,x:Float,y:Float,aWidth:Float,aHeight:Float,aTexWidth:Float,aTexHeight:Float,aClear:Bool,aResolution:Float=1)
 		{
 			aPainter.textureID = aSource;
 			
-			writeVertex(aPainter,x, y,aTexWidth,aTexHeight);
+			writeVertex(aPainter,x, y,aTexWidth,aTexHeight,aResolution);
 
-			writeVertex(aPainter,x+aWidth, y,aTexWidth,aTexHeight);
+			writeVertex(aPainter,x+aWidth, y,aTexWidth,aTexHeight,aResolution);
 				
-			writeVertex(aPainter,x, y+aHeight,aTexWidth,aTexHeight);
+			writeVertex(aPainter,x, y+aHeight,aTexWidth,aTexHeight,aResolution);
 
-			writeVertex(aPainter,x+aWidth, y+aHeight,aTexWidth,aTexHeight);
+			writeVertex(aPainter,x+aWidth, y+aHeight,aTexWidth,aTexHeight,aResolution);
 			
 			aPainter.render(aClear);
 		}
-		inline function  writeVertex(aPainter:IPainter,aX:Float,aY:Float,aSWidth:Float,aSHeight:Float) {
-				aPainter.write(aX);
-				aPainter.write(aY);
+		inline function  writeVertex(aPainter:IPainter,aX:Float,aY:Float,aSWidth:Float,aSHeight:Float,aResolution:Float) {
+				aPainter.write(aX*aResolution);
+				aPainter.write(aY*aResolution);
 				aPainter.write(aX/aSWidth);
 				aPainter.write(aY/aSHeight);	
 		}
@@ -519,7 +519,7 @@ import kha.System;
 			var id:Int = renderTargetPool.getFreeImageId();
 			if (id ==-1)
 			{
-				var target:Image = Image.createRenderTarget(width, height,null,DepthStencilFormat.NoDepthAndStencil,1);
+				var target:Image = Image.createRenderTarget(width, height,null,DepthStencilFormat.NoDepthAndStencil,2);
 				id = mTextures.push(target) - 1;
 				renderTargetPool.addRenderTarget(id);
 			}

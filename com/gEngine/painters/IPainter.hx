@@ -15,4 +15,5 @@ interface IPainter
    function releaseTexture():Bool;
    function adjustRenderArea(aArea:MinMax):Void;
    var textureID:Int;
+   var resolution:Float;
 }

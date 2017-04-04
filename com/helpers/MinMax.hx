@@ -105,4 +105,13 @@ class MinMax
 		max.y += aValue;
 	}
 	
+	public inline function height() 
+	{
+		return max.y - min.y;
+	}
+	public inline function width() 
+	{
+		return max.x - min.x;
+	}
+	
 }

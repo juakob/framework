@@ -34,6 +34,8 @@ class Painter implements IPainter
 	var mMvpID:ConstantLocation;
 	public var mTextureID:TextureUnit;
 	
+	public var resolution:Float = 1;
+	
 	var ratioIndexVertex:Float = 6 / 4;
 	private var counter:Int=0;
 	var buffer:Float32Array;
