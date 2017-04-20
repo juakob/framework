@@ -4,6 +4,9 @@ import com.gEngine.display.IDraw;
 import com.gEngine.display.Layer;
 import com.gEngine.painters.IPainter;
 import com.gEngine.painters.Painter;
+import com.gEngine.shaders.RenderPass;
+import com.gEngine.shaders.ShDontRender;
+import com.gEngine.shaders.ShRender;
 import com.helpers.Matrix;
 import com.helpers.MinMax;
 
@@ -13,15 +16,36 @@ import com.helpers.MinMax;
  */
 class Filter
 {
-	private var filters:Array<IPainter>;
+	private var renderPass:Array<RenderPass>;
 	public function new(aFilters:Array<IPainter>) 
 	{
-		filters = aFilters;
+		renderPass = new Array();
+		var passFilters:Array<IPainter> = new Array();
+		for (filter in aFilters) 
+		{
+			if (Std.is(filter, ShRender))
+			{
+				renderPass.push(new RenderPass(passFilters, true));
+				passFilters = new Array();
+				continue;
+			}
+			if (Std.is(filter, ShDontRender))
+			{
+				renderPass.push(new RenderPass(passFilters, false));
+				passFilters = new Array();
+				continue;
+			}
+			passFilters.push(filter);
+		}
+		if (passFilters.length != 0)
+		{
+			renderPass.push(new RenderPass(passFilters, true));
+		}
 	}
 	
 	public function render(aLayer:Layer,aDisplay:MyList<IDraw>,aPainter:IPainter,aMatrix:Matrix):Void
 	{
-		if (filters.length == 0)
+		if (renderPass.length == 0)
 		{
 			return;
 		}
@@ -44,23 +68,39 @@ class Filter
 		drawArea.transform(aMatrix);
 		aPainter.render();
 		aPainter.finish();
-		var resolution:Float = 1;
-		for (i in 0...(filters.length-1)) //dont iterate over the last one
+		var counter:Int = renderPass.length;
+		for (renderPass in renderPass) 
 		{
-			var sourceImg = workTargetId;
-			workTargetId = GEngine.i.getRenderTarget();
-			
-			GEngine.i.setCanvas(workTargetId);
-			var filter:IPainter = filters[i];
-			filter.adjustRenderArea(drawArea);
-			GEngine.i.renderBuffer(sourceImg, filter, drawArea.min.x * resolution, drawArea.min.y * resolution, (drawArea.max.x - drawArea.min.x) * resolution, (drawArea.max.y - drawArea.min.y) * resolution, 1280, 720, true, filter.resolution);
-			resolution *= filter.resolution;
-			if (filter.releaseTexture()) GEngine.i.releaseRenderTarget(sourceImg);
+			--counter;
+			var filters:Array<IPainter> = renderPass.filters;
+			var resolution:Float = 1;
+			var length:Int;
+			if (renderPass.renderAtEnd)
+			{
+				length = filters.length - 1;//dont iterate over the last one
+			}else {
+				length= filters.length ;
+			}
+			for (i in 0...length) 
+			{
+				var sourceImg = workTargetId;
+				workTargetId = GEngine.i.getRenderTarget();
+				
+				GEngine.i.setCanvas(workTargetId);
+				var filter:IPainter = filters[i];
+				filter.adjustRenderArea(drawArea);
+				GEngine.i.renderBuffer(sourceImg, filter, drawArea.min.x * resolution, drawArea.min.y * resolution, drawArea.width() * resolution, drawArea.height() * resolution, 1280, 720, true, filter.resolution);
+				resolution *= filter.resolution;
+				if (filter.releaseTexture()) GEngine.i.releaseRenderTarget(sourceImg);
+			}
+			if (renderPass.renderAtEnd)
+			{
+				GEngine.i.setCanvas(finishTarget);
+				var filter:IPainter = filters[filters.length - 1];
+				filter.adjustRenderArea(drawArea);
+				GEngine.i.renderBuffer(workTargetId, filter,drawArea.min.x, drawArea.min.y,drawArea.width(), drawArea.height(), 1280/resolution, 720/resolution, false);
+				if (filter.releaseTexture()&&counter==0) GEngine.i.releaseRenderTarget(workTargetId);
+			}
 		}
-		GEngine.i.setCanvas(finishTarget);
-		var filter:IPainter = filters[filters.length - 1];
-		filter.adjustRenderArea(drawArea);
-		GEngine.i.renderBuffer(workTargetId, filter,drawArea.min.x, drawArea.min.y, drawArea.max.x-drawArea.min.x, drawArea.max.y-drawArea.min.y, 1280*1/resolution, 720*1/resolution, false);
-		if (filter.releaseTexture())GEngine.i.releaseRenderTarget(workTargetId);
 	}
 }
