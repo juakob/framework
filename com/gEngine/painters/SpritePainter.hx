@@ -52,7 +52,6 @@ class SpritePainter implements IPainter
 	
 	public function validateBatch(aTexture:Int, aSize:Int, aAlpha:Bool, aColorTransform:Bool,aMask:Bool):Void 
 	{
-		
 		if (usingAlpha != aAlpha||usingColor!=aColorTransform||usingMask!=aMask)
 		{
 			

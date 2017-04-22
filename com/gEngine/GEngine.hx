@@ -22,7 +22,12 @@ import com.gEngine.display.Stage;
 import haxe.io.Bytes;
 import haxe.io.BytesInput;
 import kha.Canvas;
+import kha.Shaders;
+import kha.graphics4.BlendingFactor;
 import kha.graphics4.DepthStencilFormat;
+import kha.graphics4.PipelineState;
+import kha.graphics4.VertexData;
+import kha.graphics4.VertexStructure;
 
 import kha.Color;
 import kha.Framebuffer;
@@ -273,8 +278,24 @@ import kha.System;
 			
 			var linker:MyList<AnimationTilesheetLinker> = new MyList();
 			var g = atlasImage.g2;
-			g.begin(true,0);
+			g.begin(true, 0);
+			var shaderPipeline = new PipelineState();
+			shaderPipeline.fragmentShader = Shaders.painter_image_frag;
+			shaderPipeline.vertexShader = Shaders.painter_image_vert;
 
+			var structure = new VertexStructure();
+			structure.add("vertexPosition", VertexData.Float3);
+			structure.add("texPosition", VertexData.Float2);
+			structure.add("vertexColor", VertexData.Float4);
+			shaderPipeline.inputLayout = [structure];
+			
+			shaderPipeline.blendSource = BlendingFactor.BlendOne;
+			shaderPipeline.blendDestination = BlendingFactor.BlendZero;
+			shaderPipeline.alphaBlendSource = BlendingFactor.BlendOne;
+			shaderPipeline.alphaBlendDestination = BlendingFactor.BlendZero;
+				
+			shaderPipeline.compile();
+			g.pipeline = shaderPipeline;
 			var once:Bool = true;
 			for (bitmap in bitmaps) 
 			{
@@ -289,7 +310,7 @@ import kha.System;
 				
 			}
 			g.end();
-			
+			shaderPipeline.delete();
 			var img = Image.createRenderTarget(1, 1, TextureFormat.RGBA32);
 			img.unload();
 			for (animation in simpleAnimations) 
