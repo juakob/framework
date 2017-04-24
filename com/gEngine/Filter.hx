@@ -21,6 +21,7 @@ class Filter
 	{
 		renderPass = new Array();
 		var passFilters:Array<IPainter> = new Array();
+		
 		for (filter in aFilters) 
 		{
 			if (Std.is(filter, ShRender))
@@ -40,6 +41,19 @@ class Filter
 		if (passFilters.length != 0)
 		{
 			renderPass.push(new RenderPass(passFilters, true));
+		}
+		
+		for (renderPass in renderPass) 
+		{
+			var length:Int = renderPass.filters.length;
+			if (renderPass.renderAtEnd)
+			{
+				length -= 1;
+			}
+			for (i in 0...length) 
+			{
+				aFilters[i].multipassBlend();
+			}
 		}
 	}
 	
@@ -65,9 +79,11 @@ class Filter
 			display.render(aPainter, aMatrix);
 		}
 		aLayer.getDrawArea(drawArea);
-		drawArea.transform(aMatrix);
+		drawArea.transform(aMatrix);	
+		aPainter.multipassBlend();
 		aPainter.render();
 		aPainter.finish();
+	
 		var counter:Int = renderPass.length;
 		for (renderPass in renderPass) 
 		{

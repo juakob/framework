@@ -14,6 +14,7 @@ class AreaEffect implements IDraw
 	@:access(com.gEngine.GEngine.mPainter)
 	public function new(aSnapShotShader:IPainter,aPrintShader:IPainter) 
 	{
+		aSnapShotShader.multipassBlend();
 		screenScaleX = 1/GEngine.i.scaleWidth;
 		screenScaleY = 1/GEngine.i.scaleHeigth;
 		if (aSnapShotShader == null)

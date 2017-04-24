@@ -61,7 +61,7 @@ class Painter implements IPainter
 	}
 	public function finish()
 	{
-
+		setBlends(pipeline);
 	}
 	public function render(clear:Bool = false ):Void
 	{
@@ -183,6 +183,13 @@ class Painter implements IPainter
 			aPipeline.alphaBlendSource = BlendingFactor.SourceAlpha;
 			aPipeline.alphaBlendDestination = BlendingFactor.InverseSourceAlpha;
 		
+		}
+		public function multipassBlend() 
+		{
+			pipeline.blendSource = BlendingFactor.BlendOne;
+			pipeline.blendDestination = BlendingFactor.InverseSourceAlpha;
+			pipeline.alphaBlendSource = BlendingFactor.BlendOne;
+			pipeline.alphaBlendDestination = BlendingFactor.InverseSourceAlpha;
 		}
 		private function defineVertexStructure(structure:VertexStructure)
 		{
