@@ -1,14 +1,14 @@
-#version 100
+#version 450
 
-attribute vec2 vertexPosition;
-attribute vec2 texPosition;
-attribute vec4 colorMul;
-attribute vec4 colorAdd;
+in vec2 vertexPosition;
+in vec2 texPosition;
+in vec4 colorMul;
+in vec4 colorAdd;
 
 uniform mat4 projectionMatrix;
-varying vec2 texCoord;
-varying vec4 _colorMul;
-varying vec4 _colorAdd;
+out vec2 texCoord;
+out vec4 _colorMul;
+out vec4 _colorAdd;
 
 
 void kore() {

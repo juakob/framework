@@ -1,10 +1,11 @@
+#version 450
 
-attribute vec2 vertexPosition;
-attribute vec2 texPosition;
+in vec2 vertexPosition;
+in vec2 texPosition;
 
 uniform mat4 projectionMatrix;
-varying vec2 texCoord;
-varying vec2 texCoordMask;
+out vec2 texCoord;
+out vec2 texCoordMask;
 
 void kore() {
 	vec4 pos =  projectionMatrix*vec4(vertexPosition.xy,0.0, 1.0) ;

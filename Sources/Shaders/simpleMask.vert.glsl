@@ -1,10 +1,10 @@
-#version 100
+#version 450
 
-attribute vec2 vertexPosition;
-attribute vec4 texPosition;
+in vec2 vertexPosition;
+in vec4 texPosition;
 
 uniform mat4 projectionMatrix;
-varying vec4 texCoord;
+out vec4 texCoord;
 
 
 void kore() {

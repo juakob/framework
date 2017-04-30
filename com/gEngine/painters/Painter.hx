@@ -1,6 +1,7 @@
 package com.gEngine.painters;
 import com.helpers.MinMax;
 import kha.Color;
+import kha.FastFloat;
 import kha.Shaders;
 import kha.arrays.Float32Array;
 import kha.graphics4.BlendingOperation;
@@ -28,6 +29,10 @@ class Painter implements IPainter
 	var vertexBuffer:VertexBuffer;
 	var indexBuffer:IndexBuffer;
 	var pipeline:PipelineState;
+	var red:FastFloat = 0.;
+	var green:FastFloat = 0.;
+	var blue:FastFloat = 0.;
+	var alpha:FastFloat = 0.;
 	public var MAX_VERTEX_PER_BUFFER:Int =1500;
 	
 	var dataPerVertex:Int = 4;
@@ -73,7 +78,7 @@ class Painter implements IPainter
 			g.begin();
 			uploadVertexBuffer();
 			// Clear screen
-			if(clear) g.clear(Color.fromFloats(0.0, 0.0, 0.0,0));
+			if(clear) g.clear(Color.fromFloats(red,green,blue,alpha));
 			// Bind data we want to draw
 			g.setVertexBuffer(vertexBuffer);
 			g.setIndexBuffer(indexBuffer);
@@ -251,6 +256,13 @@ class Painter implements IPainter
 		public function adjustRenderArea(aArea:MinMax):Void 
 		{
 			
+		}
+		
+		/* INTERFACE com.gEngine.painters.IPainter */
+		
+		public function defaultBlend():Void 
+		{
+			setBlends(pipeline);
 		}
 		
 		

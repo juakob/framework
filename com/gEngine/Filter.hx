@@ -9,6 +9,8 @@ import com.gEngine.shaders.ShDontRender;
 import com.gEngine.shaders.ShRender;
 import com.helpers.Matrix;
 import com.helpers.MinMax;
+import kha.Color;
+import kha.FastFloat;
 
 /**
  * ...
@@ -17,9 +19,26 @@ import com.helpers.MinMax;
 class Filter
 {
 	private var renderPass:Array<RenderPass>;
-	public function new(aFilters:Array<IPainter>) 
+	var red:FastFloat = 0;
+	var green:FastFloat = 0;
+	var blue:FastFloat = 0;
+	var alpha:FastFloat = 0;
+	var cropScreen:Bool;
+	var drawArea:MinMax;
+	public function new(aFilters:Array<IPainter>,r:FastFloat=0,g:FastFloat=0,b:FastFloat=0,a:FastFloat=0,aCropScreen:Bool=true) 
 	{
+		red = r;
+		green = g;
+		blue = b;
+		alpha = a;
+		cropScreen = aCropScreen;
 		renderPass = new Array();
+		drawArea = new MinMax();
+		if (!cropScreen)
+		{
+			drawArea.min.setTo(0, 0);
+			drawArea.max.setTo(1280, 720);
+		}
 		var passFilters:Array<IPainter> = new Array();
 		
 		for (filter in aFilters) 
@@ -70,19 +89,24 @@ class Filter
 		var workTargetId:Int = GEngine.i.getRenderTarget();
 		
 		GEngine.i.setCanvas(workTargetId);
-		GEngine.i.currentCanvas().g2.begin(true,0);
+		GEngine.i.currentCanvas().g2.begin(true,Color.fromFloats(red,green,blue,alpha));
 		GEngine.i.currentCanvas().g2.end();
-		var drawArea:MinMax = new MinMax();
+		
+		if (cropScreen)
+		{
 		drawArea.reset();
+		}
+		aPainter.multipassBlend();
 		for (display in aDisplay) 
 		{
 			display.render(aPainter, aMatrix);
 		}
 		aLayer.getDrawArea(drawArea);
 		drawArea.transform(aMatrix);	
-		aPainter.multipassBlend();
 		aPainter.render();
 		aPainter.finish();
+		aPainter.defaultBlend();
+		
 	
 		var counter:Int = renderPass.length;
 		for (renderPass in renderPass) 

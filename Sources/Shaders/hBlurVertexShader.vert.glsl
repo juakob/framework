@@ -1,14 +1,16 @@
-attribute vec2 vertexPosition;
-attribute vec2 texPosition;
+#version 450
+
+in vec2 vertexPosition;
+in vec2 texPosition;
 
  
-varying vec2 v_texCoord;
-varying vec2 v_blurCoord0;
-varying vec2 v_blurCoord1;
-varying vec2 v_blurCoord2;
-varying vec2 v_blurCoord3;
-varying vec2 v_blurCoord4;
-varying vec2 v_blurCoord5;
+out vec2 v_texCoord;
+out vec2 v_blurCoord0;
+out vec2 v_blurCoord1;
+out vec2 v_blurCoord2;
+out vec2 v_blurCoord3;
+out vec2 v_blurCoord4;
+out vec2 v_blurCoord5;
 
 
 

@@ -42,10 +42,7 @@ class SpritePainter implements IPainter
 	
 	public function finish():Void 
 	{
-		simplePainer.finish();
-		alphaPainter.finish();
-		colorPainter.finish();
-		maskPainter.finish();
+		currentPainter.finish();
 	}
 	
 	public function render(clear:Bool = false):Void 
@@ -118,6 +115,16 @@ class SpritePainter implements IPainter
 		alphaPainter.multipassBlend();
 		colorPainter.multipassBlend();
 		maskPainter.multipassBlend();
+	}
+	
+	/* INTERFACE com.gEngine.painters.IPainter */
+	
+	public function defaultBlend():Void 
+	{
+		simplePainer.defaultBlend();
+		alphaPainter.defaultBlend();
+		colorPainter.defaultBlend();
+		maskPainter.defaultBlend();
 	}
 	
 }

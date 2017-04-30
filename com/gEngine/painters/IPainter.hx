@@ -15,6 +15,7 @@ interface IPainter
    function releaseTexture():Bool;
    function adjustRenderArea(aArea:MinMax):Void;
    function multipassBlend():Void;
+   function defaultBlend():Void;
    var textureID:Int;
    var resolution:Float;
 }
