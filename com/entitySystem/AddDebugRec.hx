@@ -1,4 +1,5 @@
 package com.entitySystem;
+#if expose
 import com.entitySystem.operators.OpFactory;
 import com.entitySystem.properties.PrRecDebugDisplay;
 import com.entitySystem.system.EsRecDebugDisplay;
@@ -9,7 +10,7 @@ import entitySystem.Message;
 import entitySystem.SystemManager.ES;
 import entitySystem.listeners.RsCallFunctionPassMessage;
 import myComponents.properties.PrDisplay;
-
+#end
 /**
  * ...
  * @author Joaquin
@@ -19,6 +20,7 @@ class AddDebugRec
 
 	public static function addDebugRec(aDisplayGroup:Int) 
 	{
+		#if expose
 		ES.i.add(new EsRecDebugDisplay());
 		var entity:Entity = new Entity();
 		ES.i.subscribeEntity(entity, "showMeta", RsCallFunctionPassMessage.ID, 
@@ -47,6 +49,7 @@ class AddDebugRec
 			ES.i.addEntity(child, aDisplayGroup);
 		}
 		,true);
+		#end
 	}
 	
 }

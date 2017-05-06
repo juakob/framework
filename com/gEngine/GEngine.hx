@@ -8,6 +8,7 @@ import com.gEngine.display.BasicSprite;
 import com.gEngine.display.Batch;
 import com.gEngine.display.BatchProxy;
 import com.gEngine.display.ComplexSprite;
+import com.gEngine.display.extra.AnimationSpriteClone;
 import com.gEngine.painters.IPainter;
 import com.gEngine.painters.Painter;
 import com.gEngine.painters.PainterAlpha;
@@ -213,6 +214,11 @@ import kha.System;
 		public function getNewAnimation(name:String):AnimationSprite
 		{
 			var animation:AnimationSprite = new AnimationSprite(mResources.getAnimationData(name));
+			return animation;
+		}
+		public function getNewAnimationClone(name:String):AnimationSpriteClone
+		{
+			var animation:AnimationSpriteClone = new AnimationSpriteClone(mResources.getAnimationData(name));
 			return animation;
 		}
 		public function getNewComplexSprite(name:String):ComplexSprite

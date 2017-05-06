@@ -23,7 +23,9 @@ class OpSet implements Operation
 	
 	public function process(destination:PrRecDebugDisplay):Void 
 	{
+		#if expose
 		destination.setValue(varDestinationId, property.getValue(varSourceId));
+		#end
 	}
 	
 }

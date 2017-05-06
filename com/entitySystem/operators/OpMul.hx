@@ -18,8 +18,10 @@ class OpMul extends OpSet
 	
 	public override function process(destination:PrRecDebugDisplay):Void 
 	{
+		#if expose
 		var value:Float = Std.parseFloat(destination.getValue(varDestinationId))*Std.parseFloat(property.getValue(varSourceId));
 		destination.setValue(varDestinationId, Std.string(value));
+		#end
 	}
 	
 }

@@ -20,8 +20,10 @@ class OpMulFix implements Operation
 	
 	public function process(destination:PrRecDebugDisplay):Void 
 	{
+		#if expose
 		var value:Float = Std.parseFloat(destination.getValue(varDestinationId))*value;
 		destination.setValue(varDestinationId, Std.string(value));
+		#end
 	}
 	
 }
