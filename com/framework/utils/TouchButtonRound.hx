@@ -13,6 +13,7 @@ class TouchButtonRound extends Entity
 	var touchId:Int =-1;
 	public var onRelease:TouchButtonRound->Void;
 	public var onTouch:TouchButtonRound->Void;
+	public var userData:Dynamic;
 	
 	public function new(aX:Float=0,aY:Float=0,aRadio:Float=0) 
 	{
