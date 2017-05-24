@@ -43,6 +43,13 @@ class RenderTargetPool
 		}
 		throw "error";
 	}
+	public function releaseAll() 
+	{
+		for (target in targets) 
+		{
+			target.inUse = false;
+		}
+	}
 }
 class ImageProx
 {

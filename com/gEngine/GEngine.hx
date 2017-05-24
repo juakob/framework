@@ -77,7 +77,7 @@ import kha.System;
 		var finalViewMatrixMirrorY:FastMatrix4;
 		private var mPainter:Painter;
 		private var mSpritePainter:SpritePainter;
-		inline static var initialIndex:Int = 2;
+		inline static var initialIndex:Int = 1;
 		var currentIndex:Int = initialIndex;
 		
 		var renderTargetPool:RenderTargetPool;
@@ -245,7 +245,7 @@ import kha.System;
 			var textureId:Int;
 			if (currentIndex < mTextures.length)
 			{
-				atlasImage = mTextures[currentIndex];
+				atlasImage = mTextures[currentIndex];//TODO make sure that the texture is equal to the requested size
 				textureId = currentIndex;
 				
 			}else {
@@ -566,6 +566,7 @@ import kha.System;
 			mStage = new Stage();
 			currentIndex = initialIndex;
 			PainterGarbage.i.clear();
+			renderTargetPool.releaseAll();
 		}
 		
 		public function releaseRenderTarget(aId:Int) 

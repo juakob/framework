@@ -28,7 +28,6 @@ import com.helpers.Point;
 	private var mTotalTime:Float;
 	private var mShakeInterval:Float=0;
 	private var mLastShake:Float=0;
-	var velocity:Float=10000;
 	
 	public function new(screenWidth:Float = 0,screenHeight:Float=0 ) 
 	{
@@ -79,30 +78,22 @@ import com.helpers.Point;
 	public var maxSeparationFromTarget:Float = 100 * 100;
 	public function update(aDt:Float):Void 
 	{
-		var deltaX:Float =  mTargetPos.x-mPosition.x;
-		var deltaY:Float =  mTargetPos.y-mPosition.y;
-		var sqLength:Float = deltaX * deltaX + deltaY * deltaY;
-		if (sqLength > maxSeparationFromTarget*maxSeparationFromTarget)
-		{
+		//mPosition.x = (mPosition.x + mTargetPos.x) * 0.5 ;
+		//mPosition.y = (mPosition.y + mTargetPos.y) * 0.5 ;
 		
-			var length:Float = Math.sqrt(sqLength);
+		//mPosition.x = (mPosition.x + mTargetPos.x) * 0.5 ;
+		//mPosition.y = (mPosition.y + mTargetPos.y) * 0.5 ;
+		
+		mPosition.x = (mPosition.x + mTargetPos.x) * 0.5 ;
+		mPosition.y = (mPosition.y + mTargetPos.y) * 0.5 ;
+		
+		var deltaX:Float = mPosition.x - mTargetPos.x;
+		var deltaY:Float = mPosition.y - mTargetPos.y;
+		if (deltaX * deltaX + deltaY * deltaY > maxSeparationFromTarget*maxSeparationFromTarget)
+		{
+			var length:Float = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 			mPosition.x = mTargetPos.x + (deltaX / length)*maxSeparationFromTarget;
 			mPosition.y = mTargetPos.y + (deltaY / length)*maxSeparationFromTarget;
-		}else{
-			var length:Float = Math.sqrt(sqLength);
-			var translateDeltaX = (deltaX / length) * velocity * aDt;
-			
-			if ( translateDeltaX*translateDeltaX> deltaX*deltaX) {
-				mPosition.x = mTargetPos.x;
-			}else {
-				mPosition.x +=translateDeltaX ;
-			}
-			var translateDeltaY = (deltaY / length) * velocity*aDt;
-			if (translateDeltaY > deltaY) {
-				mPosition.y = mTargetPos.y;
-			}else {
-				mPosition.y +=translateDeltaY ;
-			}
 		}
 		
 		adjustToLimits();
