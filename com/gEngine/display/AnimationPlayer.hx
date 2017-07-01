@@ -66,7 +66,7 @@ class AnimationPlayer
 	var lastFrame:Int = 0;
 	public inline function play(aAnimation:String,aLoop:Bool=true,aForce:Bool=false):Void
 	{
-		if (currentAnimation != aAnimation||aForce)
+		if (currentAnimation != aAnimation||aForce||!mDisplay.Playing)
 		{
 			mLoop = aLoop;
 			currentAnimation = aAnimation;

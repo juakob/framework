@@ -1,6 +1,6 @@
 package com.framework.utils;
 import com.helpers.Point;
-import kha.Key;
+import kha.input.KeyCode;
 import kha.input.Keyboard;
 import kha.input.Mouse;
 import kha.input.Surface;
@@ -120,35 +120,21 @@ class Input
 		mMousePressed = mMouseIsDown = (aButton == 0);
 	}
 	
-	function onKeyDown(aKey:Key,aChar:String):Void
-	{
-		var vKey:Int;
-		if (aKey == Key.CHAR)
-		{
-			vKey = aChar.toUpperCase().charCodeAt(0);
-		}else {
-			vKey = keyToCode(aKey);
-		}
-		if ( mKeysDown.indexOf(vKey) == -1) {
-			mKeysDown.push(vKey);
-			mKeysPressed.push(vKey);
+	function onKeyDown(aKey:Int):Void
+	{	
+		if ( mKeysDown.indexOf(aKey) == -1) {
+			mKeysDown.push(aKey);
+			mKeysPressed.push(aKey);
 		}
 	}
 	
-	function onKeyUp(aKey:Key,aChar:String):Void
+	function onKeyUp(aKey:Int):Void
 	{
-		var vKey:Int;
-		if (aKey == Key.CHAR)
-		{
-			vKey = aChar.toUpperCase().charCodeAt(0);
-		}else {
-			vKey = keyToCode(aKey);
-		}
-		var vIndex:Int = mKeysDown.indexOf(vKey);
+		var vIndex:Int = mKeysDown.indexOf(aKey);
 		if ( vIndex != -1 ) {
 			mKeysDown.splice(vIndex, 1);
 		}
-		mKeysReleased.push(vKey);
+		mKeysReleased.push(aKey);
 	}
 	
 	public function update():Void 
@@ -219,22 +205,22 @@ class Input
 	}
 	
 	
-	public static inline function keyToCode(aKey:Key):UInt
-	{
-		switch(aKey)
-		{
-			case Key.BACKSPACE: return 0x08;
-			case Key.LEFT: return 0x40000050;
-			case Key.RIGHT: return 0x4000004F;
-			case Key.UP: return 0x40000052;
-			case Key.DOWN: return 0x40000051;
-			case Key.ESC: return 0x1B;
-			case Key.SHIFT: return 0x400000E1;
-			case Key.ALT: return 0x400000E2;
-			case Key.CTRL: return 0x400000E0;
-			case Key.ENTER: return 0x40000058;
-			default: return 0;
-		}
-		
-	}
+	//public static inline function keyToCode(aKey:Key):UInt
+	//{
+		//switch(aKey)
+		//{
+			//case Key.BACKSPACE: return 0x08;
+			//case Key.LEFT: return 0x40000050;
+			//case Key.RIGHT: return 0x4000004F;
+			//case Key.UP: return 0x40000052;
+			//case Key.DOWN: return 0x40000051;
+			//case Key.ESC: return 0x1B;
+			//case Key.SHIFT: return 0x400000E1;
+			//case Key.ALT: return 0x400000E2;
+			//case Key.CTRL: return 0x400000E0;
+			//case Key.ENTER: return 0x40000058;
+			//default: return 0;
+		//}
+		//
+	//}
 }
