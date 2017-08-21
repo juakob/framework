@@ -31,7 +31,7 @@ class Batch
 	}
 	public function destroy():Void
 	{
-		toDraw = null;
+		//toDraw = null;
 	}
 	
 	

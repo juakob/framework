@@ -33,8 +33,8 @@ class Simulation
 		mCurrentState = new State();
 		GEngine.init();
 		Input.init();
-		Input.i.screenScale.x = 1/GEngine.i.scaleWidth;
-		Input.i.screenScale.y = 1/GEngine.i.scaleHeigth;
+		//Input.i.screenScale.x = 1/GEngine.i.scaleWidth;
+		//Input.i.screenScale.y = 1/GEngine.i.scaleHeigth;
 		init();
 		
 	}

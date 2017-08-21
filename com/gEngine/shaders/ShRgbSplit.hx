@@ -20,22 +20,9 @@ class ShRgbSplit extends Painter
 		super();
 		
 	}
-	var mTimer:ConstantLocation;
-	override function getConstantLocations(aPipeline:PipelineState) 
-	{
-		super.getConstantLocations(aPipeline);
-		mTimer = aPipeline.getConstantLocation("time");
-	}
 	override function setShaders(aPipeline:PipelineState):Void 
 	{
-		aPipeline.vertexShader = Shaders.simpleTime_vert;
-		aPipeline.fragmentShader = Shaders.rgbSplit_frag;
-	}
-	var time:Float=0;
-	override function setParameter(g:Graphics):Void 
-	{
-		time+= TimeManager.delta*5;
-		super.setParameter(g);
-		g.setFloat4(mTimer,time,time,time,time);
+		aPipeline.vertexShader = Shaders.simple_vert;
+		aPipeline.fragmentShader = Shaders.simpleRgbSplit_frag;
 	}
 }

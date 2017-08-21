@@ -421,6 +421,13 @@ import kha.System;
 		}
 		public function renderBuffer(aSource:Int,aPainter:IPainter,x:Float,y:Float,aWidth:Float,aHeight:Float,aTexWidth:Float,aTexHeight:Float,aClear:Bool,aResolution:Float=1)
 		{
+		
+			if (x + aWidth > 1280) {
+				aWidth = 1280 - x;
+			}
+			if (y + aHeight > 720) {
+				aHeight = 720 - y;
+			}
 			aPainter.textureID = aSource;
 			
 			writeVertex(aPainter,x, y,aTexWidth,aTexHeight,aResolution);

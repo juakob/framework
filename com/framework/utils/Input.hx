@@ -120,21 +120,21 @@ class Input
 		mMousePressed = mMouseIsDown = (aButton == 0);
 	}
 	
-	function onKeyDown(aKey:Int):Void
+	function onKeyDown(aKey:KeyCode):Void
 	{	
-		if ( mKeysDown.indexOf(aKey) == -1) {
-			mKeysDown.push(aKey);
-			mKeysPressed.push(aKey);
+		if ( mKeysDown.indexOf(cast aKey) == -1) {
+			mKeysDown.push(cast aKey);
+			mKeysPressed.push(cast aKey);
 		}
 	}
 	
-	function onKeyUp(aKey:Int):Void
+	function onKeyUp(aKey:KeyCode):Void
 	{
-		var vIndex:Int = mKeysDown.indexOf(aKey);
+		var vIndex:Int = mKeysDown.indexOf(cast aKey);
 		if ( vIndex != -1 ) {
 			mKeysDown.splice(vIndex, 1);
 		}
-		mKeysReleased.push(aKey);
+		mKeysReleased.push(cast aKey);
 	}
 	
 	public function update():Void 
@@ -161,14 +161,14 @@ class Input
 	}
 	
 	/// Keyboard functions that operate on KeyCodes from Keyboard class.
-	public function isKeyCodeDown(aKeyCode:Int):Bool {
-		return mKeysDown.indexOf(aKeyCode) != -1;
+	public function isKeyCodeDown(aKeyCode:KeyCode):Bool {
+		return mKeysDown.indexOf(cast aKeyCode) != -1;
 	}
-	public function isKeyCodePressed(aKeyCode:Int):Bool {
-		return mKeysPressed.indexOf(aKeyCode) != -1;
+	public function isKeyCodePressed(aKeyCode:KeyCode):Bool {
+		return mKeysPressed.indexOf(cast aKeyCode) != -1;
 	}
-	public function isKeyCodeReleased(aKeyCode:Int):Bool {
-		return mKeysReleased.indexOf(aKeyCode) != -1;
+	public function isKeyCodeReleased(aKeyCode:KeyCode):Bool {
+		return mKeysReleased.indexOf(cast aKeyCode) != -1;
 	}
 	
 	/// Mouse functions

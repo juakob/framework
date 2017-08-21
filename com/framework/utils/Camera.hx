@@ -84,8 +84,10 @@ import com.helpers.Point;
 		//mPosition.x = (mPosition.x + mTargetPos.x) * 0.5 ;
 		//mPosition.y = (mPosition.y + mTargetPos.y) * 0.5 ;
 		
-		mPosition.x = (mPosition.x + mTargetPos.x) * 0.5 ;
-		mPosition.y = (mPosition.y + mTargetPos.y) * 0.5 ;
+		//mPosition.x = (mPosition.x + mTargetPos.x) * 0.5 ;
+		//mPosition.y = (mPosition.y + mTargetPos.y) * 0.5 ;
+		mPosition.x = mTargetPos.x ;
+		mPosition.y = mTargetPos.y ;
 		
 		var deltaX:Float = mPosition.x - mTargetPos.x;
 		var deltaY:Float = mPosition.y - mTargetPos.y;

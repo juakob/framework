@@ -102,6 +102,7 @@ class Filter
 			display.render(aPainter, aMatrix);
 		}
 		aLayer.getDrawArea(drawArea);
+		
 		//drawArea.transform(aMatrix);	
 		aPainter.render();
 		aPainter.finish();

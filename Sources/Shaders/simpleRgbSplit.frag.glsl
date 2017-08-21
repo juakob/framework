@@ -9,7 +9,11 @@ in vec2 texCoord;
 out vec4 FragColor;
 
 void kore() {
-	vec4 c1 = texture( tex, texCoord);
-	vec4 finalColor=vec4( c1.x, c1.y, c1.z, c1.w);
-	FragColor = finalColor;
+	vec2 value = vec2(2./1280.,2./720.);
+	vec4 c1 = texture( tex, texCoord - value );
+	vec4 c2 = texture( tex, texCoord );
+	vec4 c3 = texture( tex, texCoord + value);
+	
+	vec4 col = vec4( c1.r, c2.g, c3.b, c1.a + c2.a + c3.b );
+	FragColor = col;
 }
