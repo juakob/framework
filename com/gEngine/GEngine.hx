@@ -102,21 +102,16 @@ import kha.System;
 			mPainter = new Painter(false);
 			mSpritePainter = new SpritePainter(false);
 			
-			width = Std.int(width);
-			height = Std.int(height);
-			
 			realWidth = mTempBuffer.realWidth;
 			realHeight = mTempBuffer.realHeight;
 			
-			#if flash
-			realWidth = width;
-			realHeight = height;
-			#end
-			
-			
 			var renderScale:Float = 1;
-			scaleWidth = width / 1280;
-			scaleHeigth = height / 720;
+			realU =  width*renderScale / realWidth ;
+			realV =  height*renderScale /realHeight ;
+			
+			
+			scaleWidth = width / 1280*realU;
+			scaleHeigth = height / 720*realV;
 			
 			modelViewMatrix = FastMatrix4.identity();
 			modelViewMatrix=modelViewMatrix.multmat(FastMatrix4.scale((2.0*renderScale) / width*scaleWidth, -(2.0*renderScale) / height*scaleHeigth, 1));
@@ -126,10 +121,6 @@ import kha.System;
 			modelViewMatrixMirrorY=modelViewMatrixMirrorY.multmat(FastMatrix4.scale((2.0*renderScale) / width*scaleWidth, -(2.0*renderScale) / height*scaleHeigth, 1));
 			modelViewMatrixMirrorY = modelViewMatrixMirrorY.multmat(FastMatrix4.translation( -width/scaleWidth / (2.0*renderScale), height/scaleHeigth/(2.0*renderScale), 0));
 			modelViewMatrixMirrorY = modelViewMatrixMirrorY.multmat(FastMatrix4.scale(1, -1, 1));
-		
-			
-			width = Std.int(System.windowWidth());
-			height = Std.int(System.windowHeight());
 			
 			finalViewMatrix = FastMatrix4.identity();
 			finalViewMatrix=finalViewMatrix.multmat(FastMatrix4.scale(2.0 / width, -2.0 / height, 1));
@@ -142,26 +133,16 @@ import kha.System;
 			
 
 			
-			realU =  width*renderScale / realWidth ;
-			realV =  height*renderScale /realHeight ;
+			
 			
 			
 		}
 		public static function init():Void
 		{
 			i = new GEngine();
-			 #if debug
+			#if debug
 			initialized = true;
 			#end
-			resize();
-			
-		}
-		
-		
-		static private inline function  resize():Void
-		{
-			var width:Int = System.windowWidth();
-			var height:Int = System.windowHeight();
 		}
 	
 		public function addResources(data:Blob):Array<String>
@@ -243,6 +224,7 @@ import kha.System;
 			
 			var atlasImage:Image;
 			var textureId:Int;
+			trace("enter");
 			if (currentIndex < mTextures.length)
 			{
 				atlasImage = mTextures[currentIndex];//TODO make sure that the texture is equal to the requested size
@@ -254,7 +236,6 @@ import kha.System;
 				
 				
 			}
-			
 			++currentIndex;
 			
 			var imagesNames:MyList<String> = new MyList();
@@ -284,7 +265,7 @@ import kha.System;
 			
 			var linker:MyList<AnimationTilesheetLinker> = new MyList();
 			var g = atlasImage.g2;
-			g.begin(true, 0);
+			g.begin(true,0);
 			var shaderPipeline = new PipelineState();
 			shaderPipeline.fragmentShader = Shaders.painter_image_frag;
 			shaderPipeline.vertexShader = Shaders.painter_image_vert;
@@ -323,7 +304,7 @@ import kha.System;
 			{
 				mResources.linkAnimationToTexture(animation,textureId, linker);
 			}
-			
+			trace("finish");
 			return atlasImage;
 		}
 	
@@ -421,13 +402,6 @@ import kha.System;
 		}
 		public function renderBuffer(aSource:Int,aPainter:IPainter,x:Float,y:Float,aWidth:Float,aHeight:Float,aTexWidth:Float,aTexHeight:Float,aClear:Bool,aResolution:Float=1)
 		{
-		
-			if (x + aWidth > 1280) {
-				aWidth = 1280 - x;
-			}
-			if (y + aHeight > 720) {
-				aHeight = 720 - y;
-			}
 			aPainter.textureID = aSource;
 			
 			writeVertex(aPainter,x, y,aTexWidth,aTexHeight,aResolution);
@@ -443,8 +417,8 @@ import kha.System;
 		inline function  writeVertex(aPainter:IPainter,aX:Float,aY:Float,aSWidth:Float,aSHeight:Float,aResolution:Float) {
 				aPainter.write(aX*aResolution);
 				aPainter.write(aY*aResolution);
-				aPainter.write(aX/aSWidth);
-				aPainter.write(aY/aSHeight);	
+				aPainter.write(aX/aSWidth*realU);
+				aPainter.write(aY/aSHeight*realV);	
 		}
 	
 		private function getTexture(aId:Int):Image
@@ -559,8 +533,11 @@ import kha.System;
 			}
 			return id;
 		}
+		public function releaseRenderTarget(aId:Int) 
+		{
+			renderTargetPool.release(aId);
+		}
 		
-	
 		private function sortArea(b1:Bitmap, b2:Bitmap):Int
 		{
 			return Std.int((b2.width * b2.height) - (b1.width * b1.height));
@@ -576,10 +553,7 @@ import kha.System;
 			renderTargetPool.releaseAll();
 		}
 		
-		public function releaseRenderTarget(aId:Int) 
-		{
-			renderTargetPool.release(aId);
-		}
+		
 	}
 
 

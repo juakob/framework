@@ -48,6 +48,7 @@ class Simulation
 		Scheduler.addTimeTask(onEnterFrame, 0, 1 / System.refreshRate);
 		System.notifyOnRender(onRender);
 		
+		
 		//stage.addEventListener(Event.ACTIVATE, onActive);
 		//stage.addEventListener(Event.DEACTIVATE, onDeactivate);
 		

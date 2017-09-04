@@ -76,6 +76,7 @@ class Painter implements IPainter
 			var g = GEngine.i.currentCanvas().g4;
 			// Begin rendering
 			g.begin();
+			g.scissor(0, 0, GEngine.i.width, GEngine.i.height);
 			uploadVertexBuffer();
 			// Clear screen
 			if(clear) g.clear(Color.fromFloats(red,green,blue,alpha));
@@ -88,12 +89,13 @@ class Painter implements IPainter
 
 			setParameter(g);
 			g.setTextureParameters(mTextureID, TextureAddressing.Clamp, TextureAddressing.Clamp, TextureFilter.LinearFilter, TextureFilter.LinearFilter, MipMapFilter.NoMipFilter);
-
+			
 			g.drawIndexedVertices(0, Std.int(vertexCount() * ratioIndexVertex)); 
 			
 			unsetTextures(g);
 			// End rendering	
 			buffer = getVertexBuffer();
+			g.disableScissor();
 			g.end();
 		
 		

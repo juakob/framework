@@ -39,13 +39,13 @@ class ShMixGlow extends Painter
 	{
 		super.getConstantLocations(aPipeline);
 		mMaskTextureID = aPipeline.getTextureUnit("baseColor");
-		mAmountID = aPipeline.getConstantLocation("amount");
+		//mAmountID = aPipeline.getConstantLocation("amount");
 	}
 	override function setParameter(g:Graphics):Void 
 	{
 		super.setParameter(g);
 		g.setTexture(mMaskTextureID, GEngine.i.mTextures[textureBaseColor.textureID]);
-		g.setFloat(mAmountID, mAmount);
+		//g.setFloat(mAmountID, mAmount);
 		textureBaseColor.referenceUseFinish();
 	}
 	
