@@ -105,21 +105,29 @@ import kha.System;
 			realWidth = mTempBuffer.realWidth;
 			realHeight = mTempBuffer.realHeight;
 			
+			trace(width);
+			trace(height);
+			trace(realWidth);
+			trace(realHeight);
+			
 			var renderScale:Float = 1;
-			realU =  width*renderScale / realWidth ;
-			realV =  height*renderScale /realHeight ;
+			realU =   width / realWidth ;
+			realV =  height / realHeight ;
 			
 			
-			scaleWidth = width / 1280*realU;
-			scaleHeigth = height / 720*realV;
+			
+			scaleWidth =  1;// (width / realWidth   );
+			scaleHeigth = 1;// (height / realHeight   ) ;
+			
+			
 			
 			modelViewMatrix = FastMatrix4.identity();
-			modelViewMatrix=modelViewMatrix.multmat(FastMatrix4.scale((2.0*renderScale) / width*scaleWidth, -(2.0*renderScale) / height*scaleHeigth, 1));
-			modelViewMatrix = modelViewMatrix.multmat(FastMatrix4.translation( -width / scaleWidth / (2*renderScale), -height / scaleHeigth / (2*renderScale), 0));
+			modelViewMatrix=modelViewMatrix.multmat(FastMatrix4.scale((2.0*renderScale) / virtualWidth*scaleWidth, -(2.0*renderScale) / virtualHeight*scaleHeigth, 1));
+			modelViewMatrix = modelViewMatrix.multmat(FastMatrix4.translation( -virtualWidth / scaleWidth / (2*renderScale), -virtualHeight / scaleHeigth / (2*renderScale), 0));
 			
 			modelViewMatrixMirrorY = FastMatrix4.identity();
-			modelViewMatrixMirrorY=modelViewMatrixMirrorY.multmat(FastMatrix4.scale((2.0*renderScale) / width*scaleWidth, -(2.0*renderScale) / height*scaleHeigth, 1));
-			modelViewMatrixMirrorY = modelViewMatrixMirrorY.multmat(FastMatrix4.translation( -width/scaleWidth / (2.0*renderScale), height/scaleHeigth/(2.0*renderScale), 0));
+			modelViewMatrixMirrorY=modelViewMatrixMirrorY.multmat(FastMatrix4.scale((2.0*renderScale) / virtualWidth*scaleWidth, -(2.0*renderScale) / virtualHeight*scaleHeigth, 1));
+			modelViewMatrixMirrorY = modelViewMatrixMirrorY.multmat(FastMatrix4.translation( -virtualWidth/scaleWidth / (2.0*renderScale), virtualHeight/scaleHeigth/(2.0*renderScale), 0));
 			modelViewMatrixMirrorY = modelViewMatrixMirrorY.multmat(FastMatrix4.scale(1, -1, 1));
 			
 			finalViewMatrix = FastMatrix4.identity();
@@ -134,7 +142,22 @@ import kha.System;
 
 			
 			
+			shaderPipeline = new PipelineState();
+			shaderPipeline.fragmentShader = Shaders.painter_image_frag;
+			shaderPipeline.vertexShader = Shaders.painter_image_vert;
+
+			var structure = new VertexStructure();
+			structure.add("vertexPosition", VertexData.Float3);
+			structure.add("texPosition", VertexData.Float2);
+			structure.add("vertexColor", VertexData.Float4);
+			shaderPipeline.inputLayout = [structure];
 			
+			shaderPipeline.blendSource = BlendingFactor.BlendOne;
+			shaderPipeline.blendDestination = BlendingFactor.BlendZero;
+			shaderPipeline.alphaBlendSource = BlendingFactor.BlendOne;
+			shaderPipeline.alphaBlendDestination = BlendingFactor.BlendZero;
+				
+			shaderPipeline.compile();
 			
 		}
 		public static function init():Void
@@ -265,25 +288,12 @@ import kha.System;
 			
 			var linker:MyList<AnimationTilesheetLinker> = new MyList();
 			var g = atlasImage.g2;
-			g.begin(true,0);
-			var shaderPipeline = new PipelineState();
-			shaderPipeline.fragmentShader = Shaders.painter_image_frag;
-			shaderPipeline.vertexShader = Shaders.painter_image_vert;
-
-			var structure = new VertexStructure();
-			structure.add("vertexPosition", VertexData.Float3);
-			structure.add("texPosition", VertexData.Float2);
-			structure.add("vertexColor", VertexData.Float4);
-			shaderPipeline.inputLayout = [structure];
 			
-			shaderPipeline.blendSource = BlendingFactor.BlendOne;
-			shaderPipeline.blendDestination = BlendingFactor.BlendZero;
-			shaderPipeline.alphaBlendSource = BlendingFactor.BlendOne;
-			shaderPipeline.alphaBlendDestination = BlendingFactor.BlendZero;
-				
-			shaderPipeline.compile();
+			
+			
 			g.pipeline = shaderPipeline;
-			var once:Bool = true;
+			
+			g.begin(true,0);
 			for (bitmap in bitmaps) 
 			{
 				
@@ -296,8 +306,8 @@ import kha.System;
 				linker.push(new AnimationTilesheetLinker(bitmap.name, rectangle, aWidth, aHeight));
 				
 			}
+			
 			g.end();
-			shaderPipeline.delete();
 			var img = Image.createRenderTarget(1, 1, TextureFormat.RGBA32);
 			img.unload();
 			for (animation in simpleAnimations) 
@@ -344,6 +354,10 @@ import kha.System;
 		public var renderFinal:Bool;
 		private var renderCustomBuffer:Bool;
 		private var customBuffer:Image;
+		var shaderPipeline:kha.graphics4.PipelineState;
+		
+		public static inline var virtualWidth:Float=1280;
+		public static inline var virtualHeight:Float=720;
 		
 		public var scaleWidth:Float=1;
 		public var scaleHeigth:Float=1;
@@ -443,7 +457,7 @@ import kha.System;
 			drawCounter = 0;
 			
 			var g = mTempBuffer.g4;
-
+			
 			// Begin rendering
 			g.begin();
 			if(clear)g.clear(Color.fromFloats(0.0, 0.0,0.0,0),0.0);
