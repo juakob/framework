@@ -101,7 +101,7 @@ class ComplexSprite extends AnimationSprite
 				--stuffToDraw;
 				++drawOrderCounter;
 				var maskBatch:MaskBatch = frame.maskBatchs[maskCounter];
-				painter.validateBatch(mTextureId, Std.int(maskBatch.vertex.length/2), false,false,true);
+				painter.validateBatch(mTextureId, Std.int(maskBatch.vertex.length/2), false,false,true,blend);
 				
 				var polygons:MyList<Float> = maskBatch.vertex;
 				var polyUvs:MyList<Float> = maskBatch.uvs;
@@ -182,7 +182,7 @@ class ComplexSprite extends AnimationSprite
 			}
 				
 			
-			painter.validateBatch(mTextureId, Std.int(frame.vertexs.length / 8 + frame.UVs.length / 8), alphas.length != 0, colorTrans.length!=0,false);
+			painter.validateBatch(mTextureId, Std.int(frame.vertexs.length / 8 + frame.UVs.length / 8), alphas.length != 0, colorTrans.length!=0,false,blend);
 			
 			
 			if (colorTrans.length!=0)

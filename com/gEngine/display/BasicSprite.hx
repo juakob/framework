@@ -26,6 +26,8 @@ class BasicSprite implements IDraw
 	public var scaleY:Float;
 	public var rotation(default, set):Float;
 	
+	public var blend:Blend = null;
+	
 	private var cosAng:Float;
 	private var sinAng:Float;
 	
@@ -39,9 +41,6 @@ class BasicSprite implements IDraw
 	
 	public var TotalFrames(default, null):Int;
 	private var mTileSheetId:Int;
-	
-	
-	public var Blend:Int;
 	
 	public var parent:IDrawContainer;
 	public var visible:Bool = true;
@@ -76,7 +75,6 @@ class BasicSprite implements IDraw
 		}
 		#end
 
-		Blend = 0;//Tilesheet.TILE_BLEND_NORMAL;
 		scaleX = 1;
 		scaleY = 1;
 		rotation = 0;
@@ -454,7 +452,7 @@ class BasicSprite implements IDraw
 					--staffToDraw;
 					
 					var maskBatch:MaskBatch = frame.maskBatchs[maskCounter];
-					painter.validateBatch(mTextureId, Std.int(maskBatch.vertex.length/2), false,false,true);
+					painter.validateBatch(mTextureId, Std.int(maskBatch.vertex.length/2), false,false,true,blend);
 					
 					var polygons:MyList<Float> = maskBatch.vertex;
 					var polyUvs:MyList<Float> = maskBatch.uvs;
@@ -511,7 +509,7 @@ class BasicSprite implements IDraw
 				}
 				
 			}
-			painter.validateBatch(mTextureId, Std.int(frame.vertexs.length / 8 + frame.UVs.length / 8), alphas.length != 0, colorTrans.length!=0,false);
+			painter.validateBatch(mTextureId, Std.int(frame.vertexs.length / 8 + frame.UVs.length / 8), alphas.length != 0, colorTrans.length!=0,false,blend);
 			
 			
 			if (colorTrans.length!=0)
@@ -673,10 +671,6 @@ class BasicSprite implements IDraw
 	
 	/* INTERFACE com.gEngine.display.IDraw */
 	
-	public inline function blend():Int 
-	{
-		return Blend;
-	}
 
 	public inline function texture():Int 
 	{
@@ -704,13 +698,6 @@ class BasicSprite implements IDraw
 	
 	public function colorTransform(r:Float = 0, g:Float = 0, b:Float = 0, a:Float = 0):Void
 	{
-		if (r == 0 && g == 0 && b == 0 && a == 0 )
-		{
-			//Blend = Blend & ~Tilesheet.TILE_TRANS_COLOR;
-			
-		}else {
-		//	Blend |=Tilesheet.TILE_TRANS_COLOR;
-		}
 		transRed = r;
 		transGreen = g;
 		transBlue = b;

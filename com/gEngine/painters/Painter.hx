@@ -1,4 +1,5 @@
 package com.gEngine.painters;
+import com.gEngine.display.Blend;
 import com.helpers.MinMax;
 import kha.Color;
 import kha.FastFloat;
@@ -50,6 +51,7 @@ class Painter implements IPainter
 		if (aAutoDestroy) PainterGarbage.i.add(this);
 		initShaders();
 		buffer = getVertexBuffer();
+		mCustomBlend = false;
 	}
 	public inline function write(aValue:Float):Void
 	{
@@ -236,13 +238,36 @@ class Painter implements IPainter
 		}
 		
 		/* INTERFACE com.gEngine.painters.IPainter */
-		
-		public function validateBatch(aTexture:Int, aSize:Int, aAlpha:Bool, aColorTransform:Bool,aMask:Bool):Void 
+		var mCustomBlend:Bool = false;
+		public function validateBatch(aTexture:Int, aSize:Int, aAlpha:Bool, aColorTransform:Bool,aMask:Bool,aBlend:Blend):Void 
 		{
-			if (aTexture != textureID || !canDraw(aSize))
+			
+			var needToSetBlend:Bool = (aBlend != null) && !mCustomBlend;
+			var needToSetDefault:Bool = (aBlend == null) && mCustomBlend;
+			var needToChangeBlend:Bool = needToSetBlend || needToSetDefault;
+			//TODO create blend index to detect if they have the same blend
+			
+			if (aTexture != textureID || !canDraw(aSize) || needToChangeBlend )
 			{
 				render();
 				textureID = aTexture;
+				if (needToChangeBlend)
+				{
+				
+					if (needToSetBlend) {
+					trace("setBlend");	
+						pipeline.blendSource = aBlend.blendSource;
+						pipeline.blendDestination = aBlend.blendDestination;
+						pipeline.alphaBlendSource = aBlend.alphaBlendSource;
+						pipeline.alphaBlendDestination = aBlend.alphaBlendDestination;
+						mCustomBlend = true;
+					}else {
+						trace("setdefaultBlend");
+						defaultBlend();
+						mCustomBlend = false;
+					}
+					
+				}
 			}
 		}
 		
@@ -264,8 +289,10 @@ class Painter implements IPainter
 		
 		public function defaultBlend():Void 
 		{
+			mCustomBlend = false; 
 			setBlends(pipeline);
 		}
+		
 		
 		
 }

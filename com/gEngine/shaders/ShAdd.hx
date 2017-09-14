@@ -13,7 +13,7 @@ import kha.graphics4.TextureUnit;
  * ...
  * @author Joaquin
  */
-class ShLight extends Painter
+class ShAdd extends Painter
 {
 	private var mTextureLigthID:TextureUnit;
 	public var textureLightID:Int = 0;
@@ -25,8 +25,8 @@ class ShLight extends Painter
 	}
 	override private function setBlends(aPipeline:PipelineState) 
 		{
-			aPipeline.blendSource = BlendingFactor.DestinationColor;
-			aPipeline.blendDestination = BlendingFactor.SourceColor;
+			aPipeline.blendSource = BlendingFactor.SourceAlpha;
+			aPipeline.blendDestination = BlendingFactor.BlendOne;
 			aPipeline.alphaBlendSource = BlendingFactor.BlendOne;
 			aPipeline.alphaBlendDestination = BlendingFactor.BlendZero;
 		}
@@ -34,7 +34,6 @@ class ShLight extends Painter
 		{
 			setBlends(pipeline);
 		}
-		
 	//override function setShaders(aPipeline:PipelineState):Void 
 	//{
 		//aPipeline.vertexShader = Shaders.simple_vert;

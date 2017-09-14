@@ -1,4 +1,5 @@
 package com.gEngine.painters;
+import com.gEngine.display.Blend;
 import com.helpers.MinMax;
 
 /**
@@ -50,7 +51,7 @@ class SpritePainter implements IPainter
 		currentPainter.render(clear);
 	}
 	
-	public function validateBatch(aTexture:Int, aSize:Int, aAlpha:Bool, aColorTransform:Bool,aMask:Bool):Void 
+	public function validateBatch(aTexture:Int, aSize:Int, aAlpha:Bool, aColorTransform:Bool,aMask:Bool,aBlend:Blend):Void 
 	{
 		if (usingAlpha != aAlpha||usingColor!=aColorTransform||usingMask!=aMask)
 		{
@@ -83,7 +84,7 @@ class SpritePainter implements IPainter
 				simplePainer.textureID = aTexture;
 			}
 		}
-		currentPainter.validateBatch(aTexture, aSize, aAlpha, aColorTransform,aMask);
+		currentPainter.validateBatch(aTexture, aSize, aAlpha, aColorTransform,aMask,aBlend);
 		
 		
 	}

@@ -118,6 +118,10 @@ import kha.System;
 			
 			scaleWidth =  1;// (width / realWidth   );
 			scaleHeigth = 1;// (height / realHeight   ) ;
+			#if flash
+			scaleWidth =   (width / realWidth   );
+			scaleHeigth =  (height / realHeight   ) ;
+			#end
 			
 			
 			

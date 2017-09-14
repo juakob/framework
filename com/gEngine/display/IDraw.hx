@@ -16,7 +16,6 @@ interface IDraw
 	public var visible:Bool;
    function render(batch:IPainter, transform:Matrix):Void;
    function update(elapsedTime:Float):Void;
-   function blend():Int;
    function texture():Int;
    function removeFromParent():Void;
     public var x:Float;
