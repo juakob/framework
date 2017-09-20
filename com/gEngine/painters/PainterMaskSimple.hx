@@ -1,4 +1,5 @@
 package com.gEngine.painters;
+import com.gEngine.display.Blend;
 import kha.Shaders;
 import kha.graphics4.IndexBuffer;
 import kha.graphics4.PipelineState;
@@ -13,9 +14,9 @@ import kha.graphics4.VertexStructure;
 class PainterMaskSimple extends Painter
 {
 
-	public function new(aAutoDestroy:Bool=true) 
+	public function new(aAutoDestroy:Bool=true,aBlend:Blend) 
 	{
-		super(aAutoDestroy);
+		super(aAutoDestroy,aBlend);
 		ratioIndexVertex = 1;
 		dataPerVertex = 6;
 	}
@@ -28,8 +29,8 @@ class PainterMaskSimple extends Painter
 	{
 		// Create index buffer
 		indexBuffer = new IndexBuffer(
-			Std.int(MAX_VERTEX_PER_BUFFER), // Number of indices for our cube
-			Usage.StaticUsage // Index data will stay the same
+			Std.int(MAX_VERTEX_PER_BUFFER), 
+			Usage.StaticUsage 
 		);
 		
 		// Copy indices to index buffer

@@ -5,6 +5,7 @@ import kha.graphics4.BlendingFactor;
  * ...
  * @author Joaquin
  */
+
 class Blend
 {
 	public var blendSource:BlendingFactor;
@@ -22,6 +23,24 @@ class Blend
 		blend.blendDestination = BlendingFactor.BlendOne;
 		blend.alphaBlendSource = BlendingFactor.BlendOne;
 		blend.alphaBlendDestination = BlendingFactor.BlendZero;
+		return blend;
+	}
+	public static function blendMultipass():Blend
+	{
+		var blend:Blend = new Blend();
+		blend.blendSource = BlendingFactor.BlendOne;
+		blend.blendDestination = BlendingFactor.BlendZero;
+		blend.alphaBlendSource = BlendingFactor.BlendOne;
+		blend.alphaBlendDestination = BlendingFactor.BlendZero;
+		return blend;
+	}
+	public static function blendDefault():Blend
+	{
+		var blend:Blend = new Blend();
+		blend.blendSource = BlendingFactor.BlendOne;
+		blend.blendDestination = BlendingFactor.InverseSourceAlpha;
+		blend.alphaBlendSource = BlendingFactor.SourceAlpha;
+		blend.alphaBlendDestination = BlendingFactor.InverseSourceAlpha;
 		return blend;
 	}
 }

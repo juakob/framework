@@ -14,9 +14,9 @@ class AreaEffect implements IDraw
 	@:access(com.gEngine.GEngine.mPainter)
 	public function new(aSnapShotShader:IPainter,aPrintShader:IPainter) 
 	{
-		aSnapShotShader.multipassBlend();
-		screenScaleX = 1/GEngine.i.scaleWidth;
-		screenScaleY = 1/GEngine.i.scaleHeigth;
+//		aSnapShotShader.multipassBlend();
+		//screenScaleX = GEngine.i.scaleWidth;
+		//screenScaleY = GEngine.i.scaleHeigth;
 		if (aSnapShotShader == null)
 		{
 			snapShotShader = GEngine.i.mPainter;
@@ -81,8 +81,8 @@ class AreaEffect implements IDraw
 	
 	private  function createDrawInitialRectangle(aPainter:IPainter):Void
 	{
-		var screenWidth = GEngine.i.realWidth *screenScaleX;
-		var screenHeight = GEngine.i.realHeight*screenScaleY;
+		var screenWidth = GEngine.i.width ;
+		var screenHeight = GEngine.i.height;
 		aPainter.write(x);
 		aPainter.write(y);
 		aPainter.write(x/screenWidth);
@@ -105,8 +105,8 @@ class AreaEffect implements IDraw
 	}
 	private function createDrawFinishRectangle(aPainter:IPainter):Void
 	{
-		var screenWidth = GEngine.i.realWidth *screenScaleX;
-		var screenHeight = GEngine.i.realHeight*screenScaleY;
+		var screenWidth = GEngine.i.width ;
+		var screenHeight = GEngine.i.height;
 		aPainter.write(x);
 		aPainter.write(y);
 		aPainter.write(x/screenWidth);

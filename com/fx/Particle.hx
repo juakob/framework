@@ -14,13 +14,14 @@ import com.helpers.Point;
  */
 class Particle extends Entity 
 {
-	private var mAnimation:AnimationSprite;
+	public var animation:AnimationSprite;
 	private var mX:Float=0;
 	private var mY:Float=0;
 	private var mLife:Float = 0;
 	private var mTotalLife:Float;
 	private var mVelocity:Point=new Point();
 	public var gravity:Float = 100;
+	public var accelerationX:Float = 0;
 	public var mAngularVelocity:Float=0;
 	
 	public function new(aAnimation:String) 
@@ -29,11 +30,11 @@ class Particle extends Entity
 		die();
 		setAnimation(aAnimation);
 	}
-	public function setAnimation(animation:String):Void
+	public function setAnimation(aAnimation:String):Void
 	{
-		mAnimation = GEngine.i.getNewAnimation(animation);
+		animation = GEngine.i.getNewAnimation(aAnimation);
 		//mAnimation.frameRate = 1 / 60;
-		mAnimation.Loop = false;
+		animation.Loop = false;
 	}
 	public function reset(x:Float, y:Float, life:Float,speedX:Float,speedY:Float,layer:Layer,angularVelocity:Float,scale:Float=1):Void
 	{
@@ -42,17 +43,18 @@ class Particle extends Entity
 		mLife =mTotalLife=  life;
 		mVelocity.x = speedX;
 		mVelocity.y = speedY;
-		layer.addChild(mAnimation);
-		mAnimation.x = x;
-		mAnimation.y = y;
+		layer.addChild(animation);
+		animation.x = x;
+		animation.y = y;
 		mAngularVelocity = angularVelocity;
-		mAnimation.scaleX = mAnimation.scaleY = mInitialScale =  scale;
-		mAnimation.goToAndPlay(0);
-		mAnimation.Loop = false;
+		animation.scaleX = animation.scaleY = mInitialScale =  scale;
+		animation.goToAndPlay(0);
+		animation.Loop = false;
+		animation.rotation = 0;
 	}
 	override private function limboStart():Void 
 	{
-		mAnimation.removeFromParent();
+		animation.removeFromParent();
 	}
 	public var scaleAtDeath:Bool;
 	private var mInitialScale:Float;
@@ -66,15 +68,16 @@ class Particle extends Entity
 		}
 		if (scaleAtDeath)
 		{
-			mAnimation.scaleX = mAnimation.scaleY =mInitialScale* mLife / mTotalLife;
+			animation.scaleX = animation.scaleY =mInitialScale* mLife / mTotalLife;
 		}
 		
 		mVelocity.y += gravity * aDt;
+		mVelocity.x += accelerationX * aDt;
 		mX += mVelocity.x * aDt;
 		mY += mVelocity.y * aDt;
-		mAnimation.x = mX;
-		mAnimation.y = mY;
-		mAnimation.rotation += mAngularVelocity * aDt;
+		animation.x = mX;
+		animation.y = mY;
+		animation.rotation += mAngularVelocity * aDt;
 		
 		//if (mAnimation.TotalFrames > 0)
 		{

@@ -71,7 +71,7 @@ class Filter
 			}
 			for (i in 0...length) 
 			{
-				aFilters[i].multipassBlend();
+			//	aFilters[i].multipassBlend();
 			}
 		}
 	}
@@ -96,7 +96,7 @@ class Filter
 		{
 		drawArea.reset();
 		}
-		aPainter.multipassBlend();
+		//aPainter.multipassBlend();
 		for (display in aDisplay) 
 		{
 			display.render(aPainter, aMatrix);
@@ -106,7 +106,7 @@ class Filter
 		//drawArea.transform(aMatrix);	
 		aPainter.render();
 		aPainter.finish();
-		aPainter.defaultBlend();
+		//aPainter.defaultBlend();
 		
 	
 		var counter:Int = renderPass.length;

@@ -26,7 +26,7 @@ class BasicSprite implements IDraw
 	public var scaleY:Float;
 	public var rotation(default, set):Float;
 	
-	public var blend:Blend = null;
+	public var blend:BlendMode = BlendMode.Default;
 	
 	private var cosAng:Float;
 	private var sinAng:Float;
@@ -452,7 +452,7 @@ class BasicSprite implements IDraw
 					--staffToDraw;
 					
 					var maskBatch:MaskBatch = frame.maskBatchs[maskCounter];
-					painter.validateBatch(mTextureId, Std.int(maskBatch.vertex.length/2), false,false,true,blend);
+					painter.validateBatch(mTextureId, Std.int(maskBatch.vertex.length/2), DrawMode.Mask,blend);
 					
 					var polygons:MyList<Float> = maskBatch.vertex;
 					var polyUvs:MyList<Float> = maskBatch.uvs;
@@ -509,7 +509,11 @@ class BasicSprite implements IDraw
 				}
 				
 			}
-			painter.validateBatch(mTextureId, Std.int(frame.vertexs.length / 8 + frame.UVs.length / 8), alphas.length != 0, colorTrans.length!=0,false,blend);
+			var drawMode:DrawMode = DrawMode.Default;
+			if (alphas.length != 0) drawMode = DrawMode.Alpha;
+			if (colorTrans.length != 0) drawMode = DrawMode.ColorTint;
+			
+			painter.validateBatch(mTextureId, Std.int(frame.vertexs.length / 8 + frame.UVs.length / 8), drawMode,blend);
 			
 			
 			if (colorTrans.length!=0)

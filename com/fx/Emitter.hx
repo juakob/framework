@@ -36,7 +36,7 @@ import com.gEngine.display.Layer;
 	public var angularVelocityMin :Float = 0;
 	
 	public var gravity:Float=0;
-	
+	public var accelerationX:Float=0;
 	
 	public function new() 
 	{
@@ -95,6 +95,7 @@ import com.gEngine.display.Layer;
 			var particle:Particle = cast(recycle(Particle));
 			particle.reset(xRandom-xRandom*2*Math.random(), yRandom-yRandom*2*Math.random(), minLife + maxLife * Math.random(), minVelocityX + maxVelocityX * Math.random(), minVelocityY + maxVelocityY * Math.random(), mContainer,angularVelocityMin+angularVelocityMax*Math.random(),minScale+maxScale*Math.random());
 			particle.gravity = gravity;
+			particle.accelerationX = accelerationX;
 		}
 		
 	}

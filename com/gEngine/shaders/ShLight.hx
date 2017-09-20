@@ -1,6 +1,7 @@
 package com.gEngine.shaders;
 
 import com.gEngine.GEngine;
+import com.gEngine.display.Blend;
 import com.gEngine.painters.Painter;
 import kha.Shaders;
 import kha.graphics4.BlendingFactor;
@@ -23,17 +24,14 @@ class ShLight extends Painter
 		//alpha = 1;
 		//red = green = blue = 1;
 	}
-	override private function setBlends(aPipeline:PipelineState) 
+	override private function setBlends(aPipeline:PipelineState,aBlend:Blend) 
 		{
 			aPipeline.blendSource = BlendingFactor.DestinationColor;
 			aPipeline.blendDestination = BlendingFactor.SourceColor;
 			aPipeline.alphaBlendSource = BlendingFactor.BlendOne;
 			aPipeline.alphaBlendDestination = BlendingFactor.BlendZero;
 		}
-		override public function multipassBlend() 
-		{
-			setBlends(pipeline);
-		}
+		
 		
 	//override function setShaders(aPipeline:PipelineState):Void 
 	//{

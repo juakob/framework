@@ -1,7 +1,7 @@
 #version 450
 
 
-//uniform float time;
+uniform float time;
 const float A = 0.03;
 const float B = 200.0;
 const float C = 5.0;
@@ -16,8 +16,8 @@ in vec2 texCoord;
 out vec4 FragColor;
 
 void kore() {
-	float x =  D * sin(E * texCoord.x) * sin(F * 0.1)*texCoord.y;
-	float y =  A * sin(B * texCoord.y) * sin(C * 0.1)*texCoord.y;
+	float x =  D * sin(E * texCoord.x) * sin(F * time)*texCoord.y;
+	float y =  A * sin(B * texCoord.y) * sin(C * time)*texCoord.y;
 	
 	vec2 c = vec2(texCoord.x + x, texCoord.y + y);
 	vec4 diffuse_color =  texture(tex, c);

@@ -1,9 +1,11 @@
 package com.gEngine.shaders;
 
 
+import com.gEngine.display.Blend;
 import com.gEngine.painters.Painter;
 import kha.Shaders;
 import kha.graphics4.BlendingFactor;
+import kha.graphics4.Graphics;
 import kha.graphics4.PipelineState;
 
 /**
@@ -12,10 +14,11 @@ import kha.graphics4.PipelineState;
  */
 class ShMirage extends Painter
 {
-
+	var time:kha.graphics4.ConstantLocation;
+	
 	public function new() 
 	{
-		super();
+		super(true);
 		
 	}
 	override function setShaders(aPipeline:PipelineState):Void 
@@ -23,11 +26,21 @@ class ShMirage extends Painter
 		aPipeline.vertexShader = Shaders.simple_vert;
 		aPipeline.fragmentShader = Shaders.mirage_frag;
 	}
-	override private function setBlends(aPipeline:PipelineState) 
+	override function getConstantLocations(aPipeline:PipelineState) 
+	{
+		super.getConstantLocations(aPipeline);
+		time = aPipeline.getConstantLocation("time");
+	}
+	override function setParameter(g:Graphics):Void 
+	{
+		super.setParameter(g);
+		g.setFloat(time, TimeManager.time);
+	}
+	override private function setBlends(aPipeline:PipelineState,aBlend:Blend) 
 		{
 			aPipeline.blendSource = BlendingFactor.BlendOne;
-			aPipeline.blendDestination = BlendingFactor.InverseSourceAlpha;
+			aPipeline.blendDestination = BlendingFactor.BlendZero;
 			aPipeline.alphaBlendSource = BlendingFactor.BlendOne;
-			aPipeline.alphaBlendDestination = BlendingFactor.InverseSourceAlpha;
+			aPipeline.alphaBlendDestination = BlendingFactor.BlendZero;
 		}
 }

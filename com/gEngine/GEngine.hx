@@ -7,6 +7,7 @@ import com.gEngine.display.AnimationSprite;
 import com.gEngine.display.BasicSprite;
 import com.gEngine.display.Batch;
 import com.gEngine.display.BatchProxy;
+import com.gEngine.display.Blend;
 import com.gEngine.display.ComplexSprite;
 import com.gEngine.display.extra.AnimationSpriteClone;
 import com.gEngine.painters.IPainter;
@@ -64,8 +65,8 @@ import kha.System;
 		 public var height(default, null):Int;
 		 public var realWidth(default, null):Int;
 		 public var realHeight(default, null):Int;
-		 private var realU:Float;
-		 private var realV:Float;
+		 public var realU:Float;
+		 public var realV:Float;
 		private var mResources:EngineResources;
 		private var mTextures:MyList<Image>;
 		private var mStage:Stage;
@@ -99,7 +100,7 @@ import kha.System;
 			mTempBuffer = Image.createRenderTarget(width, height, null, DepthStencilFormat.NoDepthAndStencil, 1);
 			mCurrentRenderTargetId=mTempBufferID = mTextures.push(mTempBuffer) - 1;
 			
-			mPainter = new Painter(false);
+			mPainter = new Painter(false,Blend.blendDefault());
 			mSpritePainter = new SpritePainter(false);
 			
 			realWidth = mTempBuffer.realWidth;
@@ -251,7 +252,6 @@ import kha.System;
 			
 			var atlasImage:Image;
 			var textureId:Int;
-			trace("enter");
 			if (currentIndex < mTextures.length)
 			{
 				atlasImage = mTextures[currentIndex];//TODO make sure that the texture is equal to the requested size

@@ -1,6 +1,7 @@
 package com.gEngine.shaders;
 
 import com.gEngine.GEngine;
+import com.gEngine.display.Blend;
 import com.gEngine.painters.CacheTexture;
 import com.gEngine.painters.Painter;
 import kha.Shaders;
@@ -25,7 +26,7 @@ class ShMaxBlend extends Painter
 		super();
 		
 	}
-	override private function setBlends(aPipeline:PipelineState) 
+	override private function setBlends(aPipeline:PipelineState,aBlend:Blend) 
 		{
 			aPipeline.blendSource = BlendingFactor.BlendOne;
 			aPipeline.blendDestination = BlendingFactor.BlendZero;

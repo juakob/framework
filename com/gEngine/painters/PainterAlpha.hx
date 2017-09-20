@@ -1,4 +1,5 @@
 package com.gEngine.painters;
+import com.gEngine.display.Blend;
 import kha.Shaders;
 import kha.graphics4.PipelineState;
 import kha.graphics4.VertexData;
@@ -11,9 +12,9 @@ import kha.graphics4.VertexStructure;
 class PainterAlpha extends Painter
 {
 
-	public function new(aAutoDestroy:Bool=true) 
+	public function new(aAutoDestroy:Bool=true,aBlend:Blend) 
 	{
-		super(aAutoDestroy);
+		super(aAutoDestroy,aBlend);
 		dataPerVertex = 5;
 	}
 	override function defineVertexStructure(structure:VertexStructure) 

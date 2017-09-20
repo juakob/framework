@@ -1,5 +1,7 @@
 package com.gEngine.painters;
 import com.gEngine.display.Blend;
+import com.gEngine.display.BlendMode;
+import com.gEngine.display.DrawMode;
 import com.helpers.MinMax;
 import kha.Color;
 import kha.FastFloat;
@@ -34,7 +36,7 @@ class Painter implements IPainter
 	var green:FastFloat = 0.;
 	var blue:FastFloat = 0.;
 	var alpha:FastFloat = 0.;
-	public var MAX_VERTEX_PER_BUFFER:Int =1500;
+	public var MAX_VERTEX_PER_BUFFER:Int =2500;
 	
 	var dataPerVertex:Int = 4;
 	var mMvpID:ConstantLocation;
@@ -46,10 +48,12 @@ class Painter implements IPainter
 	private var counter:Int=0;
 	var buffer:Float32Array;
 	public var textureID:Int = -1;
-	public function new(aAutoDestroy:Bool = true) 
-	{
+	
+	public function new(aAutoDestroy:Bool = true, aBlend:Blend=null) 
+	{	
+		if (aBlend == null) aBlend = Blend.blendDefault();
 		if (aAutoDestroy) PainterGarbage.i.add(this);
-		initShaders();
+		initShaders(aBlend);
 		buffer = getVertexBuffer();
 		mCustomBlend = false;
 	}
@@ -68,7 +72,7 @@ class Painter implements IPainter
 	}
 	public function finish()
 	{
-		setBlends(pipeline);
+		
 	}
 	public function render(clear:Bool = false ):Void
 	{
@@ -109,19 +113,8 @@ class Painter implements IPainter
 		return Std.int(counter / dataPerVertex);
 	}
 	
-	public function initShaders():Void {
-			//structure = new VertexStructure();
-			//structure.add("pos", VertexData.Float2);
-			//structure.add("uv", VertexData.Float2);
-			
-
-			
-			// Save length - we store position and uv data
-			
-	
-			// Compile pipeline state
-			// Shaders are located in 'Sources/Shaders' directory
-			// and Kha includes them automatically
+	public function initShaders(aBlend:Blend):Void {
+		
 			pipeline = new PipelineState();
 			setShaders(pipeline);
 			
@@ -129,31 +122,17 @@ class Painter implements IPainter
 			defineVertexStructure(structure);
 			pipeline.inputLayout = [structure];
 			
-			// Set depth mode
-			//    pipeline.depthWrite = true;
-				
-			//    pipeline.depthMode = CompareMode.Always;
 			pipeline.cullMode = CullMode.None;
 			
-			setBlends(pipeline);
+			setBlends(pipeline,aBlend);
 			pipeline.compile();
 			
-	
-			// Get a handle for our "MVP" uniform
-			//mvpID = pipeline.getConstantLocation("MVP");
-	//
-			//// Get a handle for texture sample
-			//textureID = pipeline.getTextureUnit("myTextureSampler");
-			
-//			timeID = pipeline.getConstantLocation("time");
 			getConstantLocations(pipeline);
 	
-			// Texture
-			// Create vertex buffer
 			vertexBuffer=new VertexBuffer(
-				MAX_VERTEX_PER_BUFFER, // Vertex count - 3 floats per vertex
-				structure, // Vertex structure
-				Usage.DynamicUsage // Vertex data will stay the same
+				MAX_VERTEX_PER_BUFFER,
+				structure, 
+				Usage.DynamicUsage 
 				);
 	
 			createIndexBuffer();
@@ -185,21 +164,14 @@ class Painter implements IPainter
 			}
 			indexBuffer.unlock();
 		}
-		private function setBlends(aPipeline:PipelineState) 
+		private function setBlends(aPipeline:PipelineState, aBlend:Blend) 
 		{
-			aPipeline.blendSource = BlendingFactor.BlendOne;
-			aPipeline.blendDestination = BlendingFactor.InverseSourceAlpha;
-			aPipeline.alphaBlendSource = BlendingFactor.SourceAlpha;
-			aPipeline.alphaBlendDestination = BlendingFactor.InverseSourceAlpha;
+			aPipeline.blendSource = aBlend.blendSource;
+			aPipeline.blendDestination = aBlend.blendDestination;
+			aPipeline.alphaBlendSource = aBlend.alphaBlendSource;
+			aPipeline.alphaBlendDestination = aBlend.alphaBlendDestination;
+		}
 		
-		}
-		public function multipassBlend() 
-		{
-			pipeline.blendSource = BlendingFactor.BlendOne;
-			pipeline.blendDestination = BlendingFactor.InverseSourceAlpha;
-			pipeline.alphaBlendSource = BlendingFactor.BlendOne;
-			pipeline.alphaBlendDestination = BlendingFactor.InverseSourceAlpha;
-		}
 		private function defineVertexStructure(structure:VertexStructure)
 		{
 			structure.add("vertexPosition", VertexData.Float2);
@@ -239,35 +211,12 @@ class Painter implements IPainter
 		
 		/* INTERFACE com.gEngine.painters.IPainter */
 		var mCustomBlend:Bool = false;
-		public function validateBatch(aTexture:Int, aSize:Int, aAlpha:Bool, aColorTransform:Bool,aMask:Bool,aBlend:Blend):Void 
+		public function validateBatch(aTexture:Int, aSize:Int, aDrawMode:DrawMode, aBlend:BlendMode):Void 
 		{
-			
-			var needToSetBlend:Bool = (aBlend != null) && !mCustomBlend;
-			var needToSetDefault:Bool = (aBlend == null) && mCustomBlend;
-			var needToChangeBlend:Bool = needToSetBlend || needToSetDefault;
-			//TODO create blend index to detect if they have the same blend
-			
-			if (aTexture != textureID || !canDraw(aSize) || needToChangeBlend )
+			if (aTexture != textureID || !canDraw(aSize)  )
 			{
 				render();
 				textureID = aTexture;
-				if (needToChangeBlend)
-				{
-				
-					if (needToSetBlend) {
-					trace("setBlend");	
-						pipeline.blendSource = aBlend.blendSource;
-						pipeline.blendDestination = aBlend.blendDestination;
-						pipeline.alphaBlendSource = aBlend.alphaBlendSource;
-						pipeline.alphaBlendDestination = aBlend.alphaBlendDestination;
-						mCustomBlend = true;
-					}else {
-						trace("setdefaultBlend");
-						defaultBlend();
-						mCustomBlend = false;
-					}
-					
-				}
 			}
 		}
 		
@@ -284,15 +233,4 @@ class Painter implements IPainter
 		{
 			
 		}
-		
-		/* INTERFACE com.gEngine.painters.IPainter */
-		
-		public function defaultBlend():Void 
-		{
-			mCustomBlend = false; 
-			setBlends(pipeline);
-		}
-		
-		
-		
 }
