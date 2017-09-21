@@ -14,9 +14,6 @@ class AreaEffect implements IDraw
 	@:access(com.gEngine.GEngine.mPainter)
 	public function new(aSnapShotShader:IPainter,aPrintShader:IPainter) 
 	{
-//		aSnapShotShader.multipassBlend();
-		//screenScaleX = GEngine.i.scaleWidth;
-		//screenScaleY = GEngine.i.scaleHeigth;
 		if (aSnapShotShader == null)
 		{
 			snapShotShader = GEngine.i.mPainter;
@@ -52,24 +49,23 @@ class AreaEffect implements IDraw
 		aPainter.render();
 		aPainter = snapShotShader;	
 		var lastTarger:Int = GEngine.i.currentCanvasId();
-		aPainter.textureID = 0;//tempBuffer
+		
 		var renderTarget:Int = GEngine.i.getRenderTarget();
 		GEngine.i.setCanvas(renderTarget);
 		
 		aPainter.start();
-		createDrawInitialRectangle(aPainter);
+//tempBuffer  =0
+		GEngine.i.renderBuffer(0, aPainter, x, y, width, height, 1280,720, true);
 
-		aPainter.render(true);
 		aPainter.finish();
 	
 		aPainter = printShader;
-		aPainter.textureID = renderTarget;//tempBuffer
+
 		GEngine.i.setCanvas(lastTarger);
 		aPainter.start();
 
-		createDrawFinishRectangle(aPainter);
+		GEngine.i.renderBuffer(renderTarget, aPainter, x, y, width, height, 1280,720, false);
 
-		aPainter.render();
 		aPainter.finish();
 		GEngine.i.releaseRenderTarget(renderTarget);
 
@@ -79,63 +75,9 @@ class AreaEffect implements IDraw
 	
 	
 	
-	private  function createDrawInitialRectangle(aPainter:IPainter):Void
-	{
-		var screenWidth = GEngine.i.width ;
-		var screenHeight = GEngine.i.height;
-		aPainter.write(x);
-		aPainter.write(y);
-		aPainter.write(x/screenWidth);
-		aPainter.write(y/screenHeight);
-		
-		aPainter.write((x+width*resolution));
-		aPainter.write(y);
-		aPainter.write(((x+width))/screenWidth);
-		aPainter.write(y/screenHeight);
-		
-		aPainter.write(x);
-		aPainter.write(y+height*resolution);
-		aPainter.write(x/screenWidth);
-		aPainter.write((y+height)/screenHeight);
-		
-		aPainter.write((x+width*resolution));
-		aPainter.write(y+height*resolution);
-		aPainter.write(((x+width))/screenWidth);
-		aPainter.write((y+height)/screenHeight);
-	}
-	private function createDrawFinishRectangle(aPainter:IPainter):Void
-	{
-		var screenWidth = GEngine.i.width ;
-		var screenHeight = GEngine.i.height;
-		aPainter.write(x);
-		aPainter.write(y);
-		aPainter.write(x/screenWidth);
-		aPainter.write(y/screenHeight);
-		
-		aPainter.write((x+width));
-		aPainter.write(y);
-		aPainter.write(((x+width*resolution))/screenWidth);
-		aPainter.write(y/screenHeight);
-		
-		aPainter.write(x);
-		aPainter.write(y+height);
-		aPainter.write(x/screenWidth);
-		aPainter.write((y+height*resolution)/screenHeight);
-		
-		aPainter.write((x+width));
-		aPainter.write(y+height);
-		aPainter.write(((x+width*resolution))/screenWidth);
-		aPainter.write((y+height*resolution)/screenHeight);
-	}
-	
 	public function update(elapsedTime:Float):Void 
 	{
 		
-	}
-	
-	public function blend():Int 
-	{
-		return 0;
 	}
 	
 	public function texture():Int 
