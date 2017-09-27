@@ -53,10 +53,16 @@ class BasicSprite implements IDraw
 	private var tanSkewX:Float = 0;
 	private var tanSkewY:Float = 0;
 	
-	private var transRed:Float = 0;
-	private var transGreen:Float = 0;
-	private var transBlue:Float = 0;
-	private var transAlpha:Float = 0;
+	private var colorTransform:Bool = false;
+	private var addRed:Float = 0;
+	private var addGreen:Float = 0;
+	private var addBlue:Float = 0;
+	private var addAlpha:Float = 0;
+	
+	private var mulRed:Float = 1;
+	private var mulGreen:Float = 1;
+	private var mulBlue:Float = 1;
+	private var mulAlpha:Float = 1;
 	
 	private var mTextureId:Int =-1;
 	
@@ -511,87 +517,64 @@ class BasicSprite implements IDraw
 			}
 			var drawMode:DrawMode = DrawMode.Default;
 			if (alphas.length != 0) drawMode = DrawMode.Alpha;
-			if (colorTrans.length != 0) drawMode = DrawMode.ColorTint;
+			if (colorTrans.length != 0||colorTransform) drawMode = DrawMode.ColorTint;
 			
 			painter.validateBatch(mTextureId, Std.int(frame.vertexs.length / 8 + frame.UVs.length / 8), drawMode,blend);
 			
 			
-			if (colorTrans.length!=0)
+			if (colorTrans.length!=0||colorTransform)
 			{
 				var redMul, blueMul , greenMul,alphaMul:Float;
-				var redAdd, blueAdd , greenAdd,alphaAdd:Float;
+				var redAdd, blueAdd , greenAdd, alphaAdd:Float;
+				var frameColorTransform:Bool = colorTrans.length != 0;
 				for ( i in normalCounter...counter)
 					{
-						redMul = colorTrans[i*8];
-						greenMul = colorTrans[i * 8 + 1];
-						blueMul = colorTrans[i * 8 + 2];
-						alphaMul = colorTrans[i*8 + 3];
-						
-						redAdd = colorTrans[i*8 +4];
-						greenAdd = colorTrans[i * 8 + 5];
-						blueAdd = colorTrans[i * 8 + 6] ;
-						alphaAdd = colorTrans[i*8 + 7];
+						if (frameColorTransform)
+						{
+							redMul = colorTrans[i*8]*this.mulRed;
+							greenMul = colorTrans[i * 8 + 1]*this.mulGreen;
+							blueMul = colorTrans[i * 8 + 2]*this.mulBlue;
+							alphaMul = colorTrans[i*8 + 3]*this.mulAlpha;
+							
+							redAdd = colorTrans[i*8 +4]+this.addRed;
+							greenAdd = colorTrans[i * 8 + 5]+this.addGreen;
+							blueAdd = colorTrans[i * 8 + 6] +this.addBlue;
+							alphaAdd = colorTrans[i * 8 + 7] + this.addAlpha;
+						}else {
+							redMul = this.mulRed;
+							greenMul = this.mulGreen;
+							blueMul = this.mulBlue;
+							alphaMul = this.mulAlpha;
+							
+							redAdd = this.addRed;
+							greenAdd = this.addGreen;
+							blueAdd = this.addBlue;
+							alphaAdd = this.addAlpha;
+						}
 						
 						vertexX = vertexs[i * 8 + 0]-pivotX;
-						vertexY = vertexs[i * 8 + 1]-pivotY;
-						painter.write( _tx + vertexX * _1 + vertexY * _3);
-						painter.write( _ty + vertexX * _2 + vertexY * _4);
-						painter.write(uvs[i * 8 + 0]);
-						painter.write(uvs[i * 8 + 1]);
-						painter.write(redMul);
-						painter.write(greenMul);
-						painter.write(blueMul);
-						painter.write(alphaMul);
-						painter.write(redAdd);
-						painter.write(greenAdd);
-						painter.write(blueAdd);
-						painter.write(alphaAdd);
-						
+						vertexY = vertexs[i * 8 + 1] - pivotY;
+						writeColorVertex(_tx + vertexX * _1 + vertexY * _3, _ty + vertexX * _2 + vertexY * _4, 
+						uvs[i * 8 + 0], uvs[i * 8 + 1],
+						redMul, greenMul, blueMul, alphaMul, redAdd, greenAdd, blueAdd, alphaAdd,painter);
 						
 						vertexX = vertexs[i * 8 + 2]-pivotX;
 						vertexY = vertexs[i * 8 + 3]-pivotY;
-						painter.write( _tx + vertexX * _1 + vertexY * _3);
-						painter.write( _ty + vertexX * _2 + vertexY * _4);
-						painter.write(uvs[i * 8 + 2]);
-						painter.write(uvs[i * 8 + 3]);
-						painter.write(redMul);
-						painter.write(greenMul);
-						painter.write(blueMul);
-						painter.write(alphaMul);
-						painter.write(redAdd);
-						painter.write(greenAdd);
-						painter.write(blueAdd);
-						painter.write(alphaAdd);
+						writeColorVertex(_tx + vertexX * _1 + vertexY * _3, _ty + vertexX * _2 + vertexY * _4, 
+						uvs[i * 8 + 2], uvs[i * 8 + 3],
+						redMul, greenMul, blueMul, alphaMul, redAdd, greenAdd, blueAdd, alphaAdd,painter);
 						
 						vertexX = vertexs[i * 8 + 4]-pivotX;
 						vertexY = vertexs[i * 8 + 5]-pivotY;
-						painter.write( _tx + vertexX * _1 + vertexY * _3);
-						painter.write( _ty + vertexX * _2 + vertexY * _4);
-						painter.write(uvs[i * 8 + 4]);
-						painter.write(uvs[i * 8 + 5]);
-						painter.write(redMul);
-						painter.write(greenMul);
-						painter.write(blueMul);
-						painter.write(alphaMul);
-						painter.write(redAdd);
-						painter.write(greenAdd);
-						painter.write(blueAdd);
-						painter.write(alphaAdd);
+						writeColorVertex(_tx + vertexX * _1 + vertexY * _3, _ty + vertexX * _2 + vertexY * _4, 
+						uvs[i * 8 + 4], uvs[i * 8 + 5],
+						redMul, greenMul, blueMul, alphaMul, redAdd, greenAdd, blueAdd, alphaAdd,painter);
 						
 						vertexX = vertexs[i * 8 + 6]-pivotX;
 						vertexY = vertexs[i * 8 + 7]-pivotY;
-						painter.write( _tx + vertexX * _1 + vertexY * _3);
-						painter.write( _ty + vertexX * _2 + vertexY * _4);
-						painter.write(uvs[i * 8 + 6]);
-						painter.write(uvs[i * 8 + 7]);
-						painter.write(redMul);
-						painter.write(greenMul);
-						painter.write(blueMul);
-						painter.write(alphaMul);
-						painter.write(redAdd);
-						painter.write(greenAdd);
-						painter.write(blueAdd);
-						painter.write(alphaAdd);
+						writeColorVertex(_tx + vertexX * _1 + vertexY * _3, _ty + vertexX * _2 + vertexY * _4, 
+						uvs[i * 8 + 6], uvs[i * 8 + 7],
+						redMul, greenMul, blueMul, alphaMul, redAdd, greenAdd, blueAdd, alphaAdd,painter);
 					}
 			}else
 			if (alphas.length == 0)
@@ -672,6 +655,21 @@ class BasicSprite implements IDraw
 		y -= offsetY+pivotY;
 	}
 	
+	private static inline function writeColorVertex(aX:Float, aY:Float, aU:Float, aV:Float, aRedMul:Float, aGreenMul:Float, aBlueMul:Float, aAlphaMul:Float,
+												aRedAdd:Float,aGreenAdd:Float,aBlueAdd:Float,aAlphaAdd:Float,painter:IPainter) {
+			painter.write( aX);
+			painter.write(aY);
+			painter.write(aU);
+			painter.write(aV);
+			painter.write(aRedMul);
+			painter.write(aGreenMul);
+			painter.write(aBlueMul);
+			painter.write(aAlphaMul);
+			painter.write(aRedAdd);
+			painter.write(aGreenAdd);
+			painter.write(aBlueAdd);
+			painter.write(aAlphaAdd);	
+	}
 	
 	/* INTERFACE com.gEngine.display.IDraw */
 	
@@ -700,12 +698,25 @@ class BasicSprite implements IDraw
 		}
 	}
 	
-	public function colorTransform(r:Float = 0, g:Float = 0, b:Float = 0, a:Float = 0):Void
+	public function colorAdd(r:Float = 0, g:Float = 0, b:Float = 0, a:Float = 0):Void
 	{
-		transRed = r;
-		transGreen = g;
-		transBlue = b;
-		transAlpha = alpha;
+		addRed = r;
+		addGreen = g;
+		addBlue = b;
+		addAlpha = alpha;
+		colorTransform = overrideColorTransform();
+	}
+	public function colorMultiplication(r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
+	{
+		mulRed = r;
+		mulGreen = g;
+		mulBlue = b;
+		mulAlpha = alpha;
+		colorTransform = overrideColorTransform();
+	}
+	private inline function overrideColorTransform():Bool {
+		return !(mulRed + mulGreen + mulBlue+mulAlpha == 0 &&
+		addRed == 0 && addGreen == 0 && addBlue == 0 && addAlpha == 0);
 	}
 	
 	/* INTERFACE com.gEngine.display.IDraw */
