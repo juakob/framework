@@ -703,7 +703,7 @@ class BasicSprite implements IDraw
 		addRed = r;
 		addGreen = g;
 		addBlue = b;
-		addAlpha = alpha;
+		addAlpha = a;
 		colorTransform = overrideColorTransform();
 	}
 	public function colorMultiplication(r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
@@ -711,7 +711,7 @@ class BasicSprite implements IDraw
 		mulRed = r;
 		mulGreen = g;
 		mulBlue = b;
-		mulAlpha = alpha;
+		mulAlpha = a;
 		colorTransform = overrideColorTransform();
 	}
 	private inline function overrideColorTransform():Bool {

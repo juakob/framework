@@ -16,4 +16,5 @@ void kore() {
 	texcolor+=_colorAdd*texcolor.w;
 	
 	FragColor = texcolor;
+
 }
