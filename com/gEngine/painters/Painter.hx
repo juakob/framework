@@ -103,10 +103,10 @@ class Painter implements IPainter
 			buffer = getVertexBuffer();
 			g.disableScissor();
 			g.end();
-		
-		
-	
-		counter = 0;
+			#if debugInfo
+			++GEngine.drawCount;
+			#end
+			counter = 0;
 	}
 	public function vertexCount():Int
 	{
@@ -147,8 +147,8 @@ class Painter implements IPainter
 		{
 			// Create index buffer
 			indexBuffer = new IndexBuffer(
-				Std.int(MAX_VERTEX_PER_BUFFER*6/4), // Number of indices for our cube
-				Usage.StaticUsage // Index data will stay the same
+				Std.int(MAX_VERTEX_PER_BUFFER*6/4), 
+				Usage.StaticUsage 
 			);
 			
 			// Copy indices to index buffer

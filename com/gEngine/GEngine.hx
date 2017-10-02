@@ -83,7 +83,17 @@ import kha.System;
 		
 		var renderTargetPool:RenderTargetPool;
 		
-		var mCurrentRenderTargetId:Int=-1;
+		var mCurrentRenderTargetId:Int =-1;
+		
+		#if debugInfo
+			private var deltaTime:Float = 0.0;
+			private var totalFrames:Int = 0;
+			private var elapsedTime:Float = 0.0;
+			private var previousTime:Float = 0.0;
+			private var fps:Int = 0;
+			public static var drawCount:Int = 0;
+			private var font:kha.Font;
+		#end
 		
 		private function new() 
 		{
@@ -166,12 +176,23 @@ import kha.System;
 			
 		}
 		public static function init():Void
-		{
+		{	
+			
 			i = new GEngine();
+			#if debugInfo
+			Assets.loadFont("mainfont", setFont);
+			#end
 			#if debug
 			initialized = true;
 			#end
 		}
+		
+		#if debugInfo
+		static private function setFont(aFont:kha.Font) 
+		{
+			i.font = aFont;
+		}
+		#end
 	
 		public function addResources(data:Blob):Array<String>
 		{
@@ -318,7 +339,6 @@ import kha.System;
 			{
 				mResources.linkAnimationToTexture(animation,textureId, linker);
 			}
-			trace("finish");
 			return atlasImage;
 		}
 	
@@ -443,22 +463,29 @@ import kha.System;
 		{
 			return mTextures[aId];
 		}
-		public function render(painter:Painter) :Void
-		{	
-			++drawCounter;
-		}
+		
 		public function update(elapsedTime:Float):Void
 		{
 			mStage.update(elapsedTime);
 		}
 		
-		
-		public var drawCounter:Int = 0;
 		public function draw(aFrameBuffer:Framebuffer,clear:Bool=true):Void
 		{
+			#if debugInfo
+			var currentTime:Float = kha.Scheduler.realTime();
+			deltaTime = (currentTime - previousTime);
 			
+			elapsedTime += deltaTime;
+			if (elapsedTime >= 1.0) {
+				fps = totalFrames;
+				totalFrames = 0;
+				elapsedTime = 0;
+				
+			}
+			totalFrames++;
+			 previousTime = currentTime;
+			#end
 			mFrameBuffer = aFrameBuffer;
-			drawCounter = 0;
 			
 			var g = mTempBuffer.g4;
 			
@@ -514,6 +541,18 @@ import kha.System;
 			}
 			mPainter.render(true);
 			renderFinal = false;
+			
+			#if debugInfo
+			aFrameBuffer.g2.font = font;
+			aFrameBuffer.g2.fontSize = 16;
+			aFrameBuffer.g2.color = 0xFF000000;
+			aFrameBuffer.g2.fillRect(0, 0, 200, 20);
+			aFrameBuffer.g2.color = 0xFFFFFFFF;
+			aFrameBuffer.g2.drawString("drawCount: " + drawCount + "         fps: " + fps, 10, 2);
+			aFrameBuffer.g2.end();
+			
+			drawCount = 0;
+			#end
 			
 		}
 		public function addChild(draw:IDraw):Void
