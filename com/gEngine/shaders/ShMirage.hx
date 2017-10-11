@@ -34,7 +34,7 @@ class ShMirage extends Painter
 	override function setParameter(g:Graphics):Void 
 	{
 		super.setParameter(g);
-		g.setFloat(time, TimeManager.time);
+		g.setFloat(time, TimeManager.time*2);
 	}
 	override private function setBlends(aPipeline:PipelineState,aBlend:Blend) 
 		{

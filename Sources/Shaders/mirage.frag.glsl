@@ -16,10 +16,9 @@ in vec2 texCoord;
 out vec4 FragColor;
 
 void kore() {
-	float x =  D * sin(E * texCoord.x) * sin(F * time)*texCoord.y;
-	float y =  A * sin(B * texCoord.y) * sin(C * time)*texCoord.y;
+	float x =  D * sin(F * time)*texCoord.y;
 	
-	vec2 c = vec2(texCoord.x + x, texCoord.y + y);
+	vec2 c = vec2(texCoord.x + x, texCoord.y );
 	vec4 diffuse_color =  texture(tex, c);
 	FragColor = diffuse_color;
 }
