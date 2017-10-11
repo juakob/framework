@@ -93,6 +93,7 @@ import kha.System;
 			private var fps:Int = 0;
 			public static var drawCount:Int = 0;
 			private var font:kha.Font;
+			public static var extraInfo:String = "";
 		#end
 		
 		private function new() 
@@ -279,7 +280,7 @@ import kha.System;
 				textureId = currentIndex;
 				
 			}else {
-				atlasImage = Image.createRenderTarget(2048, 2048, TextureFormat.RGBA32);
+				atlasImage = Image.createRenderTarget(2048, 2048, TextureFormat.RGBA32,DepthStencilFormat.DepthOnly);
 				textureId = mTextures.push(atlasImage) - 1;
 				
 				
@@ -333,7 +334,7 @@ import kha.System;
 			}
 			
 			g.end();
-			var img = Image.createRenderTarget(1, 1, TextureFormat.RGBA32);
+			var img = Image.createRenderTarget(1, 1, TextureFormat.RGBA32,DepthStencilFormat.DepthOnly);
 			img.unload();
 			for (animation in simpleAnimations) 
 			{
@@ -543,12 +544,13 @@ import kha.System;
 			renderFinal = false;
 			
 			#if debugInfo
+			
 			aFrameBuffer.g2.font = font;
 			aFrameBuffer.g2.fontSize = 16;
 			aFrameBuffer.g2.color = 0xFF000000;
-			aFrameBuffer.g2.fillRect(0, 0, 200, 20);
+			aFrameBuffer.g2.fillRect(0, 0, 300, 20);
 			aFrameBuffer.g2.color = 0xFFFFFFFF;
-			aFrameBuffer.g2.drawString("drawCount: " + drawCount + "         fps: " + fps, 10, 2);
+			aFrameBuffer.g2.drawString("drawCount: " + drawCount + "         fps: " + fps +"\n"+extraInfo, 10, 2);
 			aFrameBuffer.g2.end();
 			
 			drawCount = 0;

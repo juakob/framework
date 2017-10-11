@@ -31,7 +31,6 @@ class Simulation
 		/// Register services
 		mResources = new Resource();
 		mCurrentState = new State();
-		GEngine.init();
 		Input.init();
 		//Input.i.screenScale.x = 1/GEngine.i.scaleWidth;
 		//Input.i.screenScale.y = 1/GEngine.i.scaleHeigth;

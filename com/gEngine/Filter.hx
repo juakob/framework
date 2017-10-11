@@ -89,8 +89,10 @@ class Filter
 		var workTargetId:Int = GEngine.i.getRenderTarget();
 		
 		GEngine.i.setCanvas(workTargetId);
+		GEngine.i.currentCanvas().g2.scissor(0, 0, GEngine.i.width, GEngine.i.height);
 		GEngine.i.currentCanvas().g2.begin(true,Color.fromFloats(red,green,blue,alpha));
 		GEngine.i.currentCanvas().g2.end();
+		GEngine.i.currentCanvas().g2.disableScissor();
 		
 		if (cropScreen)
 		{
