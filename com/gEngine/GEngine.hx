@@ -117,11 +117,6 @@ import kha.System;
 			realWidth = mTempBuffer.realWidth;
 			realHeight = mTempBuffer.realHeight;
 			
-			trace(width);
-			trace(height);
-			trace(realWidth);
-			trace(realHeight);
-			
 			var renderScale:Float = 1;
 			realU =   width / realWidth ;
 			realV =  height / realHeight ;
@@ -178,7 +173,6 @@ import kha.System;
 		}
 		public static function init():Void
 		{	
-			
 			i = new GEngine();
 			#if debugInfo
 			Assets.loadFont("mainfont", setFont);
@@ -423,7 +417,7 @@ import kha.System;
 			}
 			return mTempBuffer;
 		}
-		private function getMatrix():FastMatrix4
+		public function getMatrix():FastMatrix4
 		{
 			if (renderFinal)
 			{

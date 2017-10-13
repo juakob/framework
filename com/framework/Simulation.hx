@@ -72,19 +72,23 @@ class Simulation
 	}
 	
 	private var mFrameByFrameTime:Float = 0;
-	private var mLastFrameTime:Float=0;
+	private var mLastFrameTime:Float = 0;
+	private var mLastRealFrameTime:Float = 0;
 	private function onEnterFrame():Void 
 	{
 		if (!mPause) {
-			var time = Scheduler.realTime();
+			var time = Scheduler.time();
 			mFrameByFrameTime =  time- mLastFrameTime;
 			mLastFrameTime = time;
+			
 			
 			if (mFrameByFrameTime <= 0||mFrameByFrameTime>0.06666)
 			{
 				mFrameByFrameTime = 1 / 60;
 			}
-			TimeManager.setDelta(mFrameByFrameTime);
+			time = Scheduler.realTime();
+			TimeManager.setDelta(mFrameByFrameTime, time-mLastRealFrameTime);
+			mLastRealFrameTime = time;
 			update( mFrameByFrameTime );
 			
 		
