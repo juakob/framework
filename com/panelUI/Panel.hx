@@ -83,8 +83,9 @@ class Panel extends Entity
 	}
 	
 
-	public function getComponent(name:String):IDraw
+	public function getComponent(?name:String):IDraw
 	{
+		if (name == null) return mContainer;
 		return mComponents.get(name);
 	}
 

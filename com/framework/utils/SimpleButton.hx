@@ -13,7 +13,7 @@ import kha.math.FastVector2;
  * ...
  * @author ...
  */
-class SimpleButton extends Entity
+class SimpleButton extends Entity implements UIComponent
 {
 	private var mArea:Rectangle;
 	
@@ -31,6 +31,7 @@ class SimpleButton extends Entity
 	
 	public var userData:Dynamic;
 	public var camera:Camera;
+	public var autoDetect:Bool = true;
 		
 	public var display(default,null):AnimationSprite;
 	
@@ -71,7 +72,7 @@ class SimpleButton extends Entity
 		{
 			touchInside = true;
 		}
-		if (Input.inst.isMouseReleased())
+		if (Input.inst.isMouseReleased()&&autoDetect)
 		{
 			if(touchInside&& mouseInsideArea())
 			{
@@ -87,6 +88,22 @@ class SimpleButton extends Entity
 		
 		//display.x = mArea.x + offset.x;
 		//display.y = mArea.y + offset.y;
+	}
+	
+	/* INTERFACE com.framework.utils.UIComponent */
+	
+	public function handleInput():Void 
+	{
+		if (Input.inst.isMouseReleased()){
+			if(mouseInsideArea())
+			{
+				isPress = true;
+				display.scaleX = 2;
+				display.scaleY = 2;
+				oneFrameDelay = true;
+			}
+		}
+		
 	}
 	public var multitouch:Bool;
 	//var touchPoint:TouchInfo;

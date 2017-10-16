@@ -14,7 +14,8 @@ class TouchSliderH extends Entity
 	public var display:Layer;
 	public var scrollLimit:Float =-1;
 	public var scrollStart:Float = 0;
-	public var slotSize:Float=1;
+	public var slotSize:Float = 1;
+	var components:Array<UIComponent>;
 	
 	public function new(aX:Float,aY:Float,aWidth:Float,aHeight:Float) 
 	{
@@ -29,6 +30,7 @@ class TouchSliderH extends Entity
 		display = new Layer();
 		x = aX;
 		y = aY;
+		components = new Array();
 	}
 	var captureMovement:Bool;
 	var velocities:Array<Float>;
@@ -39,6 +41,10 @@ class TouchSliderH extends Entity
 	var friction:Float=0.95;
 	var slotVel:Float = 0;
 	var lock:Bool;
+	public var maxDelta:Float = 20;
+	var startTouch:Bool;
+	var startX:Float = 0;
+	var startY:Float = 0;
 	override function onUpdate(aDt:Float):Void 
 	{
 		if (Input.i.isMousePressed())
@@ -47,13 +53,38 @@ class TouchSliderH extends Entity
 			var mouseY:Float = Input.i.getMouseY();
 			if (mouseX < right() && mouseX > left() && mouseY > top() && mouseY < bottom())
 			{
-				captureMovement = true;
-				offset = display.x - mouseX;
+				startX = Input.i.getMouseX();
+				startY = Input.i.getMouseY();
+				startTouch = true;
 			}
 			for (i in 0...REC_POSITIONS_NUM) 
+				{
+					velocities[i]=0;
+				}
+		}
+		if (startTouch&&Input.i.isMouseDown())
+		{
+			var mouseX:Float = Input.i.getMouseX();
+			var mouseY:Float = Input.i.getMouseY();
+			if (mouseX < right() && mouseX > left() && mouseY > top() && mouseY < bottom()&&(Math.abs(startX-mouseX)>maxDelta||Math.abs(startY-mouseY)>maxDelta))
 			{
-				velocities[i]=0;
+				startTouch = false;
+				captureMovement = true;
+				offset = display.x - mouseX;
+				
+			}else {
+				for (component in components) 
+				{
+					component.handleInput();
+				}	
 			}
+			
+		}
+		if (startTouch && Input.i.isMouseReleased()) {
+			for (component in components) 
+			{
+				component.handleInput();
+			}	
 		}
 		
 		if (captureMovement)
@@ -153,5 +184,9 @@ class TouchSliderH extends Entity
 	public function isPositionLock():Bool
 	{
 		return (-display.x / slotSize)-index()==0;
+	}
+	public function addComponent(component:UIComponent)
+	{
+		components.push(component);
 	}
 }
