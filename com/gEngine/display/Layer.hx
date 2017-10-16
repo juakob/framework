@@ -32,13 +32,13 @@ class Layer implements IDrawContainer
 	public var visible:Bool = true;
 	public var filter:Filter;
 	
-	var drawArea:MinMax;
+	public var drawArea(default,set):MinMax;
 	
 	public function new() 
 	{
 		mChildren = new MyList();
 		mTransformation = new Matrix();
-		drawArea = new MinMax();
+		
 	}
 	
 	
@@ -61,18 +61,28 @@ class Layer implements IDrawContainer
 		}else {
 			mHlpMatrix.setTo(mTransformation.a, mTransformation.b, mTransformation.c, mTransformation.d, mTransformation.tx, mTransformation.ty);
 		}
+		if (drawArea != null)
+		{
+			aPainter.render();
+			aPainter.adjustRenderArea(drawArea);
+		}
 		if (filter == null)
 		{
+			
 			for (child in mChildren) 
 			{
 				child.render(aPainter,mHlpMatrix);
 			}
 		}else {
 			
-			filter.render(this,mChildren, aPainter, mHlpMatrix);
+			filter.render(this, mChildren, aPainter, mHlpMatrix);
+			
 		}
-		
-		
+		if (drawArea != null)
+		{
+			aPainter.render();
+			aPainter.resetRenderArea();
+		}
 	}
 	
 	public function getDrawArea(aValue:MinMax):Void
@@ -219,6 +229,16 @@ class Layer implements IDrawContainer
 		return 1;
 		}
 		return 0;
+	}
+	
+	function set_drawArea(value:MinMax):MinMax 
+	{
+		trace(value.max.x );
+		value.min.x = GEngine.i.width*value.min.x/GEngine.virtualWidth;
+		value.min.y = GEngine.i.height*value.min.y / GEngine.virtualHeight;
+		value.max.x = GEngine.i.width*value.max.x / GEngine.virtualWidth;
+		value.max.y = GEngine.i.height*value.max.y/GEngine.virtualHeight;
+		return drawArea = value;
 	}
 	
 }

@@ -18,6 +18,7 @@ class SpritePainter implements IPainter
 	public var textureID:Int = 0;
 	
 	var painters:Array<Array<IPainter>>;
+	var renderArea:MinMax;
 	
 	public function new(aAutoDelete:Bool) 
 	{
@@ -80,16 +81,24 @@ class SpritePainter implements IPainter
 	{
 		if (drawMode!=aDrawMode||blend!=aBlend)
 		{
-			
 			if (currentPainter.vertexCount() > 0)
 			{
-			currentPainter.render();
-			
+				if (renderArea != null)
+				{
+					currentPainter.adjustRenderArea(renderArea);
+					currentPainter.render();
+					currentPainter.resetRenderArea();
+				}else {
+					currentPainter.render();
+				}
+				
 			}
 			drawMode = aDrawMode;
 			blend = aBlend;
+			
 			currentPainter = painters[cast aDrawMode][cast aBlend];
 			currentPainter.textureID = aTexture;
+			
 			
 		}
 		currentPainter.validateBatch(aTexture, aSize, aDrawMode, aBlend);
@@ -114,7 +123,16 @@ class SpritePainter implements IPainter
 	
 	public function adjustRenderArea(aArea:MinMax):Void 
 	{
-		
+		renderArea = aArea;
+		currentPainter.adjustRenderArea(aArea);
+	}
+	
+	/* INTERFACE com.gEngine.painters.IPainter */
+	
+	public function resetRenderArea():Void 
+	{
+		renderArea = null;
+		currentPainter.resetRenderArea();
 	}
 	
 }

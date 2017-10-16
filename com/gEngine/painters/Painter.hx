@@ -6,6 +6,7 @@ import com.helpers.MinMax;
 import kha.Color;
 import kha.FastFloat;
 import kha.Shaders;
+import kha.System;
 import kha.arrays.Float32Array;
 import kha.graphics4.BlendingOperation;
 import kha.graphics4.Graphics;
@@ -51,6 +52,11 @@ class Painter implements IPainter
 	var buffer:Float32Array;
 	public var textureID:Int = -1;
 	
+	var fullScreenWidth:Float;
+	var fullScreenHeight:Float;
+	
+	var cropArea:MinMax;
+	
 	public function new(aAutoDestroy:Bool = true, aBlend:Blend=null) 
 	{	
 		if (aBlend == null) aBlend = Blend.blendDefault();
@@ -58,6 +64,10 @@ class Painter implements IPainter
 		initShaders(aBlend);
 		buffer = getVertexBuffer();
 		mCustomBlend = false;
+		fullScreenWidth = System.windowWidth();
+		fullScreenHeight = System.windowHeight();
+		cropArea = new MinMax();
+		resetRenderArea();
 	}
 	public inline function write(aValue:Float):Void
 	{
@@ -84,7 +94,7 @@ class Painter implements IPainter
 			var g = GEngine.i.currentCanvas().g4;
 			// Begin rendering
 			g.begin();
-			g.scissor(0, 0, GEngine.i.width, GEngine.i.height);
+			g.scissor(Std.int(cropArea.min.x),Std.int(cropArea.min.y),Std.int(cropArea.max.x),Std.int(cropArea.max.y));
 			uploadVertexBuffer();
 			// Clear screen
 			if(clear) g.clear(Color.fromFloats(red,green,blue,alpha));
@@ -249,6 +259,17 @@ class Painter implements IPainter
 		
 		public function adjustRenderArea(aArea:MinMax):Void 
 		{
-			
+			cropArea.min.x = aArea.min.x;
+			cropArea.min.y = aArea.min.y;
+			cropArea.max.x = aArea.max.x;
+			cropArea.max.y = aArea.max.y;
 		}
+		public function resetRenderArea():Void {
+			cropArea.min.x = 0;
+			cropArea.min.y = 0;
+			cropArea.max.x = fullScreenWidth;
+			cropArea.max.y = fullScreenHeight;
+		}
+		
+		
 }

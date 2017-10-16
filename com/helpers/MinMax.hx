@@ -114,4 +114,14 @@ class MinMax
 		return max.x - min.x;
 	}
 	
+	static inline public function from(x:Float, y:Float, width:Float, height:Float):MinMax
+	{
+		var minMax:MinMax = new MinMax();
+		minMax.min.x = x;
+		minMax.min.y = y;
+		minMax.max.x = width;
+		minMax.max.y = height;
+		return minMax;
+	}
+	
 }

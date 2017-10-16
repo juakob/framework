@@ -85,6 +85,7 @@ class TouchSliderH extends Entity
 			{
 				component.handleInput();
 			}	
+			startTouch = false;
 		}
 		
 		if (captureMovement)

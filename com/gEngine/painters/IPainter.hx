@@ -18,7 +18,7 @@ interface IPainter
    function vertexCount():Int;
    function releaseTexture():Bool;
    function adjustRenderArea(aArea:MinMax):Void;
-   
+   function resetRenderArea():Void;
    var textureID:Int;
    var resolution:Float;
 }
