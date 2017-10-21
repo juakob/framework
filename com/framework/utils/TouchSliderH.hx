@@ -1,10 +1,14 @@
 package com.framework.utils;
 import com.gEngine.display.Layer;
+import com.helpers.MinMax;
 
 /**
  * ...
  * @author Joaquin
  */
+enum ScrollDirection {
+Horizontal; Vertical;	
+}
 class TouchSliderH extends Entity
 {
 	public var width:Float;
@@ -16,8 +20,10 @@ class TouchSliderH extends Entity
 	public var scrollStart:Float = 0;
 	public var slotSize:Float = 1;
 	var components:Array<UIComponent>;
+	var scrollDirection:ScrollDirection;
+	public var cropLayer(default,set):Bool;
 	
-	public function new(aX:Float,aY:Float,aWidth:Float,aHeight:Float) 
+	public function new(aX:Float,aY:Float,aWidth:Float,aHeight:Float,aScrollDirection:ScrollDirection) 
 	{
 		super();
 		width = aWidth;
@@ -31,6 +37,7 @@ class TouchSliderH extends Entity
 		x = aX;
 		y = aY;
 		components = new Array();
+		scrollDirection = aScrollDirection;
 	}
 	var captureMovement:Bool;
 	var velocities:Array<Float>;
@@ -70,7 +77,11 @@ class TouchSliderH extends Entity
 			{
 				startTouch = false;
 				captureMovement = true;
-				offset = display.x - mouseX;
+				if(scrollDirection==ScrollDirection.Horizontal){
+					offset = display.x - mouseX;
+				}else {
+					offset = display.y - mouseY;
+				}
 				
 			}else {
 				for (component in components) 
@@ -90,10 +101,21 @@ class TouchSliderH extends Entity
 		
 		if (captureMovement)
 		{
-			var nextPos:Float = Input.i.getMouseX() + offset;
+			var nextPos:Float;
+			if(scrollDirection==ScrollDirection.Horizontal){
+				 nextPos = Input.i.getMouseX() + offset;
+			}else {
+				nextPos = Input.i.getMouseY() + offset;
+			}	
 			posIndex = (++posIndex) % REC_POSITIONS_NUM;
-			velocities[posIndex] = (nextPos - display.x)/aDt;
-			display.x = nextPos;
+			
+			if (scrollDirection == ScrollDirection.Horizontal) {
+				velocities[posIndex] = (nextPos - display.x) / aDt;
+				display.x = nextPos;
+			}else {
+				velocities[posIndex] = (nextPos - display.y) / aDt;
+				display.y = nextPos;
+			}
 			velocity = 0;
 			slotVel = 0;
 			lock = false;
@@ -101,7 +123,12 @@ class TouchSliderH extends Entity
 		}else
 		if (!lock)
 		{
-			var delta:Float = (display.x / slotSize) - Std.int(display.x / slotSize);
+			var delta:Float; 
+			if(scrollDirection==ScrollDirection.Horizontal){
+				delta=(display.x / slotSize) - Std.int(display.x / slotSize);
+			}else {
+				delta=(display.y / slotSize) - Std.int(display.y / slotSize);
+			}
 			var absDelta:Float = Math.abs(delta);
 		
 			if (Math.abs(velocity)<1000&&(absDelta<0.03||absDelta>0.97))
@@ -111,9 +138,17 @@ class TouchSliderH extends Entity
 				velocity = 0;
 				if (absDelta > 0.5)
 				{
-					display.x = Std.int(display.x / slotSize-1)*slotSize ;
+					if(scrollDirection==ScrollDirection.Horizontal){
+						display.x = Std.int(display.x / slotSize-1) * slotSize ;
+					}else {
+						display.y = Std.int(display.y / slotSize-1) * slotSize ;
+					}
 				}else {
-					display.x = Std.int(display.x / slotSize)*slotSize;
+					if(scrollDirection==ScrollDirection.Horizontal){
+						display.x = Std.int(display.x / slotSize) * slotSize;
+					}else {
+						display.y = Std.int(display.y / slotSize) * slotSize;
+					}
 				}
 			}else
 			if(delta!=0){
@@ -143,19 +178,35 @@ class TouchSliderH extends Entity
 			velocity /= REC_POSITIONS_NUM;
 			captureMovement = false;
 		}
-		
-		display.x += (velocity+slotVel )* aDt;
+		if(scrollDirection==ScrollDirection.Horizontal){
+			display.x += (velocity + slotVel ) * aDt;
+		}else {
+			display.y += (velocity + slotVel ) * aDt;
+		}
 		velocity = velocity * friction;
 		
-		if (display.x > scrollStart)
-		{
-			display.x = scrollStart;
-			slotVel=velocity = 0;
-		}else
-		if (scrollLimit > 0 &&-display.x > scrollLimit)
-		{
-			display.x =-scrollLimit;
-			slotVel=velocity = 0;
+		if(scrollDirection==ScrollDirection.Horizontal){
+			if (display.x > scrollStart)
+			{
+				display.x = scrollStart;
+				slotVel=velocity = 0;
+			}else
+			if (scrollLimit > 0 &&-display.x > scrollLimit)
+			{
+				display.x =-scrollLimit;
+				slotVel=velocity = 0;
+			}
+		}else {
+			if (display.y > scrollStart)
+			{
+				display.y = scrollStart;
+				slotVel=velocity = 0;
+			}else
+			if (scrollLimit > 0 &&-display.y > scrollLimit)
+			{
+				display.y =-scrollLimit;
+				slotVel=velocity = 0;
+			}
 		}
 	}
 	inline function  left():Float
@@ -190,4 +241,15 @@ class TouchSliderH extends Entity
 	{
 		components.push(component);
 	}
+	
+	function set_cropLayer(value:Bool):Bool 
+	{
+		if(value){
+			display.drawArea = MinMax.from(x, y, width, height);
+		}else {
+			display.drawArea = null;
+		}
+		return cropLayer = value;
+	}
+	
 }
