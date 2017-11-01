@@ -85,19 +85,20 @@ class Layer implements IDrawContainer
 		}
 	}
 	
+	var drawAreaTemp:MinMax = new MinMax();
 	public function getDrawArea(aValue:MinMax):Void
 	{
-		drawArea.reset();
+		drawAreaTemp.reset();
 		for (child in mChildren) 
 		{
-			child.getDrawArea(drawArea);
+			child.getDrawArea(drawAreaTemp);
 		}
 		mTransformation.tx = x;
 		mTransformation.ty = y;
 		mTransformation.a = scaleX;
 		mTransformation.d = scaleY;
-		drawArea.transform(mTransformation);
-		aValue.merge(drawArea);
+		drawAreaTemp.transform(mTransformation);
+		aValue.merge(drawAreaTemp);
 	}
 	public var playing(default,default):Bool = true;
 	public function stop():Void

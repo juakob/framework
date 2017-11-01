@@ -1,5 +1,6 @@
 package com.gEngine.shaders;
 
+import com.gEngine.display.Blend;
 import com.gEngine.painters.Painter;
 import com.helpers.MinMax;
 import kha.Shaders;
@@ -16,9 +17,9 @@ class ShBlurV extends Painter
 {
 	var mResolutionID:ConstantLocation;
 	public var mFactor:Float;
-	public function new(factor:Float = 1) 
+	public function new(factor:Float = 1,aBlend:Blend) 
 	{
-		super();
+		super(true,aBlend);
 		mFactor = factor;
 	}
 	override function setShaders(aPipeline:PipelineState):Void 

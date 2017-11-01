@@ -6,6 +6,8 @@ import com.gEngine.display.Layer;
 import com.gEngine.GEngine;
 import com.helpers.Point;
 import com.helpers.Rectangle;
+import com.panelUI.ITransition;
+import com.panelUI.TransitionPlayer;
 import kha.math.FastVector2;
 
 
@@ -32,6 +34,10 @@ class SimpleButton extends Entity implements UIComponent
 	public var userData:Dynamic;
 	public var camera:Camera;
 	public var autoDetect:Bool = true;
+	public var disable(get, set):Bool;
+	var mDisable:Bool;
+	
+	var transitionPlayer:TransitionPlayer;
 		
 	public var display(default,null):AnimationSprite;
 	
@@ -53,20 +59,22 @@ class SimpleButton extends Entity implements UIComponent
 		}
 		
 		super();
+		transitionPlayer = new TransitionPlayer();
 	}
 	
 	private var oneFrameDelay:Bool;
 	var touchInside:Bool;
 	override public function update(aDt:Float):Void 
 	{
+		transitionPlayer.update(aDt);
+		if(disable){
+			return;
+		}
 		isPress = false;
 		if (oneFrameDelay &&onClick!=null)
 		{
 			onClick(this);
 			oneFrameDelay = false;
-		}else {
-			display.scaleX = 1;
-			display.scaleY = 1;
 		}
 		if (press())
 		{
@@ -77,8 +85,6 @@ class SimpleButton extends Entity implements UIComponent
 			if(touchInside&& mouseInsideArea())
 			{
 				isPress = true;
-				display.scaleX = 2;
-				display.scaleY = 2;
 				oneFrameDelay = true;
 			}
 			touchInside = false;
@@ -94,12 +100,13 @@ class SimpleButton extends Entity implements UIComponent
 	
 	public function handleInput():Void 
 	{
+		if(disable){
+			return;
+		}
 		if (Input.inst.isMouseReleased()){
 			if(mouseInsideArea())
 			{
 				isPress = true;
-				display.scaleX = 2;
-				display.scaleY = 2;
 				oneFrameDelay = true;
 			}
 		}
@@ -184,5 +191,20 @@ class SimpleButton extends Entity implements UIComponent
 		display.removeFromParent();
 		onClick = null;
 		super.onDestroy();
+	}
+	public function addTransition(aTransition:ITransition)
+	{
+		transitionPlayer.addTransition(aTransition);
+	}
+	
+	function get_disable():Bool 
+	{
+		return mDisable;
+	}
+	
+	function set_disable(value:Bool):Bool 
+	{
+		display.visible = !value;
+		return mDisable = value;
 	}
 }

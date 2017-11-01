@@ -5,11 +5,12 @@ precision mediump float;
 #endif
 
 uniform sampler2D tex;
+uniform vec2 resolution;
 in vec2 texCoord;
 out vec4 FragColor;
 
 void kore() {
-	vec2 value = vec2(2./1280.,2./720.);
+	vec2 value = resolution;
 	vec4 c1 = texture( tex, texCoord - value );
 	vec4 c2 = texture( tex, texCoord );
 	vec4 c3 = texture( tex, texCoord + value);

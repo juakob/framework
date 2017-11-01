@@ -242,6 +242,11 @@ class TouchSliderH extends Entity
 		components.push(component);
 	}
 	
+	public function goTo() 
+	{
+		
+	}
+	
 	function set_cropLayer(value:Bool):Bool 
 	{
 		if(value){

@@ -10,6 +10,7 @@ import com.gEngine.display.BatchProxy;
 import com.gEngine.display.Blend;
 import com.gEngine.display.ComplexSprite;
 import com.gEngine.display.extra.AnimationSpriteClone;
+import com.gEngine.helper.Screen;
 import com.gEngine.painters.IPainter;
 import com.gEngine.painters.Painter;
 import com.gEngine.painters.PainterAlpha;
@@ -24,6 +25,7 @@ import com.gEngine.display.Stage;
 import haxe.io.Bytes;
 import haxe.io.BytesInput;
 import kha.Canvas;
+import kha.Display;
 import kha.Shaders;
 import kha.graphics4.BlendingFactor;
 import kha.graphics4.DepthStencilFormat;
@@ -105,8 +107,8 @@ import kha.System;
 			mResources = new EngineResources();
 			mTextures = new MyList();
 			mStage = new Stage();
-			width = System.windowWidth();
-			height = System.windowHeight();
+			width = Screen.getWidth();
+			height = Screen.getHeight();
 			
 			mTempBuffer = Image.createRenderTarget(width, height, null, DepthStencilFormat.NoDepthAndStencil, 1);
 			mCurrentRenderTargetId=mTempBufferID = mTextures.push(mTempBuffer) - 1;
@@ -486,7 +488,7 @@ import kha.System;
 			
 			// Begin rendering
 			g.begin();
-			if(clear)g.clear(Color.fromFloats(0.0, 0.0,0.0,0),0.0);
+			if(clear)g.clear(Color.fromFloats(0,0,0,0));
 			g.end();
 			mStage.render(mSpritePainter);
 			

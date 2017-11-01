@@ -40,7 +40,7 @@ class AnimationPlayer
 			}
 			findNextEvent();
 		}
-		if (mDisplay.CurrentFrame<=lastFrame&&mDisplay.CurrentFrame>=firtsFrame) return;
+		if (mDisplay.CurrentFrame<=lastFrame&&mDisplay.CurrentFrame>=firstFrame) return;
 		if ( currentAnimation!=null)
 		{
 			//if (currentLabel.charAt(0) == "[")
@@ -52,7 +52,7 @@ class AnimationPlayer
 				//return;
 			//}
 			if(mLoop){
-				mDisplay.goToAndPlay(firtsFrame);
+				mDisplay.goToAndPlay(firstFrame);
 				findNextEvent();
 			}else 
 			{
@@ -62,17 +62,18 @@ class AnimationPlayer
 		}
 		
 	}
-	var firtsFrame:Int = 0;
+	var firstFrame:Int = 0;
 	var lastFrame:Int = 0;
 	public inline function play(aAnimation:String,aLoop:Bool=true,aForce:Bool=false):Void
 	{
-		if (currentAnimation != aAnimation||aForce||!mDisplay.Playing)
+		var firstAnimationFrame:Int = mDisplay.labelFrame(aAnimation);
+		if ((currentAnimation != aAnimation||aForce||!mDisplay.Playing)&&firstAnimationFrame!=-1)
 		{
 			mLoop = aLoop;
 			currentAnimation = aAnimation;
-			firtsFrame = mDisplay.labelFrame(currentAnimation);
+			firstFrame = firstAnimationFrame;
 			lastFrame = mDisplay.labelEnd(currentAnimation);
-			mDisplay.goToAndStop(firtsFrame);
+			mDisplay.goToAndStop(firstFrame);
 			mDisplay.play();
 			findNextEvent();
 		}
@@ -81,10 +82,10 @@ class AnimationPlayer
 	{
 		if (currentAnimation != aAnimation)
 		{
-			var delta = mDisplay.CurrentFrame-firtsFrame;
+			var delta = mDisplay.CurrentFrame-firstFrame;
 			currentAnimation = aAnimation;
-			firtsFrame = mDisplay.labelFrame(currentAnimation);
-			mDisplay.goToAndPlay(firtsFrame+delta);
+			firstFrame = mDisplay.labelFrame(currentAnimation);
+			mDisplay.goToAndPlay(firstFrame+delta);
 			findNextEvent();
 		}
 	}

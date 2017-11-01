@@ -2,8 +2,10 @@ package com.gEngine.painters;
 import com.gEngine.display.Blend;
 import com.gEngine.display.BlendMode;
 import com.gEngine.display.DrawMode;
+import com.gEngine.helper.Screen;
 import com.helpers.MinMax;
 import kha.Color;
+import kha.Display;
 import kha.FastFloat;
 import kha.Shaders;
 import kha.System;
@@ -64,8 +66,8 @@ class Painter implements IPainter
 		initShaders(aBlend);
 		buffer = getVertexBuffer();
 		mCustomBlend = false;
-		fullScreenWidth = System.windowWidth();
-		fullScreenHeight = System.windowHeight();
+		fullScreenWidth = Screen.getWidth();
+		fullScreenHeight = Screen.getHeight();
 		cropArea = new MinMax();
 		resetRenderArea();
 	}
@@ -129,7 +131,7 @@ class Painter implements IPainter
 			#end
 			counter = 0;
 	}
-	public function vertexCount():Int
+	public inline function vertexCount():Int
 	{
 		return Std.int(counter / dataPerVertex);
 	}
@@ -232,9 +234,9 @@ class Painter implements IPainter
 		}
 		public function destroy():Void
 		{
-			vertexBuffer.delete();
-			indexBuffer.delete();
-			pipeline.delete();
+			//vertexBuffer.delete();
+			//indexBuffer.delete();
+			//pipeline.delete();
 		}
 		
 		/* INTERFACE com.gEngine.painters.IPainter */
