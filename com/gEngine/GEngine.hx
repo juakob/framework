@@ -113,7 +113,7 @@ import kha.System;
 			mTempBuffer = Image.createRenderTarget(width, height, null, DepthStencilFormat.NoDepthAndStencil, 1);
 			mCurrentRenderTargetId=mTempBufferID = mTextures.push(mTempBuffer) - 1;
 			
-			mPainter = new Painter(false,Blend.blendDefault());
+			mPainter = new Painter(false,Blend.blendNone());
 			mSpritePainter = new SpritePainter(false);
 			
 			realWidth = mTempBuffer.realWidth;
@@ -265,7 +265,7 @@ import kha.System;
 			#end
 			return mResources.getChilds(id);
 		}
-		public function loadAnimationsToTexture(aAnimations:MyList<String>,aWidth:Int,aHeight:Int):Image
+		public function loadAnimationsToTexture(aAnimations:MyList<String>,aWidth:Int,aHeight:Int,aColor:Color):Image
 		{
 			
 			var atlasImage:Image;
@@ -276,7 +276,7 @@ import kha.System;
 				textureId = currentIndex;
 				
 			}else {
-				atlasImage = Image.createRenderTarget(2048, 2048, TextureFormat.RGBA32,DepthStencilFormat.DepthOnly);
+				atlasImage = Image.createRenderTarget(2048, 2048, TextureFormat.RGBA32,DepthStencilFormat.NoDepthAndStencil);
 				textureId = mTextures.push(atlasImage) - 1;
 				
 				
@@ -314,12 +314,14 @@ import kha.System;
 			
 			
 			g.pipeline = shaderPipeline;
+			g.color = aColor;
+			g.begin(true, 0);
 			
-			g.begin(true,0);
 			for (bitmap in bitmaps) 
 			{
 				
 				var rectangle = atlasMap.insertImage(bitmap);
+				
 				g.drawImage(bitmap.image, rectangle.x, rectangle.y);
 				rectangle.x+=1;
 				rectangle.y+=1;
@@ -395,8 +397,8 @@ import kha.System;
 			mCurrentRenderTargetId = aId;
 			if (mCurrentRenderTargetId != mTempBufferID)
 			{
-			renderCustomBuffer = true;
-			customBuffer = mTextures[aId];
+				renderCustomBuffer = true;
+				customBuffer = mTextures[aId];
 			}else
 			{
 				changeToBuffer();
@@ -456,7 +458,7 @@ import kha.System;
 				aPainter.write(aY/aSHeight*realV);	
 		}
 	
-		private function getTexture(aId:Int):Image
+		public function getTexture(aId:Int):Image
 		{
 			return mTextures[aId];
 		}
@@ -606,6 +608,13 @@ import kha.System;
 			currentIndex = initialIndex;
 			PainterGarbage.i.clear();
 			renderTargetPool.releaseAll();
+		}
+		
+		public function swapBuffer(aA:Int, aB:Int) 
+		{
+			var temp:Image = mTextures[aA];
+			mTextures[aA] = mTextures[aB];
+			mTextures[aB] = temp;
 		}
 		
 		

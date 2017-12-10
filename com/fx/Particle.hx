@@ -38,6 +38,7 @@ class Particle extends Entity
 	}
 	public function reset(x:Float, y:Float, life:Float,speedX:Float,speedY:Float,layer:Layer,angularVelocity:Float,scale:Float=1):Void
 	{
+		
 		mX = x;
 		mY = y;
 		mLife =mTotalLife=  life;

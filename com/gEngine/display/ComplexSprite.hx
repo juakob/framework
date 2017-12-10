@@ -29,6 +29,18 @@ class ComplexSprite extends AnimationSprite
 	{
 		mChildren.push(new DisplayDummyLink(display, aDummyName));
 	}
+	public function removeChild( aDummyName:String)
+	{
+		var index:Int=0;
+		for (i in 0...mChildren.length)
+		{
+			if (mChildren[i].dummyName == aDummyName) {
+				index = i;
+				break;
+			}
+		}
+		mChildren.splice(index,1);
+	}
 	override public  function render(painter:IPainter,transform:Matrix):Void
 	{
 		if (!visible)
@@ -74,8 +86,11 @@ class ComplexSprite extends AnimationSprite
 		for(display in mChildren)//TODO iterate over the dummys so the child list is in order
 		{
 			var dummy:Dummy = getDummy(display.dummyName);
-			mChildBatch.push(new ChildBatch(dummy, display.animation));
-			++stuffToDraw;
+			if (dummy != null)
+			{
+				mChildBatch.push(new ChildBatch(dummy, display.animation));
+				++stuffToDraw;
+			}
 		}
 		counter = Std.int(vertexs.length / 8);
 		var lastMask:Int =-1;

@@ -23,7 +23,11 @@ class AnimationSprite extends BasicSprite
 		player.update(passedTime);
 	
 	}
-	
+	override public function clone():BasicSprite
+	{
+		var cl:AnimationSprite = new AnimationSprite(mAnimationData);
+		return cl;
+	}
 	
 }
 

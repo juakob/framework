@@ -9,7 +9,7 @@ class Screen
 
 	public static inline function getWidth():Int
 	{
-		#if android_native
+		#if (kha_android&&cpp)
 		return kha.Display.width(0);
 		#else
 		return kha.System.windowWidth();
@@ -17,7 +17,7 @@ class Screen
 	}
 	public static inline function getHeight():Int
 	{
-		#if android_native
+		#if (kha_android&&cpp)
 		return kha.Display.height(0);
 		#else
 		return kha.System.windowHeight();

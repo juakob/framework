@@ -23,7 +23,7 @@ class AddDebugRec
 		#if expose
 		ES.i.add(new EsRecDebugDisplay());
 		var entity:Entity = new Entity();
-		ES.i.subscribeEntity(entity, "showMeta", RsCallFunctionPassMessage.ID, 
+		ES.i.subscribeEntity(entity, Msg.id("showMeta"), RsCallFunctionPassMessage.ID, 
 		function(aMessage:Message) {
 			
 			var prdisplay:PrDisplay = new PrDisplay();

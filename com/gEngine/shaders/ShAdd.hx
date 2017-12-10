@@ -26,7 +26,7 @@ class ShAdd extends Painter
 	}
 	override private function setBlends(aPipeline:PipelineState,aBlend:Blend) 
 		{
-			aPipeline.blendSource = BlendingFactor.SourceAlpha;
+			aPipeline.blendSource = BlendingFactor.BlendOne;
 			aPipeline.blendDestination = BlendingFactor.BlendOne;
 			aPipeline.alphaBlendSource = BlendingFactor.BlendOne;
 			aPipeline.alphaBlendDestination = BlendingFactor.BlendZero;

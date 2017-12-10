@@ -43,4 +43,14 @@ class Blend
 		blend.alphaBlendDestination = BlendingFactor.InverseSourceAlpha;
 		return blend;
 	}
+	
+	public static function blendNone():Blend
+	{
+		var blend:Blend = new Blend();
+		blend.blendSource = BlendingFactor.BlendOne;
+		blend.blendDestination = BlendingFactor.BlendZero;
+		blend.alphaBlendSource = BlendingFactor.BlendOne;
+		blend.alphaBlendDestination = BlendingFactor.BlendZero;
+		return blend;
+	}
 }

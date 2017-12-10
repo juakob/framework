@@ -12,7 +12,7 @@ import kha.math.FastMatrix3;
 class AreaEffect implements IDraw
 {
 	@:access(com.gEngine.GEngine.mPainter)
-	public function new(aSnapShotShader:IPainter,aPrintShader:IPainter) 
+	public function new(aSnapShotShader:IPainter, aPrintShader:IPainter, aSwapBuffer:Bool = false ) 
 	{
 		if (aSnapShotShader == null)
 		{
@@ -20,7 +20,7 @@ class AreaEffect implements IDraw
 		}else {
 			snapShotShader = aSnapShotShader;	
 		}
-		if (aPrintShader == null)
+		if (aPrintShader == null&& !swapBuffer)
 		{
 			printShader = GEngine.i.mPainter;
 		}else {
@@ -31,13 +31,15 @@ class AreaEffect implements IDraw
 	/* INTERFACE com.gEngine.display.IDraw */
 	private var snapShotShader:IPainter;
 	private var printShader:IPainter;
+	private var swapBuffer:Bool;
 	
 	public var parent:IDrawContainer;
 	
 	public var visible:Bool = true;
 	public var resolution:Float = 1;
 	private var screenScaleX:Float = 1;
-	private var screenScaleY:Float=1;
+	private var screenScaleY:Float = 1;
+	
 	
 	public function render(aPainter:IPainter, transform:Matrix):Void 
 	{
@@ -59,14 +61,19 @@ class AreaEffect implements IDraw
 
 		aPainter.finish();
 	
-		aPainter = printShader;
+		if (!swapBuffer)
+		{
+			aPainter = printShader;
 
-		GEngine.i.setCanvas(lastTarger);
-		aPainter.start();
+			GEngine.i.setCanvas(lastTarger);
+			aPainter.start();
 
-		GEngine.i.renderBuffer(renderTarget, aPainter, x, y, width, height, 1280,720, false);
+			GEngine.i.renderBuffer(renderTarget, aPainter, x, y, width, height, 1280,720, false);
 
-		aPainter.finish();
+			aPainter.finish();
+		}else {
+			GEngine.i.swapBuffer(renderTarget, lastTarger);
+		}
 		GEngine.i.releaseRenderTarget(renderTarget);
 
 		

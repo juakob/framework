@@ -69,7 +69,7 @@ class AnimationPlayer
 		var firstAnimationFrame:Int = mDisplay.labelFrame(aAnimation);
 		if ((currentAnimation != aAnimation||aForce||!mDisplay.Playing)&&firstAnimationFrame!=-1)
 		{
-			mLoop = aLoop;
+			mDisplay.Loop=mLoop = aLoop;
 			currentAnimation = aAnimation;
 			firstFrame = firstAnimationFrame;
 			lastFrame = mDisplay.labelEnd(currentAnimation);

@@ -3,6 +3,7 @@ package com.framework;
 import com.framework.utils.Input;
 import com.framework.utils.Resource;
 import com.gEngine.GEngine;
+import com.gEngine.helper.Screen;
 import kha.Framebuffer;
 import kha.Scheduler;
 import kha.System;
@@ -32,8 +33,8 @@ class Simulation
 		mResources = new Resource();
 		mCurrentState = new State();
 		Input.init();
-		//Input.i.screenScale.x = 1/GEngine.i.scaleWidth;
-		//Input.i.screenScale.y = 1/GEngine.i.scaleHeigth;
+		Input.i.screenScale.x = GEngine.virtualWidth/Screen.getWidth();
+		Input.i.screenScale.y = GEngine.virtualHeight/Screen.getHeight();
 		init();
 		
 	}
@@ -82,10 +83,10 @@ class Simulation
 			mLastFrameTime = time;
 			
 			
-			if (mFrameByFrameTime <= 0||mFrameByFrameTime>0.06666)
-			{
+			//if (mFrameByFrameTime <= 0||mFrameByFrameTime>0.06666)
+			//{
 				mFrameByFrameTime = 1 / 60;
-			}
+			//}
 			time = Scheduler.realTime();
 			TimeManager.setDelta(mFrameByFrameTime, time-mLastRealFrameTime);
 			mLastRealFrameTime = time;
@@ -101,9 +102,9 @@ class Simulation
 		if (uploadTextures)
 		{
 			mResources.uploadTextures();
-			mCurrentState.init();
 			uploadTextures = false;
 			initialized = true;
+			mCurrentState.init();
 			return;
 		}
 		if (mChangeState)
@@ -114,6 +115,7 @@ class Simulation
 			return;
 			
 		}
+		if (!initialized) return;
 		mCurrentState.render();
 		GEngine.i.draw(aFramebuffer);
 		mCurrentState.draw(aFramebuffer);
@@ -145,15 +147,16 @@ class Simulation
 			mCurrentState.load(mResources);
 			if (!mResources.isAllLoaded())
 			{
-				mResources.load(initState);
+				mResources.load(finishUpload);
 			}else {
-				initState();
+				finishUpload();
 			}
 		//	mResources.checkFinishLoading();
 	}
 	private var initialized:Bool = false;
+	private var initState:Bool = false;
 	private var uploadTextures:Bool = false;
-	private function initState():Void
+	private function finishUpload():Void
 	{
 		uploadTextures = true;
 		//mCurrentState.init();

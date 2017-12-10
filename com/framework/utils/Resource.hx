@@ -4,6 +4,7 @@ import com.gEngine.GEngine;
 import com.helpers.Point;
 import kha.Assets;
 import kha.Blob;
+import kha.Color;
 import kha.Image;
 import kha.Sound;
 
@@ -24,6 +25,7 @@ class Resource
 		private var mSoundResources:Array<String> = new Array();
 		private var mTexture:Array<MyList<String>> = new Array();
 		private var mTextureDimesion:Array<Point> = new Array();
+		private var mTextureColor:Array<Color> = new Array();
 		private var mDataResources:Array<String> = new Array();
 		private var mAnimationsLoaded:Int = 0;
 		private var mImagesLoaded:Int = 0;
@@ -41,10 +43,16 @@ class Resource
 			#end
 			mTexture[mTexture.length-1].push(aAnimation);
 		}
-		public function startTexture(aWidth:Int, aHeight:Int):Void
+		public function startTexture(aWidth:Int, aHeight:Int,?aColor:Color):Void
 		{
 			mTextureDimesion.push(new Point(aWidth, aHeight));
 			mTexture.push(new MyList());
+			if (aColor != null)
+			{
+				mTextureColor.push(aColor);
+			}else {
+				mTextureColor.push(Color.fromFloats(1,1, 1, 1));
+			}
 		}
 		public function addSound(aSound:String):Void
 		{
@@ -56,12 +64,14 @@ class Resource
 			for (texture in mTexture) 
 			{
 				var dimension = mTextureDimesion[counter];
-				GEngine.i.loadAnimationsToTexture(texture, Std.int(dimension.x), Std.int(dimension.y));
+				GEngine.i.loadAnimationsToTexture(texture, Std.int(dimension.x), Std.int(dimension.y), mTextureColor[counter]);
 				++counter;
 			}
 			//remove data
 			mTexture.splice(0, mTexture.length);
 			mTextureDimesion.splice(0, mTextureDimesion.length);
+			mTextureColor.splice(0, mTextureColor.length);
+			
 			for (animation in mAnimationsResources) 
 			{
 				Reflect.callMethod(Assets.blobs, Reflect.field(Assets.blobs, animation + "Unload"), []);

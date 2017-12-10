@@ -21,8 +21,8 @@ class ShRgbSplit extends Painter
 	public function new() 
 	{
 		super(true,Blend.blendMultipass());
-		resX = 1.5 / GEngine.i.realWidth;
-		resY = 1.5 / GEngine.i.realHeight;
+		resX = 2 / GEngine.i.realWidth;
+		resY = 2 / GEngine.i.realHeight;
 	}
 	override function setShaders(aPipeline:PipelineState):Void 
 	{

@@ -28,8 +28,8 @@ class ShLight extends Painter
 		{
 			aPipeline.blendSource = BlendingFactor.DestinationColor;
 			aPipeline.blendDestination = BlendingFactor.SourceColor;
-			aPipeline.alphaBlendSource = BlendingFactor.BlendOne;
-			aPipeline.alphaBlendDestination = BlendingFactor.BlendZero;
+			aPipeline.alphaBlendSource = BlendingFactor.DestinationAlpha;
+			aPipeline.alphaBlendDestination = BlendingFactor.DestinationAlpha;
 		}
 		
 		

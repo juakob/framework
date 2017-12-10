@@ -89,7 +89,11 @@ class BasicSprite implements IDraw
 		
 		mTextureId = aAnimationData.texturesID;
 	}
-	
+	public function clone():BasicSprite
+	{
+		var cl = new BasicSprite(mAnimationData);
+		return cl;
+	}
 	
 	public function recenter():Void
 	{
@@ -291,7 +295,7 @@ class BasicSprite implements IDraw
 				return dummy;
 			}
 		}
-		throw "dummy " + name + " not found";
+		return null;
 	}
 	private var sDummys:MyList<Dummy>=new MyList<Dummy>();
 	public function getDummys(name:String) :MyList<Dummy>

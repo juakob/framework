@@ -37,7 +37,7 @@ class Filter
 		if (!cropScreen)
 		{
 			drawArea.min.setTo(0, 0);
-			drawArea.max.setTo(1280, 720);
+			drawArea.max.setTo(GEngine.i.width,GEngine.i.height);
 		}
 		var passFilters:Array<IPainter> = new Array();
 		
