@@ -11,6 +11,7 @@ class MinMax
 {
 	public var min:Point;
 	public var max:Point;
+	public static var weak:MinMax = new MinMax();
 	public function new() 
 	{
 		min = new Point();

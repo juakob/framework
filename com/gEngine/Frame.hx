@@ -13,6 +13,7 @@ class Frame
 	public var colortTransform:MyList<Float>;
 	public var maskBatchs:MyList<MaskBatch>;
 	public var drawArea:DrawArea;
+	public var blurBatchs:MyList<BlurBatch>;
 	public function new() 
 	{
 		

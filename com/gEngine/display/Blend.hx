@@ -21,8 +21,17 @@ class Blend
 		var blend:Blend = new Blend();
 		blend.blendSource = BlendingFactor.SourceAlpha;
 		blend.blendDestination = BlendingFactor.BlendOne;
-		blend.alphaBlendSource = BlendingFactor.BlendOne;
-		blend.alphaBlendDestination = BlendingFactor.BlendZero;
+		blend.alphaBlendSource = BlendingFactor.SourceAlpha;
+		blend.alphaBlendDestination = BlendingFactor.BlendOne;
+		return blend;
+	}
+	public static function blendMultiply():Blend
+	{
+		var blend:Blend = new Blend();
+		blend.blendSource = BlendingFactor.SourceAlpha;
+		blend.blendDestination = BlendingFactor.SourceColor;
+		blend.alphaBlendSource = BlendingFactor.SourceAlpha;
+		blend.alphaBlendDestination = BlendingFactor.SourceAlpha;
 		return blend;
 	}
 	public static function blendMultipass():Blend

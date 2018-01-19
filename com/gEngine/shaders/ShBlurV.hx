@@ -32,7 +32,7 @@ class ShBlurV extends Painter
 		aArea.addBorderWidth(4);
 		width = aArea.width();
 	}
-	var width:Float=1280;
+	public var width:Float=720;
 	override function getConstantLocations(aPipeline:PipelineState) 
 	{
 		super.getConstantLocations(aPipeline);
@@ -41,7 +41,7 @@ class ShBlurV extends Painter
 	override function setParameter(g:Graphics):Void 
 	{
 		super.setParameter(g);
-		g.setFloat2(mResolutionID, 1/width*mFactor,0);
+		g.setFloat2(mResolutionID, 0,1/width*mFactor);
 	}
 	
 }

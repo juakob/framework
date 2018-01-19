@@ -13,4 +13,5 @@ abstract DrawMode(Int)
 	var Alpha = 1;
 	var ColorTint = 2;
 	var Mask = 3;
+	var Blur = 4;
 }

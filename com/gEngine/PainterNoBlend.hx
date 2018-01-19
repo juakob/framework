@@ -1,4 +1,5 @@
 package com.gEngine;
+import com.gEngine.display.Blend;
 import com.gEngine.painters.Painter;
 import kha.graphics4.BlendingFactor;
 import kha.graphics4.PipelineState;
@@ -15,7 +16,7 @@ class PainterNoBlend extends Painter
 		super();
 		
 	}
-	override function setBlends(aPipeline:PipelineState) 
+	override function setBlends(aPipeline:PipelineState,aBlend:Blend) 
 	{
 		aPipeline.blendSource = BlendingFactor.BlendOne;
 		aPipeline.blendDestination = BlendingFactor.BlendZero;

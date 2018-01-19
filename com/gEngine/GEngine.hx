@@ -15,6 +15,8 @@ import com.gEngine.painters.IPainter;
 import com.gEngine.painters.Painter;
 import com.gEngine.painters.PainterAlpha;
 import com.gEngine.painters.SpritePainter;
+import com.gEngine.shaders.ShBlurH;
+import com.gEngine.shaders.ShBlurV;
 import com.gEngine.tempStructures.Bitmap;
 import com.gEngine.tempStructures.UVLinker;
 import com.gEngine.tempStructures.UVLinker;
@@ -115,6 +117,9 @@ import kha.System;
 			
 			mPainter = new Painter(false,Blend.blendNone());
 			mSpritePainter = new SpritePainter(false);
+			
+			blurX = new ShBlurH(1,Blend.blendDefault());
+			blurY = new ShBlurV(1, Blend.blendDefault());
 			
 			realWidth = mTempBuffer.realWidth;
 			realHeight = mTempBuffer.realHeight;
@@ -384,6 +389,8 @@ import kha.System;
 		
 		public var scaleWidth:Float=1;
 		public var scaleHeigth:Float=1;
+		public var blurX:ShBlurH;
+		public var blurY:ShBlurV;
 		
 	
 		public function changeToBuffer()

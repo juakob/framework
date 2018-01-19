@@ -1,6 +1,7 @@
 package com.gEngine ;
 
 	import com.helpers.ByteArrayKha;
+	import com.helpers.MinMax;
 	import com.helpers.Point;
 	import com.MyList;
 	import kha.Blob;
@@ -106,6 +107,7 @@ package com.gEngine ;
 				currentFrame.alphas = new MyList();
 				currentFrame.colortTransform = new MyList();
 				currentFrame.maskBatchs = new MyList();
+				currentFrame.blurBatchs = new MyList();
 				var currentTextures = new MyList<String>();
 				while (frameLength > 0)
 				{
@@ -167,6 +169,24 @@ package com.gEngine ;
 					}
 					currentFrame.maskBatchs.push(maskBatch);
 					currentMaskBatchs.push(maskBatch);
+				}
+				
+				var blurCount = frames.readInt();
+				for (i in 0...blurCount)
+				{
+					var batch = new BlurBatch();
+					batch.start = frames.readInt();
+					batch.end = frames.readInt();
+					batch.blurX = frames.readFloat();
+					batch.blurY = frames.readFloat();
+					batch.passes = frames.readInt();
+					batch.area = new MinMax();
+					batch.area.min.x = frames.readFloat();
+					batch.area.min.y = frames.readFloat();
+					batch.area.max.x = frames.readFloat()+batch.area.min.x;
+					batch.area.max.y = frames.readFloat()+batch.area.min.y;
+					
+					currentFrame.blurBatchs.push(batch);
 				}
 				currentAnimationFrames.push(currentFrame);
 				currentAnimationTextures.push(currentTextures);

@@ -26,10 +26,12 @@ class ShLight extends Painter
 	}
 	override private function setBlends(aPipeline:PipelineState,aBlend:Blend) 
 		{
-			aPipeline.blendSource = BlendingFactor.DestinationColor;
+			aPipeline.blendOperation = BlendingOperation.Add;
+			aPipeline.colorWriteMaskAlpha = false;
+			aPipeline.blendSource = BlendingFactor.SourceAlpha;
 			aPipeline.blendDestination = BlendingFactor.SourceColor;
-			aPipeline.alphaBlendSource = BlendingFactor.DestinationAlpha;
-			aPipeline.alphaBlendDestination = BlendingFactor.DestinationAlpha;
+			aPipeline.alphaBlendSource = BlendingFactor.SourceAlpha;
+			aPipeline.alphaBlendDestination = BlendingFactor.SourceAlpha;
 		}
 		
 		

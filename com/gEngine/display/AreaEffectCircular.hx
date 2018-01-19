@@ -19,7 +19,7 @@ class AreaEffectCircular extends AreaEffect
 		super(aSnapShotShader, aPrintShader);
 	}
 
-	private override function createDrawInitialRectangle(aPainter:IPainter):Void
+	private  function createDrawInitialRectangle(aPainter:IPainter):Void
 	{
 		var screenWidth = GEngine.i.realWidth *screenScaleX;
 		var screenHeight = GEngine.i.realHeight * screenScaleY;
@@ -47,7 +47,7 @@ class AreaEffectCircular extends AreaEffect
 		x += width / 2;
 		y += height / 2;
 	}
-	private override function createDrawFinishRectangle(aPainter:IPainter):Void
+	private  function createDrawFinishRectangle(aPainter:IPainter):Void
 	{
 		var screenWidth = GEngine.i.realWidth *screenScaleX;
 		var screenHeight = GEngine.i.realHeight * screenScaleY;

@@ -11,6 +11,7 @@ import com.helpers.Matrix;
 import com.MyList;
 import com.helpers.MinMax;
 import com.helpers.Rectangle;
+import kha.Color;
 import kha.math.FastMatrix3;
 import kha.math.FastVector2;
 import kha.math.Vector2;
@@ -446,10 +447,14 @@ class BasicSprite implements IDraw
 		var uvs = frame.UVs;
 		var alphas = frame.alphas;
 		var colorTrans = frame.colortTransform;
-		var staffToDraw:Int = Std.int(vertexs.length / 8) + frame.maskBatchs.length;
+		var stuffToDraw:Int = Std.int(vertexs.length / 8) + frame.maskBatchs.length;
 		var counter:Int = 0;
 		var maskCounter:Int = 0;
+		var blurCounter:Int = 0;
+		var blurStarted:Bool=false;
 		var normalCounter:Int = 0;
+		var finishTarget:Int=-1;
+		var workTargetId:Int=-1;
 		var drawMask:Bool=false;
 		do {
 			if (frame.maskBatchs.length == 0)
@@ -459,7 +464,7 @@ class BasicSprite implements IDraw
 				if (drawMask)
 				{
 					drawMask = false;
-					--staffToDraw;
+					--stuffToDraw;
 					
 					var maskBatch:MaskBatch = frame.maskBatchs[maskCounter];
 					painter.validateBatch(mTextureId, Std.int(maskBatch.vertex.length/2), DrawMode.Mask,blend);
@@ -519,9 +524,65 @@ class BasicSprite implements IDraw
 				}
 				
 			}
+			if (frame.blurBatchs.length != 0 && blurCounter<frame.blurBatchs.length)
+			{
+				if (normalCounter == frame.blurBatchs[blurCounter].start && !blurStarted)
+				{
+					blurStarted = true;
+					counter = frame.blurBatchs[blurCounter].end+1;
+					painter.render();
+					finishTarget = GEngine.i.currentCanvasId();
+					workTargetId = GEngine.i.getRenderTarget();
+					var drawArea = MinMax.weak;
+					drawArea.reset();
+					transformArea(frame.blurBatchs[blurCounter].area,drawArea);
+					drawArea.addBorderWidth(frame.blurBatchs[blurCounter].blurX);
+					drawArea.addBorderWidth(frame.blurBatchs[blurCounter].blurY);
+					
+					GEngine.i.setCanvas(workTargetId);
+					GEngine.i.currentCanvas().g2.scissor(Std.int(drawArea.min.x-5), 
+														Std.int(drawArea.min.y-5), 
+														Std.int(drawArea.width()+10),
+														Std.int(drawArea.height()+10));
+					GEngine.i.currentCanvas().g2.begin(true,Color.fromFloats(0,0,0,0));
+					GEngine.i.currentCanvas().g2.end();
+					GEngine.i.currentCanvas().g2.disableScissor();
+				}else
+				if (normalCounter == frame.blurBatchs[blurCounter].end+1)
+				{
+					painter.render();
+					blurStarted = false;
+					
+					var drawArea = MinMax.weak;
+					var resolution:Int = 1;
+					var filter = GEngine.i.blurX;
+					filter.mFactor = frame.blurBatchs[blurCounter].blurX/5;
+					var middleStep = GEngine.i.getRenderTarget();
+					GEngine.i.setCanvas(middleStep);
+					
+					GEngine.i.renderBuffer(workTargetId, filter, drawArea.min.x * resolution, drawArea.min.y * resolution, drawArea.width() * resolution, drawArea.height() * resolution, 1280, 720, true, filter.resolution);
+					GEngine.i.setCanvas(finishTarget);
+					GEngine.i.releaseRenderTarget(workTargetId);
+					var filter2 = GEngine.i.blurY;
+					filter2.mFactor = frame.blurBatchs[blurCounter].blurY/5;
+					GEngine.i.renderBuffer(middleStep, filter, drawArea.min.x * resolution, drawArea.min.y * resolution, drawArea.width() * resolution, drawArea.height() * resolution, 1280, 720, false, filter.resolution);
+					GEngine.i.releaseRenderTarget(middleStep);
+					
+					
+					++blurCounter;
+					continue;
+				}
+				else
+				{
+					trace(frame.blurBatchs.length);
+					counter = frame.blurBatchs[blurCounter].start - normalCounter;// ;
+				
+				}
+			}
 			var drawMode:DrawMode = DrawMode.Default;
 			if (alphas.length != 0) drawMode = DrawMode.Alpha;
-			if (colorTrans.length != 0||colorTransform) drawMode = DrawMode.ColorTint;
+			if (colorTrans.length != 0 || colorTransform) drawMode = DrawMode.ColorTint;
+			
 			
 			painter.validateBatch(mTextureId, Std.int(frame.vertexs.length / 8 + frame.UVs.length / 8), drawMode,blend);
 			
@@ -652,9 +713,9 @@ class BasicSprite implements IDraw
 					}
 		
 			}
-			staffToDraw -= counter-normalCounter;
+			stuffToDraw -= counter-normalCounter;
 			normalCounter += counter-normalCounter;
-		}while (staffToDraw > 0);
+		}while (stuffToDraw > 0 || blurStarted);
 		x -= offsetX+pivotX;
 		y -= offsetY+pivotY;
 	}
@@ -759,20 +820,41 @@ class BasicSprite implements IDraw
 	
 	public function getDrawArea(aValue:MinMax):Void 
 	{
-		var drawArea = mAnimationData.frames[CurrentFrame].drawArea;
+		
 		var a = scaleX * cosAng-sinAng*tanSkewY*scaleX;
 		var b = scaleX * sinAng+cosAng*tanSkewY*scaleX;
 		var c = -scaleY * sinAng+cosAng*tanSkewX*scaleY;
 		var d = scaleY * cosAng + sinAng * tanSkewX * scaleY;
 		
 		var x = this.x+offsetX+pivotX;
-		var y =this.y+offsetY+pivotY;
-	
+		var y = this.y + offsetY + pivotY;
+		
+		var drawArea = mAnimationData.frames[CurrentFrame].drawArea;
+		
 		var matrix:FastMatrix3 = new FastMatrix3(a, c, x, b, d, y, 0, 0, 1);
 		aValue.mergeVec(matrix.multvec(new FastVector2(   drawArea.x, drawArea.y)));
 		aValue.mergeVec(matrix.multvec(new FastVector2(  drawArea.side,   drawArea.y)));
 		aValue.mergeVec(matrix.multvec(new FastVector2( drawArea.x,  drawArea.up)));
 		aValue.mergeVec(matrix.multvec(new FastVector2(  drawArea.side,   drawArea.up)));
+	}
+	
+	public function transformArea(aInput:MinMax,aResult:MinMax):Void 
+	{
+		
+		var a = scaleX * cosAng-sinAng*tanSkewY*scaleX;
+		var b = scaleX * sinAng+cosAng*tanSkewY*scaleX;
+		var c = -scaleY * sinAng+cosAng*tanSkewX*scaleY;
+		var d = scaleY * cosAng + sinAng * tanSkewX * scaleY;
+		
+		var x = this.x+offsetX+pivotX;
+		var y = this.y + offsetY + pivotY;
+		
+		
+		var matrix:FastMatrix3 = new FastMatrix3(a, c, x, b, d, y, 0, 0, 1);
+		aResult.mergeVec(matrix.multvec(new FastVector2(   aInput.min.x, aInput.min.y)));
+		aResult.mergeVec(matrix.multvec(new FastVector2(  aInput.max.x,   aInput.min.y)));
+		aResult.mergeVec(matrix.multvec(new FastVector2( aInput.min.x,  aInput.max.y)));
+		aResult.mergeVec(matrix.multvec(new FastVector2(  aInput.max.x,   aInput.max.y)));
 	}
 	/* INTERFACE com.gEngine.display.IDraw */
 	

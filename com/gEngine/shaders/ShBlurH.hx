@@ -32,7 +32,7 @@ class ShBlurH extends Painter
 		aArea.addBorderHeight(4);
 		height = aArea.height();
 	}
-	var height:Float=720;
+	public var height:Float=1280;
 	override function getConstantLocations(aPipeline:PipelineState) 
 	{
 		super.getConstantLocations(aPipeline);
@@ -41,7 +41,7 @@ class ShBlurH extends Painter
 	override function setParameter(g:Graphics):Void 
 	{
 		super.setParameter(g);
-		g.setFloat2(mResolutionID, 0, 1 / height*mFactor);
+		g.setFloat2(mResolutionID,1 / height*mFactor,0);
 	}
 	
 }
