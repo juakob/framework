@@ -528,6 +528,7 @@ class BasicSprite implements IDraw
 			{
 				if (normalCounter == frame.blurBatchs[blurCounter].start && !blurStarted)
 				{
+					
 					blurStarted = true;
 					counter = frame.blurBatchs[blurCounter].end+1;
 					painter.render();
@@ -535,9 +536,10 @@ class BasicSprite implements IDraw
 					workTargetId = GEngine.i.getRenderTarget();
 					var drawArea = MinMax.weak;
 					drawArea.reset();
+					
 					transformArea(frame.blurBatchs[blurCounter].area,drawArea);
-					drawArea.addBorderWidth(frame.blurBatchs[blurCounter].blurX);
-					drawArea.addBorderWidth(frame.blurBatchs[blurCounter].blurY);
+					//drawArea.addBorderWidth(frame.blurBatchs[blurCounter].blurX/2);
+					//drawArea.addBorderWidth(frame.blurBatchs[blurCounter].blurY/2);
 					
 					GEngine.i.setCanvas(workTargetId);
 					GEngine.i.currentCanvas().g2.scissor(Std.int(drawArea.min.x-5), 
@@ -556,6 +558,7 @@ class BasicSprite implements IDraw
 					var drawArea = MinMax.weak;
 					var resolution:Int = 1;
 					var filter = GEngine.i.blurX;
+					filter.resolution = 0.5;
 					filter.mFactor = frame.blurBatchs[blurCounter].blurX/5;
 					var middleStep = GEngine.i.getRenderTarget();
 					GEngine.i.setCanvas(middleStep);
@@ -564,8 +567,9 @@ class BasicSprite implements IDraw
 					GEngine.i.setCanvas(finishTarget);
 					GEngine.i.releaseRenderTarget(workTargetId);
 					var filter2 = GEngine.i.blurY;
+					filter2.resolution = 2;
 					filter2.mFactor = frame.blurBatchs[blurCounter].blurY/5;
-					GEngine.i.renderBuffer(middleStep, filter, drawArea.min.x * resolution, drawArea.min.y * resolution, drawArea.width() * resolution, drawArea.height() * resolution, 1280, 720, false, filter.resolution);
+					GEngine.i.renderBuffer(middleStep, filter2, drawArea.min.x * resolution, drawArea.min.y * resolution, drawArea.width() * resolution, drawArea.height() * resolution, 1280*2, 720*2, false,1);
 					GEngine.i.releaseRenderTarget(middleStep);
 					
 					
