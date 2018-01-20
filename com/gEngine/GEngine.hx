@@ -53,6 +53,7 @@ import kha.System;
 	 * @author joaquin
 	 */
 	@:allow(com.gEngine.painters.Painter)
+	@:allow(com.framework.utils.Resource)
 	 class GEngine 
 	{
 		
@@ -326,7 +327,11 @@ import kha.System;
 			{
 				
 				var rectangle = atlasMap.insertImage(bitmap);
-				
+				#if debug
+				if (rectangle == null) {
+					throw "not enough space on the atlas texture , atlas id" + textureId +", create another atlas";
+				}
+				#end
 				g.drawImage(bitmap.image, rectangle.x, rectangle.y);
 				rectangle.x+=1;
 				rectangle.y+=1;

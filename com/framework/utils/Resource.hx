@@ -1,5 +1,7 @@
 package com.framework.utils;
 import com.MyList;
+import com.framework.utils.Resource.Rename;
+import com.gEngine.AnimationData;
 import com.gEngine.GEngine;
 import com.helpers.Point;
 import kha.Assets;
@@ -12,6 +14,8 @@ import kha.Sound;
  * ...
  * @author Joaquin
  */
+typedef Rename = { var original:String; var newName:String; };
+@:allow(com.gEngine.GEngine)
 class Resource
 {
 
@@ -32,7 +36,9 @@ class Resource
 		private var mSoundsLoaded:Int = 0;
 		private var mDataLoaded:Int = 0;
 		private var mOnFinish:Void->Void;
-		public function addAnimation(aAnimation:String,textureId:Int=1):Void
+		private var renames:Array<Rename> = new Array();
+		
+		public function addAnimation(aAnimation:String,aRename:String=null,textureId:Int=1):Void
 		{
 			mAnimationsResources.push(aAnimation);
 			#if debug
@@ -41,7 +47,13 @@ class Resource
 				throw "Call startTexture before adding an animation";
 			}
 			#end
-			mTexture[mTexture.length-1].push(aAnimation);
+			mTexture[mTexture.length - 1].push(aAnimation);
+			if (aRename != null)
+			{
+				var rename:Rename = { original : aAnimation, newName : aRename };
+				renames.push(rename);
+			}
+			
 		}
 		public function startTexture(aWidth:Int, aHeight:Int,?aColor:Color):Void
 		{
@@ -82,6 +94,8 @@ class Resource
 				Reflect.callMethod(Assets.images, Reflect.field(Assets.images, image + "Unload"), []);
 			}
 			mImageResources.splice(0, mImageResources.length);
+			
+			renameAnimations();
 		}
 		public function load(onFinish:Void->Void):Void
 		{
@@ -116,6 +130,15 @@ class Resource
 			if (isAllLoaded())
 			{
 				mOnFinish();
+			}
+		}
+		
+		function renameAnimations() 
+		{
+			for (rename in renames) 
+			{
+				var animation:AnimationData = GEngine.i.mResources.getAnimationData(rename.original);
+				animation.name = rename.newName;
 			}
 		}
 		
