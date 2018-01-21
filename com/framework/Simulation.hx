@@ -4,6 +4,7 @@ import com.framework.utils.Input;
 import com.framework.utils.Resource;
 import com.gEngine.GEngine;
 import com.gEngine.helper.Screen;
+import com.soundLib.SoundManager.SM;
 import kha.Framebuffer;
 import kha.Scheduler;
 import kha.System;
@@ -34,7 +35,8 @@ class Simulation
 		mCurrentState = new State();
 		Input.init();
 		Input.i.screenScale.x = GEngine.virtualWidth/Screen.getWidth();
-		Input.i.screenScale.y = GEngine.virtualHeight/Screen.getHeight();
+		Input.i.screenScale.y = GEngine.virtualHeight / Screen.getHeight();
+		SM.init();
 		init();
 		
 	}
@@ -140,6 +142,7 @@ class Simulation
 			initialized = false;
 			if (mCurrentState!=null)
 			{
+				SM.reset();
 				mCurrentState.destroy();
 				mResources.unload();
 			}

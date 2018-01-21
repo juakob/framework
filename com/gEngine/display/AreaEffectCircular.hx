@@ -1,4 +1,5 @@
 package com.gEngine.display;
+import com.gEngine.display.IDrawContainer;
 import com.gEngine.painters.IPainter;
 import com.helpers.Matrix;
 import com.gEngine.display.IDraw;
@@ -11,46 +12,31 @@ import kha.math.FastVector2;
  * ...
  * @author Joaquin
  */
-class AreaEffectCircular extends AreaEffect
+class AreaEffectCircular implements IDraw
 {
+	private var snapShotShader:IPainter;
+	private var printShader:IPainter;
+	
 	@:access(com.gEngine.GEngine.mPainter)
 	public function new(aSnapShotShader:IPainter,aPrintShader:IPainter) 
 	{
-		super(aSnapShotShader, aPrintShader);
-	}
-
-	private  function createDrawInitialRectangle(aPainter:IPainter):Void
-	{
-		var screenWidth = GEngine.i.realWidth *screenScaleX;
-		var screenHeight = GEngine.i.realHeight * screenScaleY;
-		x -= width / 2;
-		y -= height / 2;
-		aPainter.write(x);
-		aPainter.write(y);
-		aPainter.write(x/screenWidth);
-		aPainter.write(y/screenHeight);
-		
-		aPainter.write((x+width*resolution));
-		aPainter.write(y);
-		aPainter.write(((x+width))/screenWidth);
-		aPainter.write(y/screenHeight);
-		
-		aPainter.write(x);
-		aPainter.write(y+height*resolution);
-		aPainter.write(x/screenWidth);
-		aPainter.write((y+height)/screenHeight);
-		
-		aPainter.write((x+width*resolution));
-		aPainter.write(y+height*resolution);
-		aPainter.write(((x+width))/screenWidth);
-		aPainter.write((y + height) / screenHeight);
-		x += width / 2;
-		y += height / 2;
+		if (aSnapShotShader == null)
+		{
+			snapShotShader = GEngine.i.mPainter;
+		}else {
+			snapShotShader = aSnapShotShader;	
+		}
+		if (aPrintShader == null)
+		{
+			printShader = GEngine.i.mPainter;
+		}else {
+			printShader = aPrintShader;
+		}
 	}
 	private  function createDrawFinishRectangle(aPainter:IPainter):Void
 	{
-		var screenWidth = GEngine.i.realWidth *screenScaleX;
-		var screenHeight = GEngine.i.realHeight * screenScaleY;
+		var screenWidth = GEngine.i.width *1;
+		var screenHeight = GEngine.i.height *1;
 		var faceWidth:Float = width / 10;
 		var faceHeigth:Float = height / 10;
 		
@@ -121,15 +107,84 @@ class AreaEffectCircular extends AreaEffect
 		}
 		
 	}
-	override public function getDrawArea(aValue:MinMax):Void 
+	 public function getDrawArea(aValue:MinMax):Void 
 	{
 		aValue.mergeRec(x-width/2, y-height/2, width, height);
+	}
+	
+	/* INTERFACE com.gEngine.display.IDraw */
+	
+	public var parent:IDrawContainer;
+	
+	public var visible:Bool;
+	
+	public function render(batch:IPainter, transform:Matrix):Void 
+	{
+		if (!visible)
+		{
+			return;
+		}
+		batch.render();
+		
+		var finalTarget:Int = GEngine.i.currentCanvasId();
+		var tempTexture:Int = GEngine.i.getRenderTarget();
+		GEngine.i.setCanvas(tempTexture);
+		var zoomTemp:Float = zoom;
+		var strokeTemp:Float = stroke;
+		var radioTemp:Float = radio;
+		snapShotShader.textureID = GEngine.backBufferId;
+		zoom = 1;
+		stroke+= 1;
+		radio -= 1;
+		createDrawFinishRectangle(snapShotShader);
+		zoom = zoomTemp;
+		stroke = strokeTemp;
+		radio = radioTemp;
+		snapShotShader.render(true);
+		
+		GEngine.i.setCanvas(finalTarget);
+		printShader.textureID = tempTexture;
+		createDrawFinishRectangle(printShader);
+		printShader.render();
+		
+		GEngine.i.releaseRenderTarget(tempTexture);
+	}
+	
+	public function update(elapsedTime:Float):Void 
+	{
+		
+	}
+	
+	public function texture():Int 
+	{
+		return -666;
+	}
+	
+	public function removeFromParent():Void 
+	{
+		parent.remove(this);
+		parent = null;
+	}
+	
+	public var x:Float;
+	
+	public var y:Float;
+	
+	public var scaleX:Float;
+	
+	public var scaleY:Float;
+	
+	public function getTransformation(aMatrix:FastMatrix3 = null):FastMatrix3 
+	{
+		throw "not implemented copy code from basicsprite";
 	}
 	
 	public var radio:Float=100;
 	public var stroke:Float=50;
 	public var numSegments:Int = 20;
 	public var zoom:Float = .85;
-	
+	public var width:Float = 1;
+	public var height:Float = 1;
+	public var resolution:Float = 1;
 	
 }

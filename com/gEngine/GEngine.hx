@@ -391,6 +391,7 @@ import kha.System;
 		
 		public static inline var virtualWidth:Float=1280;
 		public static inline var virtualHeight:Float=720;
+		static inline public var backBufferId=0;
 		
 		public var scaleWidth:Float=1;
 		public var scaleHeigth:Float=1;

@@ -13,12 +13,13 @@ class PainterNoBlend extends Painter
 
 	public function new() 
 	{
-		super();
+		super(true,Blend.blendNone());
 		
 	}
 	override function setBlends(aPipeline:PipelineState,aBlend:Blend) 
 	{
 		aPipeline.blendSource = BlendingFactor.BlendOne;
 		aPipeline.blendDestination = BlendingFactor.BlendZero;
+		
 	}
 }

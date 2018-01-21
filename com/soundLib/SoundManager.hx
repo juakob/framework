@@ -123,5 +123,9 @@ class SoundManager
 	{
 		return mMuteMusic;
 	}
+	static public function reset() 
+	{
+		map = new Map();
+	}
 	
 }

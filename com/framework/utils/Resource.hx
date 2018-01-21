@@ -4,6 +4,7 @@ import com.framework.utils.Resource.Rename;
 import com.gEngine.AnimationData;
 import com.gEngine.GEngine;
 import com.helpers.Point;
+import com.soundLib.SoundManager.SM;
 import kha.Assets;
 import kha.Blob;
 import kha.Color;
@@ -118,7 +119,7 @@ class Resource
 		private function loadImage(aName:String):Void {
 			if (mImageResources.indexOf(aName) < 0)
 			{
-				trace("image load: " + aName);
+				//trace("image load: " + aName);
 				mImageResources.push(aName);
 				//Assets.loadBlob(aName, addImage
 				Assets.loadImage(aName, addImage);
@@ -129,7 +130,12 @@ class Resource
 		{
 			if (isAllLoaded())
 			{
+				trace("all loaded");
 				mOnFinish();
+				for (sound in mSoundResources) 
+				{
+					SM.addSound(sound);
+				}
 			}
 		}
 		
@@ -162,7 +168,7 @@ class Resource
 		{
 			aSound.uncompress(function() {
 				++mSoundsLoaded;
-			checkFinishLoading();});
+			checkFinishLoading(); } );
 			
 		}
 		public function unload():Void
@@ -172,13 +178,18 @@ class Resource
 			{
 				Reflect.callMethod(Assets.sounds, Reflect.field(Assets.sounds, sound + "Unload"), []);
 			}
+			for (data in mDataResources) {
+				Reflect.callMethod(Assets.blobs, Reflect.field(Assets.blobs, data + "Unload"), []);
+			}
 			mSoundResources.splice(0, mSoundResources.length);
+			mDataResources.splice(0, mDataResources.length);
 			mAnimationsLoaded = 0;
 			mSoundsLoaded = 0;
 			mImagesLoaded = 0;
+			mDataLoaded = 0;
 		}
 		public inline function isAllLoaded():Bool
-		{
+		{	
 			return mAnimationsResources.length == mAnimationsLoaded &&
 				mImageResources.length == mImagesLoaded &&
 				mSoundResources.length == mSoundsLoaded &&

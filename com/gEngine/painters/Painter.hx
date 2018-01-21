@@ -37,10 +37,10 @@ class Painter implements IPainter
 	var vertexBuffer:VertexBuffer;
 	var indexBuffer:IndexBuffer;
 	var pipeline:PipelineState;
-	var red:FastFloat = 0.;
-	var green:FastFloat = 0.;
-	var blue:FastFloat = 0.;
-	var alpha:FastFloat = 0.;
+	public var red:FastFloat = 0.;
+	public var green:FastFloat = 0.;
+	public var blue:FastFloat = 0.;
+	public var alpha:FastFloat = 0.;
 	public var MAX_VERTEX_PER_BUFFER:Int =2500;
 	
 	var dataPerVertex:Int = 4;
