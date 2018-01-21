@@ -43,9 +43,11 @@ class Entity
 			}
 			++counter;
 		}
+		var offset = 0;
 		for ( index in sToDelete)
 		{
-			mChildren.splice(index, 1);
+			mChildren.splice(index-offset, 1);
+			++offset;
 		}
 		sToDelete.splice(0, sToDelete.length);
 		onUpdate(aDt);
