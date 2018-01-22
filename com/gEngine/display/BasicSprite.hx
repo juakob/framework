@@ -540,6 +540,10 @@ class BasicSprite implements IDraw
 					transformArea(frame.blurBatchs[blurCounter].area,drawArea);
 					//drawArea.addBorderWidth(frame.blurBatchs[blurCounter].blurX/2);
 					//drawArea.addBorderWidth(frame.blurBatchs[blurCounter].blurY/2);
+					drawArea.min.x -= offsetX;
+					drawArea.min.y -= offsetY;
+					drawArea.max.x -= offsetX;
+					drawArea.max.y -= offsetY;
 					
 					GEngine.i.setCanvas(workTargetId);
 					GEngine.i.currentCanvas().g2.scissor(Std.int(drawArea.min.x-5), 
