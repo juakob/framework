@@ -35,7 +35,9 @@ class Input
 	
 	private var mTouchPos:Array <Int>;
 	private var mTouchActive:Array <Bool>;
-	public var activeTouchSpots(default,null):Int;
+	public var activeTouchSpots(default, null):Int;
+	
+	var joysticks:Array<JoystickProxy>;
 	
 	
 	private var mMousePosition:Point;
@@ -66,6 +68,8 @@ class Input
 		}
 		
 		mMousePosition = new Point();
+		
+		joysticks = new Array();
 	}
 	
 	private function subscibeInput() 
@@ -76,6 +80,10 @@ class Input
 		if (surface != null)
 		{
 		surface.notify(onTouchStart, onTouchEnd, onTouchMove);
+		}
+		for (j in 0...4) 
+		{
+			joysticks.push(new JoystickProxy(j));
 		}
 	}
 	
@@ -145,6 +153,11 @@ class Input
 		mKeysPressed.splice(0,mKeysPressed.length);
 		mKeysReleased.splice(0, mKeysReleased.length);
 		
+		for (joystick in joysticks) 
+		{
+			joystick.update();
+		}
+		
 	}
 		/// Keyboard functions that operate on strings of length 1
 	public function isKeyDown(aCharacter:String):Bool {
@@ -202,6 +215,23 @@ class Input
 	public inline function touchActive(id:Int):Bool
 	{
 		return mTouchActive[id];
+	}
+	
+	public function buttonDown(aJoystickId:Int,aButtonId:Int):Bool
+	{
+		return joysticks[aJoystickId].buttonDown(aButtonId);
+	}
+	public function buttonPressed(aJoystickId:Int,aButtonId:Int):Bool
+	{
+		return joysticks[aJoystickId].buttonPressed(aButtonId);
+	}
+	public function buttonReleased(aJoystickId:Int,aButtonId:Int):Bool
+	{
+		return joysticks[aJoystickId].buttonReleased(aButtonId);
+	}
+	public function axis(aJoystickId:Int,aButtonId:Int):Float
+	{
+		return joysticks[aJoystickId].axis(aButtonId);
 	}
 	
 	

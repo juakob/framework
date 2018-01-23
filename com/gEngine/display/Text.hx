@@ -94,6 +94,10 @@ class Text extends Layer
 			letter.y = currentLine * heigthSeparation;
 		}
 	}
+	public function getLetter(aId:Int):AnimationSprite
+	{
+		return mLetters[aId];
+	}
 	
 }
 
