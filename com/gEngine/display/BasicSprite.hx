@@ -1,5 +1,6 @@
 package com.gEngine.display;
 import com.gEngine.AnimationData;
+import com.gEngine.DrawArea;
 import com.gEngine.Frame;
 import com.gEngine.MaskBatch;
 import com.gEngine.painters.IPainter;
@@ -32,8 +33,8 @@ class BasicSprite implements IDraw
 	private var cosAng:Float;
 	private var sinAng:Float;
 	
-	private var pivotX:Float=0;
-	private var pivotY:Float=0;
+	public var pivotX:Float=0;
+	public var pivotY:Float=0;
 	
 	public var offsetX:Float=0;
 	public var offsetY:Float=0;
@@ -844,6 +845,10 @@ class BasicSprite implements IDraw
 		aValue.mergeVec(matrix.multvec(new FastVector2(  drawArea.side,   drawArea.y)));
 		aValue.mergeVec(matrix.multvec(new FastVector2( drawArea.x,  drawArea.up)));
 		aValue.mergeVec(matrix.multvec(new FastVector2(  drawArea.side,   drawArea.up)));
+	}
+	public function localDrawArea():DrawArea
+	{
+		return mAnimationData.frames[CurrentFrame].drawArea;
 	}
 	
 	public function transformArea(aInput:MinMax,aResult:MinMax):Void 

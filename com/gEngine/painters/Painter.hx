@@ -32,8 +32,6 @@ import kha.graphics4.VertexStructure;
  */
 class Painter implements IPainter
 {
-	var vertexBuffer1:VertexBuffer;
-	var vertexBuffer2:VertexBuffer;
 	var vertexBuffer:VertexBuffer;
 	var indexBuffer:IndexBuffer;
 	var pipeline:PipelineState;
@@ -114,14 +112,7 @@ class Painter implements IPainter
 			
 			unsetTextures(g);
 			// End rendering	
-			if (vertex1)
-			{
-				vertex1 = false;
-				vertexBuffer = vertexBuffer1;
-			}else {
-				vertex1 = true;
-				vertexBuffer = vertexBuffer2;
-			}
+		
 			buffer = getVertexBuffer();
 			g.disableScissor();
 			g.end();
@@ -152,22 +143,15 @@ class Painter implements IPainter
 			
 			getConstantLocations(pipeline);
 	
-			vertexBuffer1=new VertexBuffer(
+			vertexBuffer=new VertexBuffer(
 				MAX_VERTEX_PER_BUFFER,
 				structure, 
 				Usage.DynamicUsage 
 				);
-				vertexBuffer = vertexBuffer1;
-				vertexBuffer2=new VertexBuffer(
-				MAX_VERTEX_PER_BUFFER,
-				structure, 
-				Usage.DynamicUsage 
-				);
-	
 	
 			createIndexBuffer();
 		}
-		var vertex1:Bool = true;
+		
 		function getConstantLocations(aPipeline:PipelineState) 
 		{
 			mMvpID = aPipeline.getConstantLocation("projectionMatrix");
@@ -234,9 +218,9 @@ class Painter implements IPainter
 		}
 		public function destroy():Void
 		{
-			//vertexBuffer.delete();
-			//indexBuffer.delete();
-			//pipeline.delete();
+			vertexBuffer.delete();
+			indexBuffer.delete();
+			pipeline.delete();
 		}
 		
 		/* INTERFACE com.gEngine.painters.IPainter */

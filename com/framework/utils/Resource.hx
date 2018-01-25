@@ -146,6 +146,7 @@ class Resource
 				var animation:AnimationData = GEngine.i.mResources.getAnimationData(rename.original);
 				animation.name = rename.newName;
 			}
+			renames.splice(0, renames.length);
 		}
 		
 		private function onAnimationLoad(aBlob:Blob):Void

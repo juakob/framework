@@ -17,9 +17,9 @@ class ShBlurH extends Painter
 {
 	var mResolutionID:ConstantLocation;
 	public var mFactor:Float;
-	public function new(factor:Float = 1,aBlend:Blend) 
+	public function new(aDelete:Bool,factor:Float = 1,aBlend:Blend) 
 	{
-		super(true,aBlend);
+		super(aDelete,aBlend);
 		mFactor = factor;
 	}
 	override function setShaders(aPipeline:PipelineState):Void 

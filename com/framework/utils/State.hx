@@ -1,6 +1,7 @@
 package com.framework.utils;
 
 import com.framework.Simulation;
+import com.gEngine.GEngine;
 import kha.Framebuffer;
 
 
@@ -37,5 +38,9 @@ class State extends Entity
 	{
 		
 	}
-	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		GEngine.i.destroy();
+	}
 }

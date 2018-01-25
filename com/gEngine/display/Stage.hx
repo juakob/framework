@@ -12,7 +12,7 @@ import kha.arrays.Float32Array;
  */
 class Stage
 {
-	private var mLayer:Layer;
+	public var mLayer:Layer;
 	private var mMatrix:Matrix;
 	public var x(get, set):Float;
 	public var y(get, set):Float;

@@ -33,6 +33,7 @@ class Layer implements IDrawContainer
 	public var filter:Filter;
 	
 	public var drawArea(default,set):MinMax;
+	public var length(get, null):Int;
 	
 	public function new() 
 	{
@@ -240,6 +241,11 @@ class Layer implements IDrawContainer
 		value.max.x = GEngine.i.width*value.max.x / GEngine.virtualWidth;
 		value.max.y = GEngine.i.height*value.max.y/GEngine.virtualHeight;
 		return drawArea = value;
+	}
+	
+	function get_length():Int 
+	{
+		return mChildren.length;
 	}
 	
 }

@@ -41,7 +41,7 @@ class RenderTargetPool
 				return;
 			}
 		}
-		throw "error";
+		throw "render target "+aId +" not found";
 	}
 	public function releaseAll() 
 	{

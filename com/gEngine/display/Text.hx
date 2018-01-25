@@ -9,7 +9,7 @@ import com.MyList;
 class Text extends Layer
 {
 	private var mLetters:MyList<AnimationSprite>;
-	public var spaceSeparation:Float=10;
+	public var spaceSeparation:Float=40;
 	public var mWidth:Float;
 	public var mType:String;
 	public var separation:Float;
@@ -41,7 +41,7 @@ class Text extends Layer
 		for (i in 0...words.length) 
 		{
 			word = words[i];
-			word=word.toLowerCase();
+			//word=word.toLowerCase();
 			for (j in 0...word.length) 
 			{
 				if (mLetters.length <= counter)
@@ -58,10 +58,12 @@ class Text extends Layer
 				}
 				++counter;
 				displayLetter.goToAndStop(displayLetter.labelFrame(word.charAt(j)));
+				displayLetter.recenter();
 				currentWordLetters.push(displayLetter);
 				displayLetter.x = currentLineWidth+currentWordWidth+separation;
 				displayLetter.y = currentLine * heigthSeparation;
-				currentWordWidth += separation + letterWidth; //TODO take into acount frame width
+				letterWidth = displayLetter.localDrawArea().side;
+				currentWordWidth +=  letterWidth; //TODO take into acount frame width
 				
 				if (currentWordWidth + currentLineWidth > mWidth && !(currentWordWidth > mWidth))
 				{

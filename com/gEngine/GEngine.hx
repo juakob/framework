@@ -58,9 +58,9 @@ import kha.System;
 	{
 		
 		 public static var i(get, null):GEngine;
-		 #if debug
+		
 		 private static var initialized:Bool;
-		 #end
+		 
 		 private static function get_i():GEngine
 		 {
 			 return i;
@@ -119,8 +119,8 @@ import kha.System;
 			mPainter = new Painter(false,Blend.blendNone());
 			mSpritePainter = new SpritePainter(false);
 			
-			blurX = new ShBlurH(1,Blend.blendDefault());
-			blurY = new ShBlurV(1, Blend.blendDefault());
+			blurX = new ShBlurH(false,1,Blend.blendDefault());
+			blurY = new ShBlurV(false,1, Blend.blendDefault());
 			
 			realWidth = mTempBuffer.realWidth;
 			realHeight = mTempBuffer.realHeight;
@@ -185,9 +185,7 @@ import kha.System;
 			#if debugInfo
 			Assets.loadFont("mainfont", setFont);
 			#end
-			#if debug
 			initialized = true;
-			#end
 		}
 		
 		#if debugInfo
@@ -614,9 +612,8 @@ import kha.System;
 		}
 		
 		public function destroy():Void 
-		{
+		{	
 			mResources.clear();
-			mStage = null;
 			mStage = new Stage();
 			currentIndex = initialIndex;
 			PainterGarbage.i.clear();
