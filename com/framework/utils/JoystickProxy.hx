@@ -21,8 +21,8 @@ class JoystickProxy
 		released = new Array();
 		
 		gamepad = Gamepad.get(aId);
-		gamepad.notify(onAxis, onButton, onDisconnect);
-		Gamepad.notifyConnect(onConnect);
+		gamepad.notify(onAxis, onButton);
+		Gamepad.notifyOnConnect(onConnect,onDisconnect);
 		//add more than needed just to be safe
 		for (i in 0...20) 
 		{
@@ -39,9 +39,9 @@ class JoystickProxy
 		trace("connect " + aId);
 	}
 	
-	function onDisconnect(gamePad:Gamepad) 
+	function onDisconnect(gamePad:Int) 
 	{
-		trace("disconnect "+ gamepad.connected);
+		trace("disconnect "+ gamepad);
 	}
 	function onAxis(aId:Int,aValue:Float) 
 	{
