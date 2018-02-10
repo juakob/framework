@@ -35,8 +35,8 @@ class AreaEffectCircular implements IDraw
 	}
 	private  function createDrawFinishRectangle(aPainter:IPainter):Void
 	{
-		var screenWidth = GEngine.i.realWidth *GEngine.i.realU;
-		var screenHeight = GEngine.i.realHeight *GEngine.i.realV;
+		var screenWidth = GEngine.i.realWidth ;
+		var screenHeight = GEngine.i.realHeight ;
 		var faceWidth:Float = width / 10;
 		var faceHeigth:Float = height / 10;
 		

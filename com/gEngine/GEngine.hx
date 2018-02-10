@@ -462,7 +462,7 @@ import kha.System;
 			
 			aPainter.render(aClear);
 		}
-		inline function  writeVertex(aPainter:IPainter,aX:Float,aY:Float,aSWidth:Float,aSHeight:Float,aResolution:Float) {
+		public  inline function  writeVertex(aPainter:IPainter,aX:Float,aY:Float,aSWidth:Float,aSHeight:Float,aResolution:Float) {
 				aPainter.write(aX*aResolution);
 				aPainter.write(aY*aResolution);
 				aPainter.write(aX/aSWidth*realU);
