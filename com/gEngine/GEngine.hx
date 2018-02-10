@@ -10,6 +10,7 @@ import com.gEngine.display.BatchProxy;
 import com.gEngine.display.Blend;
 import com.gEngine.display.ComplexSprite;
 import com.gEngine.display.extra.AnimationSpriteClone;
+import com.gEngine.helper.RectangleDisplay;
 import com.gEngine.helper.Screen;
 import com.gEngine.painters.IPainter;
 import com.gEngine.painters.Painter;
@@ -83,7 +84,7 @@ import kha.System;
 		var finalViewMatrixMirrorY:FastMatrix4;
 		private var mPainter:Painter;
 		private var mSpritePainter:SpritePainter;
-		inline static var initialIndex:Int = 1;
+		inline static var initialIndex:Int = 2;
 		var currentIndex:Int = initialIndex;
 		
 		var renderTargetPool:RenderTargetPool;
@@ -114,7 +115,13 @@ import kha.System;
 			height = Screen.getHeight();
 			
 			mTempBuffer = Image.createRenderTarget(width, height, null, DepthStencilFormat.NoDepthAndStencil, 1);
-			mCurrentRenderTargetId=mTempBufferID = mTextures.push(mTempBuffer) - 1;
+			mCurrentRenderTargetId = mTempBufferID = mTextures.push(mTempBuffer) - 1;
+			
+			var recTexture = Image.createRenderTarget(1, 1);
+			recTexture.g2.begin(true, Color.Black);
+			recTexture.g2.end();
+			mTextures.push(recTexture);
+			RectangleDisplay.init(1);
 			
 			mPainter = new Painter(false,Blend.blendNone());
 			mSpritePainter = new SpritePainter(false);
@@ -246,6 +253,13 @@ import kha.System;
 		{
 			var animation:AnimationSprite = new AnimationSprite(mResources.getAnimationData(name));
 			return animation;
+		}
+		public function getNewRectangle(width:Float,height:Float):RectangleDisplay
+		{
+			var rectangle:RectangleDisplay = new RectangleDisplay();
+			rectangle.scaleX = width;
+			rectangle.scaleY = height;
+			return rectangle;
 		}
 		public function getNewAnimationClone(name:String):AnimationSpriteClone
 		{

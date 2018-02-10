@@ -83,7 +83,7 @@ class ComplexSprite extends AnimationSprite
 		mMaskStart =mChildStart = -1;
 		
 		mChildBatch.splice(0, mChildBatch.length);
-		for(display in mChildren)//TODO iterate over the dummys so the child list is in order
+		for(display in mChildren)
 		{
 			var dummy:Dummy = getDummy(display.dummyName);
 			if (dummy != null)
