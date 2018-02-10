@@ -21,16 +21,18 @@ class JoystickProxy
 		released = new Array();
 		
 		gamepad = Gamepad.get(aId);
-		gamepad.notify(onAxis, onButton);
-		Gamepad.notifyOnConnect(onConnect,onDisconnect);
-		//add more than needed just to be safe
-		for (i in 0...20) 
-		{
-			buttons.push(0);
-		}
-		for (i in 0...7) 
-		{
-			axes.push(0);
+		if(gamepad!=null){
+			gamepad.notify(onAxis, onButton);
+			Gamepad.notifyOnConnect(onConnect,onDisconnect);
+			//add more than needed just to be safe
+			for (i in 0...20) 
+			{
+				buttons.push(0);
+			}
+			for (i in 0...7) 
+			{
+				axes.push(0);
+			}
 		}
 	}
 	

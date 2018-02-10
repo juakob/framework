@@ -122,6 +122,10 @@ class Resource
 				//trace("image load: " + aName);
 				mImageResources.push(aName);
 				//Assets.loadBlob(aName, addImage
+				#if debug
+				trace(aName);
+				if (Assets.images.names.indexOf(aName) ==-1) throw "image " + aName+" not found";
+				#end
 				Assets.loadImage(aName, addImage);
 			}
 		}
