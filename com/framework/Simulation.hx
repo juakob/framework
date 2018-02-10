@@ -106,6 +106,7 @@ class Simulation
 			mResources.uploadTextures();
 			uploadTextures = false;
 			initialized = true;
+			GEngine.i.draw(aFramebuffer);
 			mCurrentState.init();
 			return;
 		}

@@ -274,17 +274,24 @@ import kha.System;
 			
 			var atlasImage:Image;
 			var textureId:Int;
+			var start:Int = currentIndex;
+			for (i in start...mTextures.length) 
+				{
+					if (mTextures[i].width == aWidth && mTextures[i].height == aHeight) break;
+					++currentIndex;
+					
+				}
 			if (currentIndex < mTextures.length)
 			{
-				atlasImage = mTextures[currentIndex];//TODO make sure that the texture is equal to the requested size
+				atlasImage = mTextures[currentIndex];
 				textureId = currentIndex;
-				
 			}else {
 				atlasImage = Image.createRenderTarget(2048, 2048, TextureFormat.RGBA32,DepthStencilFormat.NoDepthAndStencil);
 				textureId = mTextures.push(atlasImage) - 1;
 				
 				
 			}
+			trace("atlas " + currentIndex);
 			++currentIndex;
 			
 			var imagesNames:MyList<String> = new MyList();
@@ -340,8 +347,8 @@ import kha.System;
 			}
 			
 			g.end();
-			var img = Image.createRenderTarget(1, 1, TextureFormat.RGBA32,DepthStencilFormat.DepthOnly);
-			img.unload();
+			//var img = Image.createRenderTarget(1, 1, TextureFormat.RGBA32,DepthStencilFormat.DepthOnly);
+			//img.unload();
 			for (animation in simpleAnimations) 
 			{
 				mResources.linkAnimationToTexture(animation,textureId, linker);
