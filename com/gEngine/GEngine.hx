@@ -2,6 +2,7 @@ package com.gEngine;
 
 //import com.framework.utils.Input;
 
+import com.framework.utils.Resource.TextureProxy;
 import com.framework.utils.SimpleProfiler;
 import com.gEngine.display.AnimationSprite;
 import com.gEngine.display.BasicSprite;
@@ -242,6 +243,10 @@ import kha.System;
 			}
 			return texturesToLoad;
 		}
+		public function addResource(name:String,frames:MyList<Frame>,dummys:MyList<MyList<Dummy>>,labels:MyList<Label>,textures:MyList<MyList<String>>,masks:MyList<MaskBatch>)
+		{
+			mResources.addResource(name, frames, dummys, labels, textures, masks);
+		}
 	
 		public function getNewSprite(name:String):BasicSprite
 		{
@@ -283,9 +288,12 @@ import kha.System;
 			#end
 			return mResources.getChilds(id);
 		}
-		public function loadAnimationsToTexture(aAnimations:MyList<String>,aWidth:Int,aHeight:Int,aColor:Color):Image
+		public function loadAnimationsToTexture(aTexture:TextureProxy):Image
 		{
-			
+			var aAnimations:MyList<String> = aTexture.animations;
+			var aWidth:Int = Std.int(aTexture.size.x);
+			var aHeight:Int = Std.int(aTexture.size.y); 
+			var aColor:Color = aTexture.color;
 			var atlasImage:Image;
 			var textureId:Int;
 			var start:Int = currentIndex;
@@ -305,7 +313,6 @@ import kha.System;
 				
 				
 			}
-			trace("atlas " + currentIndex);
 			++currentIndex;
 			
 			var imagesNames:MyList<String> = new MyList();
@@ -330,6 +337,15 @@ import kha.System;
 			}
 			
 			var bitmaps = getBitmaps(imagesNames);
+			
+			for (atlas in aTexture.atlas)
+			{
+				simpleAnimations.push(atlas.name);
+				for(bitmap in atlas.bitmaps){
+					bitmaps.push(bitmap);
+				}
+			}
+			
 			bitmaps.sort(sortArea);
 			var atlasMap = new ImageTree(aWidth, aHeight, 1);
 			
@@ -351,7 +367,7 @@ import kha.System;
 					throw "not enough space on the atlas texture , atlas id" + textureId +", create another atlas";
 				}
 				#end
-				g.drawImage(bitmap.image, rectangle.x, rectangle.y);
+				g.drawSubImage(bitmap.image, rectangle.x, rectangle.y, bitmap.x, bitmap.y, bitmap.width, bitmap.height);
 				rectangle.x+=1;
 				rectangle.y+=1;
 				rectangle.width -= 4;

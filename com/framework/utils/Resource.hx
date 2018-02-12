@@ -1,8 +1,13 @@
 package com.framework.utils;
 import com.MyList;
+import com.framework.utils.Resource.AtlasInfo;
 import com.framework.utils.Resource.Rename;
+import com.framework.utils.Resource.TextureProxy;
 import com.gEngine.AnimationData;
 import com.gEngine.GEngine;
+import com.gEngine.helper.AtlasExtractor;
+import com.gEngine.helper.AtlasType;
+import com.gEngine.tempStructures.Bitmap;
 import com.helpers.Point;
 import com.soundLib.SoundManager.SM;
 import kha.Assets;
@@ -28,9 +33,7 @@ class Resource
 		private var mAnimationsResources:Array<String> = new Array();
 		private var mImageResources:Array<String> = new Array();
 		private var mSoundResources:Array<String> = new Array();
-		private var mTexture:Array<MyList<String>> = new Array();
-		private var mTextureDimesion:Array<Point> = new Array();
-		private var mTextureColor:Array<Color> = new Array();
+		private var mTextures:Array<TextureProxy> = new Array();
 		private var mDataResources:Array<String> = new Array();
 		private var mAnimationsLoaded:Int = 0;
 		private var mImagesLoaded:Int = 0;
@@ -43,12 +46,12 @@ class Resource
 		{
 			mAnimationsResources.push(aAnimation);
 			#if debug
-			if (mTexture.length == 0)
+			if (mTextures.length == 0)
 			{
 				throw "Call startTexture before adding an animation";
 			}
 			#end
-			mTexture[mTexture.length - 1].push(aAnimation);
+			mTextures[mTextures.length - 1].animations.push(aAnimation);
 			if (aRename != null)
 			{
 				var rename:Rename = { original : aAnimation, newName : aRename };
@@ -58,13 +61,12 @@ class Resource
 		}
 		public function startTexture(aWidth:Int, aHeight:Int,?aColor:Color):Void
 		{
-			mTextureDimesion.push(new Point(aWidth, aHeight));
-			mTexture.push(new MyList());
+			var texture:TextureProxy = new TextureProxy();
+			texture.size = new Point(aWidth, aHeight);
+			mTextures.push(texture);
 			if (aColor != null)
 			{
-				mTextureColor.push(aColor);
-			}else {
-				mTextureColor.push(Color.fromFloats(1,1, 1, 1));
+				texture.color = aColor;
 			}
 		}
 		public function addSound(aSound:String):Void
@@ -74,16 +76,14 @@ class Resource
 		public function uploadTextures():Void
 		{ 
 			var counter:Int = 0;
-			for (texture in mTexture) 
+			for (texture in mTextures) 
 			{
-				var dimension = mTextureDimesion[counter];
-				GEngine.i.loadAnimationsToTexture(texture, Std.int(dimension.x), Std.int(dimension.y), mTextureColor[counter]);
+				AtlasExtractor.extractAtlas(texture.atlas);
+				GEngine.i.loadAnimationsToTexture(texture);
 				++counter;
 			}
 			//remove data
-			mTexture.splice(0, mTexture.length);
-			mTextureDimesion.splice(0, mTextureDimesion.length);
-			mTextureColor.splice(0, mTextureColor.length);
+			mTextures.splice(0, mTextures.length);
 			
 			for (animation in mAnimationsResources) 
 			{
@@ -101,6 +101,7 @@ class Resource
 		public function load(onFinish:Void->Void):Void
 		{
 			mOnFinish = onFinish;
+			
 			for (animation in mAnimationsResources) 
 			{
 				Assets.loadBlob(animation, onAnimationLoad);
@@ -112,6 +113,13 @@ class Resource
 			for (data in mDataResources)
 			{
 				Assets.loadBlob(data, function(b:Blob) {++mDataLoaded; checkFinishLoading();} );
+			}
+			for (texture in mTextures) 
+			{
+				for (atlas in texture.atlas) 
+				{
+					loadImage(atlas.image);
+				}
 			}
 		}
 		
@@ -163,6 +171,11 @@ class Resource
 			++mAnimationsLoaded;
 			checkFinishLoading();
 		}
+		private function onAtlasDataLoad(aBlob:Blob):Void
+		{
+			++mAnimationsLoaded;
+			checkFinishLoading();
+		}
 		
 		private function addImage(aBlob:Image):Void
 		{
@@ -205,4 +218,43 @@ class Resource
 		{
 			mDataResources.push(aName);
 		}
+		
+		public function addAtlas(aName:String,aImage:String, aData:String,aType:AtlasType) 
+		{
+			#if debug
+			if (mTextures.length == 0)
+			{
+				throw "Call startTexture before adding an animation";
+			}
+			#end
+			addData(aData);
+			var atlasInfo:AtlasInfo = new AtlasInfo();
+			atlasInfo.data = aData;
+			atlasInfo.image = aImage;
+			atlasInfo.name = aName;
+			atlasInfo.type = aType;
+			mTextures[mTextures.length - 1].atlas.push(atlasInfo);
+		}
+}
+class TextureProxy
+{
+	public var animations:Array<String> = new Array();
+	public var atlas:Array<AtlasInfo> = new Array();
+	public var color:Color=Color.fromFloats(1,1, 1, 1);
+	public var size:Point;
+	public function new()
+	{
+		
+	}
+}
+class AtlasInfo
+{
+	public var image:String;
+	public var data:String;
+	public var name:String;
+	public var type:AtlasType;
+	public var bitmaps:Array<Bitmap>=new Array();
+	public function new()
+	{
+	}
 }
