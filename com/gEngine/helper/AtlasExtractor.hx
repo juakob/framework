@@ -23,9 +23,45 @@ class AtlasExtractor
 	{
 		for (atlas in atlases) 
 		{
-			fromSparrow(atlas);
+			switch atlas.type {
+				case AtlasType.SpriteSheet: fromSpriteSheet(atlas);
+				case AtlasType.Sparrow: fromSparrow(atlas);
+				
+			}
 		}
 		
+	}
+	public static function fromSpriteSheet( atlas:AtlasInfo):Void
+	{
+		
+		var image:Image = Reflect.field(kha.Assets.images, atlas.image);
+		var spritesCount:Int = Std.int(image.width / atlas.spriteWidth) * Std.int(image.height / atlas.spriteHeight);
+		
+		var frames:MyList<Frame> = new MyList();
+		var names:MyList<Label> = new MyList();
+		var textures:MyList<MyList<String>> = new MyList();
+		var dummys:MyList<MyList<Dummy>> = new MyList();
+		var maskBatch:MyList<MaskBatch> = new MyList();
+
+		for (counter in 0...spritesCount)
+		{
+			textures.push([atlas.name+counter]);
+			dummys.push(new MyList());
+			var x = (counter%Std.int(image.width/ atlas.spriteWidth))*atlas.spriteWidth;
+			var y = Std.int(counter * atlas.spriteWidth / image.width)*atlas.spriteHeight;
+			frames.push(createFrame(0, 0, atlas.spriteWidth, atlas.spriteHeight, false));
+			
+			var bitmap:Bitmap = new Bitmap();
+			bitmap.x = x-1;
+			bitmap.y = y-1;
+			bitmap.width = atlas.spriteWidth+2;
+			bitmap.height = atlas.spriteHeight+2;
+			bitmap.name = atlas.name+counter;
+			bitmap.image = image;
+			atlas.bitmaps.push(bitmap);
+		}
+		
+		GEngine.i.addResource(atlas.name, frames, dummys, names, textures, maskBatch);
 	}
 	public static function fromSparrow( atlas:AtlasInfo):Void
 	{
@@ -65,25 +101,6 @@ class AtlasExtractor
 			bitmap.name = name;
 			bitmap.image = image;
 			atlas.bitmaps.push(bitmap);
-			//
-			//var size = if (trimmed)
-			//{
-				//new Rectangle(Std.parseInt(texture.att.frameX), Std.parseInt(texture.att.frameY), Std.parseInt(texture.att.frameWidth), Std.parseInt(texture.att.frameHeight));
-			//}
-			//else
-			//{
-				//new Rectangle(0, 0, rect.width, rect.height);
-			//}
-			//
-			//var angle = rotated ? FlxFrameAngle.ANGLE_NEG_90 : FlxFrameAngle.ANGLE_0;
-			//
-			//var offset = FlxPoint.get(-size.left, -size.top);
-			//var sourceSize = FlxPoint.get(size.width, size.height);
-			//
-			//if (rotated && !trimmed)
-				//sourceSize.set(size.height, size.width);
-			//
-			//frames.addAtlasFrame(rect, sourceSize, offset, name, angle, flipX, flipY);
 		}
 		
 		GEngine.i.addResource(atlas.name, frames, dummys, names, textures, maskBatch);

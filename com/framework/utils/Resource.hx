@@ -171,11 +171,6 @@ class Resource
 			++mAnimationsLoaded;
 			checkFinishLoading();
 		}
-		private function onAtlasDataLoad(aBlob:Blob):Void
-		{
-			++mAnimationsLoaded;
-			checkFinishLoading();
-		}
 		
 		private function addImage(aBlob:Image):Void
 		{
@@ -235,6 +230,23 @@ class Resource
 			atlasInfo.type = aType;
 			mTextures[mTextures.length - 1].atlas.push(atlasInfo);
 		}
+		
+		public function addTileSheet(aName:String,aImage:String, aSpriteWidth:Int, aSpriteHeight:Int) 
+		{
+			#if debug
+			if (mTextures.length == 0)
+			{
+				throw "Call startTexture before adding an animation";
+			}
+			#end
+			var atlasInfo:AtlasInfo = new AtlasInfo();
+			atlasInfo.image = aImage;
+			atlasInfo.name = aName;
+			atlasInfo.spriteWidth = aSpriteWidth;
+			atlasInfo.spriteHeight = aSpriteHeight;
+			atlasInfo.type = AtlasType.SpriteSheet;
+			mTextures[mTextures.length - 1].atlas.push(atlasInfo);
+		}
 }
 class TextureProxy
 {
@@ -253,7 +265,9 @@ class AtlasInfo
 	public var data:String;
 	public var name:String;
 	public var type:AtlasType;
-	public var bitmaps:Array<Bitmap>=new Array();
+	public var bitmaps:Array<Bitmap> = new Array();
+	public var spriteWidth:Int;
+	public var spriteHeight:Int;
 	public function new()
 	{
 	}

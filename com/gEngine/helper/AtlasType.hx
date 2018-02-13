@@ -6,4 +6,5 @@ package com.gEngine.helper;
 enum AtlasType 
 {
 	Sparrow;
+	SpriteSheet;
 }
