@@ -47,7 +47,7 @@ class Simulation
 		//loadState(Type.createInstance(initialState, []) );
 		initialState = null;
 		
-		Scheduler.addTimeTask(onEnterFrame, 0, 1 / System.refreshRate);
+		Scheduler.addTimeTask(onEnterFrame, 0, 1 /60);
 		System.notifyOnRender(onRender);
 		
 		
@@ -87,7 +87,7 @@ class Simulation
 			
 			//if (mFrameByFrameTime <= 0||mFrameByFrameTime>0.06666)
 			//{
-				mFrameByFrameTime = 1 / 60;
+			//	mFrameByFrameTime = 1 / 60;
 			//}
 			time = Scheduler.realTime();
 			TimeManager.setDelta(mFrameByFrameTime, time-mLastRealFrameTime);

@@ -2,6 +2,7 @@ package com.gEngine;
 
 //import com.framework.utils.Input;
 
+import com.framework.utils.Resource.TextureProxy;
 import com.framework.utils.SimpleProfiler;
 import com.gEngine.display.AnimationSprite;
 import com.gEngine.display.BasicSprite;
@@ -10,6 +11,7 @@ import com.gEngine.display.BatchProxy;
 import com.gEngine.display.Blend;
 import com.gEngine.display.ComplexSprite;
 import com.gEngine.display.extra.AnimationSpriteClone;
+import com.gEngine.helper.RectangleDisplay;
 import com.gEngine.helper.Screen;
 import com.gEngine.painters.IPainter;
 import com.gEngine.painters.Painter;
@@ -83,7 +85,7 @@ import kha.System;
 		var finalViewMatrixMirrorY:FastMatrix4;
 		private var mPainter:Painter;
 		private var mSpritePainter:SpritePainter;
-		inline static var initialIndex:Int = 1;
+		inline static var initialIndex:Int = 2;
 		var currentIndex:Int = initialIndex;
 		
 		var renderTargetPool:RenderTargetPool;
@@ -114,7 +116,13 @@ import kha.System;
 			height = Screen.getHeight();
 			
 			mTempBuffer = Image.createRenderTarget(width, height, null, DepthStencilFormat.NoDepthAndStencil, 1);
-			mCurrentRenderTargetId=mTempBufferID = mTextures.push(mTempBuffer) - 1;
+			mCurrentRenderTargetId = mTempBufferID = mTextures.push(mTempBuffer) - 1;
+			
+			var recTexture = Image.createRenderTarget(1, 1);
+			recTexture.g2.begin(true, Color.Black);
+			recTexture.g2.end();
+			mTextures.push(recTexture);
+			RectangleDisplay.init(1);
 			
 			mPainter = new Painter(false,Blend.blendNone());
 			mSpritePainter = new SpritePainter(false);
@@ -235,6 +243,10 @@ import kha.System;
 			}
 			return texturesToLoad;
 		}
+		public function addResource(name:String,frames:MyList<Frame>,dummys:MyList<MyList<Dummy>>,labels:MyList<Label>,textures:MyList<MyList<String>>,masks:MyList<MaskBatch>)
+		{
+			mResources.addResource(name, frames, dummys, labels, textures, masks);
+		}
 	
 		public function getNewSprite(name:String):BasicSprite
 		{
@@ -246,6 +258,13 @@ import kha.System;
 		{
 			var animation:AnimationSprite = new AnimationSprite(mResources.getAnimationData(name));
 			return animation;
+		}
+		public function getNewRectangle(width:Float,height:Float):RectangleDisplay
+		{
+			var rectangle:RectangleDisplay = new RectangleDisplay();
+			rectangle.scaleX = width;
+			rectangle.scaleY = height;
+			return rectangle;
 		}
 		public function getNewAnimationClone(name:String):AnimationSpriteClone
 		{
@@ -269,9 +288,12 @@ import kha.System;
 			#end
 			return mResources.getChilds(id);
 		}
-		public function loadAnimationsToTexture(aAnimations:MyList<String>,aWidth:Int,aHeight:Int,aColor:Color):Image
+		public function loadAnimationsToTexture(aTexture:TextureProxy):Image
 		{
-			
+			var aAnimations:MyList<String> = aTexture.animations;
+			var aWidth:Int = Std.int(aTexture.size.x);
+			var aHeight:Int = Std.int(aTexture.size.y); 
+			var aColor:Color = aTexture.color;
 			var atlasImage:Image;
 			var textureId:Int;
 			var start:Int = currentIndex;
@@ -315,6 +337,15 @@ import kha.System;
 			}
 			
 			var bitmaps = getBitmaps(imagesNames);
+			
+			for (atlas in aTexture.atlas)
+			{
+				simpleAnimations.push(atlas.name);
+				for(bitmap in atlas.bitmaps){
+					bitmaps.push(bitmap);
+				}
+			}
+			
 			bitmaps.sort(sortArea);
 			var atlasMap = new ImageTree(aWidth, aHeight, 1);
 			
@@ -336,7 +367,7 @@ import kha.System;
 					throw "not enough space on the atlas texture , atlas id" + textureId +", create another atlas";
 				}
 				#end
-				g.drawImage(bitmap.image, rectangle.x, rectangle.y);
+				g.drawSubImage(bitmap.image, rectangle.x, rectangle.y, bitmap.x, bitmap.y, bitmap.width, bitmap.height);
 				rectangle.x+=1;
 				rectangle.y+=1;
 				rectangle.width -= 4;
@@ -468,7 +499,7 @@ import kha.System;
 			
 			aPainter.render(aClear);
 		}
-		inline function  writeVertex(aPainter:IPainter,aX:Float,aY:Float,aSWidth:Float,aSHeight:Float,aResolution:Float) {
+		public  inline function  writeVertex(aPainter:IPainter,aX:Float,aY:Float,aSWidth:Float,aSHeight:Float,aResolution:Float) {
 				aPainter.write(aX*aResolution);
 				aPainter.write(aY*aResolution);
 				aPainter.write(aX/aSWidth*realU);
