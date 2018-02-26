@@ -291,7 +291,6 @@ import kha.System;
 				
 				
 			}
-			trace("atlas " + currentIndex);
 			++currentIndex;
 			
 			var imagesNames:MyList<String> = new MyList();

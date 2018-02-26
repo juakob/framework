@@ -14,6 +14,7 @@ class MaskBatch
 	public var maskId:String;
 	public var textures:MyList<String>;
 	public var vertexCount:MyList<Int>;
+	public var masksCount:Int;
 	public function new()
 	{
 		vertex = new MyList();

@@ -146,8 +146,9 @@ package com.gEngine ;
 					var maskId:String = aTextures[frames.readInt()];
 					maskBatch.maskId = maskId;
 					maskTextures.push(maskId);
-					var childsCount:Int = frames.readInt();
-					for (k in 0...childsCount) 
+					var maskCount:Int = frames.readInt();
+					maskBatch.masksCount = maskCount;
+					for (k in 0...maskCount) 
 					{
 						var texture:String = aTextures[frames.readInt()];
 						maskTextures.push(texture);

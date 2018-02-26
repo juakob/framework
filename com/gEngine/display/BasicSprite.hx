@@ -448,9 +448,10 @@ class BasicSprite implements IDraw
 		var uvs = frame.UVs;
 		var alphas = frame.alphas;
 		var colorTrans = frame.colortTransform;
-		var stuffToDraw:Int = Std.int(vertexs.length / 8) + frame.maskBatchs.length;
+		var stuffToDraw:Int = Std.int(vertexs.length / 8) + frame.maskBatchs.length+frame.blurBatchs.length;
 		var counter:Int = 0;
 		var maskCounter:Int = 0;
+		var maskOffset:Int = 0;
 		var blurCounter:Int = 0;
 		var blurStarted:Bool=false;
 		var normalCounter:Int = 0;
@@ -465,19 +466,20 @@ class BasicSprite implements IDraw
 				if (drawMask)
 				{
 					drawMask = false;
-					--stuffToDraw;
+					
 					
 					var maskBatch:MaskBatch = frame.maskBatchs[maskCounter];
 					painter.validateBatch(mTextureId, Std.int(maskBatch.vertex.length/2), DrawMode.Mask,blend);
-					
+					--stuffToDraw;
 					var polygons:MyList<Float> = maskBatch.vertex;
 					var polyUvs:MyList<Float> = maskBatch.uvs;
 					var maskUvs:MyList<Float> = maskBatch.maskUvs;
-					
 					var vertex0:Int = 0;
+					maskOffset +=  maskBatch.masksCount;
+					
 					for (vertexCount in maskBatch.vertexCount) 
 					{
-						var trianglesCount:Int = vertexCount-2;
+						var trianglesCount:Int = vertexCount - 2;
 						for(i in 0...trianglesCount)
 						{
 							vertexX = polygons[vertex0]-pivotX;
@@ -510,14 +512,17 @@ class BasicSprite implements IDraw
 							
 							
 						}
+						
 						vertex0 += vertexCount * 2;
 					}
+					
 					++maskCounter;
 				}
 				
 				if (frame.maskBatchs.length > maskCounter)
 				{
-					counter = frame.maskBatchs[maskCounter].start-normalCounter;
+					
+					counter =normalCounter+ frame.maskBatchs[maskCounter].start - (normalCounter + maskOffset);
 					drawMask = true;
 					
 				}else {
@@ -583,7 +588,7 @@ class BasicSprite implements IDraw
 				}
 				else
 				{
-					trace(frame.blurBatchs.length);
+					//trace(frame.blurBatchs.length);
 					counter = frame.blurBatchs[blurCounter].start - normalCounter;// ;
 				
 				}
