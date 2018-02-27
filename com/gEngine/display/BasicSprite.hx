@@ -37,7 +37,9 @@ class BasicSprite implements IDraw
 	public var pivotY:Float=0;
 	
 	public var offsetX:Float=0;
-	public var offsetY:Float=0;
+	public var offsetY:Float = 0;
+	
+	public var interpolateFrames:Bool;
 	
 	private var mAnimationData:AnimationData;
 	
@@ -167,9 +169,7 @@ class BasicSprite implements IDraw
 		#end
 		if (Playing && passedTime > 0.0) 
 		{	
-	
 			mCurrentTime += passedTime;
-			
 			if (mCurrentTime >= frameRate)
 			{
 				mFrameSkiped = Std.int(mCurrentTime / frameRate);
@@ -188,35 +188,8 @@ class BasicSprite implements IDraw
 						Playing = false;
 					}
 				}
-				#if debug
-					if (CurrentFrame == TotalFrames)
-					{
-						throw "Error()";
-					}
-				#end
-				
 			}
 		}
-		#if debug
-		else {
-			
-				if (CurrentFrame == TotalFrames)
-				{
-					throw "Error()";
-				}
-			
-		}
-		
-		
-			if (CurrentFrame == TotalFrames)
-			{
-				throw "Error()";
-			}
-		#end
-		
-			
-	  
-	   
 	}
 	public inline function frameDiferent():Bool
 	{
@@ -232,14 +205,14 @@ class BasicSprite implements IDraw
 	 public function set_CurrentFrame(frame:Int):Int
 	{
 		CurrentFrame = frame;
-		//#if debug
-		//{
-			//if (CurrentFrame == TotalFrames)
-			//{
-				//throw new Error("The frame is out of range");
-			//}
-		//}
-		//#end
+		#if debug
+		{
+			if (CurrentFrame == TotalFrames)
+			{
+				throw "frame is out of range ";
+			}
+		}
+		#end
 		return CurrentFrame;
 	}
 	
@@ -250,9 +223,9 @@ class BasicSprite implements IDraw
 			{
 				throw "negative frame";
 			}
-			if (CurrentFrame == TotalFrames)
+			if (CurrentFrame >= TotalFrames)
 			{
-				throw "Error";
+				throw "out of scope";
 			}
 		#end
 		CurrentFrame = frame;
@@ -265,9 +238,9 @@ class BasicSprite implements IDraw
 			{
 				throw "negative frame";
 			}
-			if (CurrentFrame == TotalFrames)
+			if (CurrentFrame >= TotalFrames)
 			{
-				throw "Error";
+				throw "out of scope";
 			}
 		#end
 		CurrentFrame = frame;
@@ -276,7 +249,6 @@ class BasicSprite implements IDraw
 	
 	public function hasDummy(name:String):Bool 
 	{
-		
 		var dummys:MyList<Dummy> = mAnimationData.dummys[CurrentFrame];
 		for(dummy in dummys)
 		{
@@ -443,25 +415,31 @@ class BasicSprite implements IDraw
 		
 		
 		var frame = mAnimationData.frames[CurrentFrame];
-		
-		var vertexs = frame.vertexs;
+		var vertexs:MyList<Float>;
+		if (interpolateFrames && CurrentFrame<TotalFrames)
+		{
+			vertexs = interpolateFrame(CurrentFrame, mCurrentTime, frameRate, mAnimationData.frames);
+		}else {
+			 vertexs= frame.vertexs;
+		}
+		 
 		var uvs = frame.UVs;
 		var alphas = frame.alphas;
 		var colorTrans = frame.colortTransform;
 		var stuffToDraw:Int = Std.int(vertexs.length / 8) + frame.maskBatchs.length+frame.blurBatchs.length;
-		var counter:Int = 0;
+		var drawTo:Int = 0;
 		var maskCounter:Int = 0;
 		var maskOffset:Int = 0;
 		var blurCounter:Int = 0;
 		var blurStarted:Bool=false;
-		var normalCounter:Int = 0;
+		var drawFrom:Int = 0;
 		var finishTarget:Int=-1;
 		var workTargetId:Int=-1;
 		var drawMask:Bool=false;
 		do {
 			if (frame.maskBatchs.length == 0)
 			{
-				counter = Std.int(vertexs.length / 8);
+				drawTo = Std.int(vertexs.length / 8);
 			}else {
 				if (drawMask)
 				{
@@ -522,21 +500,21 @@ class BasicSprite implements IDraw
 				if (frame.maskBatchs.length > maskCounter)
 				{
 					
-					counter =normalCounter+ frame.maskBatchs[maskCounter].start - (normalCounter + maskOffset);
+					drawTo =drawFrom+ frame.maskBatchs[maskCounter].start - (drawFrom + maskOffset);
 					drawMask = true;
 					
 				}else {
-					counter = Std.int(vertexs.length / 8);
+					drawTo = Std.int(vertexs.length / 8);
 				}
 				
 			}
 			if (frame.blurBatchs.length != 0 && blurCounter<frame.blurBatchs.length)
 			{
-				if (normalCounter == frame.blurBatchs[blurCounter].start && !blurStarted)
+				if (drawFrom == frame.blurBatchs[blurCounter].start && !blurStarted)
 				{
 					
 					blurStarted = true;
-					counter = frame.blurBatchs[blurCounter].end+1;
+					drawTo = frame.blurBatchs[blurCounter].end+1;
 					painter.render();
 					finishTarget = GEngine.i.currentCanvasId();
 					workTargetId = GEngine.i.getRenderTarget();
@@ -560,7 +538,7 @@ class BasicSprite implements IDraw
 					GEngine.i.currentCanvas().g2.end();
 					GEngine.i.currentCanvas().g2.disableScissor();
 				}else
-				if (normalCounter == frame.blurBatchs[blurCounter].end+1)
+				if (drawFrom == frame.blurBatchs[blurCounter].end+1)
 				{
 					painter.render();
 					blurStarted = false;
@@ -589,7 +567,7 @@ class BasicSprite implements IDraw
 				else
 				{
 					//trace(frame.blurBatchs.length);
-					counter = frame.blurBatchs[blurCounter].start - normalCounter;// ;
+					drawTo = frame.blurBatchs[blurCounter].start - drawFrom;// ;
 				
 				}
 			}
@@ -606,7 +584,7 @@ class BasicSprite implements IDraw
 				var redMul, blueMul , greenMul,alphaMul:Float;
 				var redAdd, blueAdd , greenAdd, alphaAdd:Float;
 				var frameColorTransform:Bool = colorTrans.length != 0;
-				for ( i in normalCounter...counter)
+				for ( i in drawFrom...drawTo)
 					{
 						if (frameColorTransform)
 						{
@@ -658,7 +636,7 @@ class BasicSprite implements IDraw
 			}else
 			if (alphas.length == 0)
 			{
-				for ( i in normalCounter...counter)
+				for ( i in drawFrom...drawTo)
 				{
 					vertexX = vertexs[i * 8 + 0]-pivotX;
 					vertexY = vertexs[i * 8 + 1]-pivotY;
@@ -691,7 +669,7 @@ class BasicSprite implements IDraw
 					
 				}
 			}else {
-					for ( i in normalCounter...counter)
+					for ( i in drawFrom...drawTo)
 					{
 						vertexX = vertexs[i * 8 + 0]-pivotX;
 						vertexY = vertexs[i * 8 + 1]-pivotY;
@@ -727,11 +705,26 @@ class BasicSprite implements IDraw
 					}
 		
 			}
-			stuffToDraw -= counter-normalCounter;
-			normalCounter += counter-normalCounter;
+			stuffToDraw -= drawTo-drawFrom;
+			drawFrom += drawTo-drawFrom;
 		}while (stuffToDraw > 0 || blurStarted);
 		x -= offsetX+pivotX;
 		y -= offsetY+pivotY;
+	}
+	
+	private static var hInterpolated:MyList<Float>=new MyList<Float>();
+	private static inline function interpolateFrame(currentFrame:Int, deltaTime:Float, frameRate:Float, frames:MyList<Frame>):MyList<Float>
+	{
+		hInterpolated.splice(0, hInterpolated.length);
+		var frameA:MyList<Float> = frames[currentFrame].vertexs;
+		var frameB:MyList<Float> = frames[currentFrame+1].vertexs;
+		var s:Float = deltaTime / frameRate;
+		var total:Int = frameA.length;
+		for (i in 0...total) 
+		{
+			hInterpolated.push(frameB[i] * s + (1-s) * frameA[i]);
+		}
+		return hInterpolated;
 	}
 	
 	private static inline function writeColorVertex(aX:Float, aY:Float, aU:Float, aV:Float, aRedMul:Float, aGreenMul:Float, aBlueMul:Float, aAlphaMul:Float,
