@@ -37,6 +37,7 @@
 		Input.i.screenScale.setTo(1280 / width, 720 / heigth);
 		
 		GEngine.init();
+		GEngine.i.createDefaultPainters();
 	}
 	
 	//////////////////////////////////////////////////////////////////////

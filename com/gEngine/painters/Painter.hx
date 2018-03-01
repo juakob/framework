@@ -52,10 +52,8 @@ class Painter implements IPainter
 	var buffer:Float32Array;
 	public var textureID:Int = -1;
 	
-	var fullScreenWidth:Float;
-	var fullScreenHeight:Float;
-	
 	var cropArea:MinMax;
+	var useScissor:Bool;
 	
 	public function new(aAutoDestroy:Bool = true, aBlend:Blend=null) 
 	{	
@@ -64,8 +62,6 @@ class Painter implements IPainter
 		initShaders(aBlend);
 		buffer = getVertexBuffer();
 		mCustomBlend = false;
-		fullScreenWidth = Screen.getWidth();
-		fullScreenHeight = Screen.getHeight();
 		cropArea = new MinMax();
 		resetRenderArea();
 	}
@@ -94,7 +90,7 @@ class Painter implements IPainter
 			var g = GEngine.i.currentCanvas().g4;
 			// Begin rendering
 			g.begin();
-			g.scissor(Std.int(cropArea.min.x),Std.int(cropArea.min.y),Std.int(cropArea.max.x),Std.int(cropArea.max.y));
+			if(useScissor) g.scissor(Std.int(cropArea.min.x),Std.int(cropArea.min.y),Std.int(cropArea.max.x),Std.int(cropArea.max.y));
 			uploadVertexBuffer();
 			// Clear screen
 			if(clear) g.clear(Color.fromFloats(red,green,blue,alpha));
@@ -114,7 +110,7 @@ class Painter implements IPainter
 			// End rendering	
 		
 			buffer = getVertexBuffer();
-			g.disableScissor();
+			if(useScissor) g.disableScissor();
 			g.end();
 			
 			#if debugInfo
@@ -245,16 +241,18 @@ class Painter implements IPainter
 		
 		public function adjustRenderArea(aArea:MinMax):Void 
 		{
+			useScissor = true;
 			cropArea.min.x = aArea.min.x;
 			cropArea.min.y = aArea.min.y;
 			cropArea.max.x = aArea.max.x;
 			cropArea.max.y = aArea.max.y;
 		}
 		public function resetRenderArea():Void {
+			useScissor = false;
 			cropArea.min.x = 0;
 			cropArea.min.y = 0;
-			cropArea.max.x = fullScreenWidth;
-			cropArea.max.y = fullScreenHeight;
+			cropArea.max.x = 0;
+			cropArea.max.y = 0;
 		}
 		
 		

@@ -2,6 +2,7 @@ package com.gEngine;
 
 //import com.framework.utils.Input;
 
+import com.framework.utils.Input;
 import com.framework.utils.Resource.TextureProxy;
 import com.framework.utils.SimpleProfiler;
 import com.gEngine.display.AnimationSprite;
@@ -112,23 +113,47 @@ import kha.System;
 			mResources = new EngineResources();
 			mTextures = new MyList();
 			mStage = new Stage();
-			width = Screen.getWidth();
-			height = Screen.getHeight();
-			
-			mTempBuffer = Image.createRenderTarget(width, height, null, DepthStencilFormat.NoDepthAndStencil, 1);
-			mCurrentRenderTargetId = mTempBufferID = mTextures.push(mTempBuffer) - 1;
+
+			createBuffer(Screen.getWidth(), Screen.getHeight());
 			
 			var recTexture = Image.createRenderTarget(1, 1);
 			recTexture.g2.begin(true, Color.Black);
 			recTexture.g2.end();
 			mTextures.push(recTexture);
 			RectangleDisplay.init(1);
+
+			shaderPipeline = new PipelineState();
+			shaderPipeline.fragmentShader = Shaders.painter_image_frag;
+			shaderPipeline.vertexShader = Shaders.painter_image_vert;
+
+			var structure = new VertexStructure();
+			structure.add("vertexPosition", VertexData.Float3);
+			structure.add("texPosition", VertexData.Float2);
+			structure.add("vertexColor", VertexData.Float4);
+			shaderPipeline.inputLayout = [structure];
 			
-			mPainter = new Painter(false,Blend.blendNone());
-			mSpritePainter = new SpritePainter(false);
+			shaderPipeline.blendSource = BlendingFactor.BlendOne;
+			shaderPipeline.blendDestination = BlendingFactor.BlendZero;
+			shaderPipeline.alphaBlendSource = BlendingFactor.BlendOne;
+			shaderPipeline.alphaBlendDestination = BlendingFactor.BlendZero;
+				
+			shaderPipeline.compile();
 			
-			blurX = new ShBlurH(false,1,Blend.blendDefault());
-			blurY = new ShBlurV(false,1, Blend.blendDefault());
+		}
+		function createBuffer(aWidth:Int, aHeight:Int)
+		{
+			
+			if (width == aWidth && height == aHeight) return;
+			width = aWidth;
+			height = aHeight;
+			if (mTempBuffer != null) mTempBuffer.unload();
+			mTempBuffer = Image.createRenderTarget(width, height, null, DepthStencilFormat.NoDepthAndStencil, 1);
+			if (mTextures.length == 0)
+			{
+			mCurrentRenderTargetId = mTempBufferID = mTextures.push(mTempBuffer) - 1;
+			}else {
+			mTextures[mTempBufferID] = mTempBuffer;	
+			}
 			
 			realWidth = mTempBuffer.realWidth;
 			realHeight = mTempBuffer.realHeight;
@@ -136,8 +161,6 @@ import kha.System;
 			var renderScale:Float = 1;
 			realU =   width / realWidth ;
 			realV =  height / realHeight ;
-			
-			
 			
 			scaleWidth =  1;// (width / realWidth   );
 			scaleHeigth = 1;// (height / realHeight   ) ;
@@ -168,24 +191,14 @@ import kha.System;
 			
 
 			
+		}
+		public function createDefaultPainters():Void
+		{
+			mPainter = new Painter(false,Blend.blendNone());
+			mSpritePainter = new SpritePainter(false);
 			
-			shaderPipeline = new PipelineState();
-			shaderPipeline.fragmentShader = Shaders.painter_image_frag;
-			shaderPipeline.vertexShader = Shaders.painter_image_vert;
-
-			var structure = new VertexStructure();
-			structure.add("vertexPosition", VertexData.Float3);
-			structure.add("texPosition", VertexData.Float2);
-			structure.add("vertexColor", VertexData.Float4);
-			shaderPipeline.inputLayout = [structure];
-			
-			shaderPipeline.blendSource = BlendingFactor.BlendOne;
-			shaderPipeline.blendDestination = BlendingFactor.BlendZero;
-			shaderPipeline.alphaBlendSource = BlendingFactor.BlendOne;
-			shaderPipeline.alphaBlendDestination = BlendingFactor.BlendZero;
-				
-			shaderPipeline.compile();
-			
+			blurX = new ShBlurH(false,1,Blend.blendDefault());
+			blurY = new ShBlurV(false,1, Blend.blendDefault());
 		}
 		public static function init():Void
 		{	
@@ -202,6 +215,12 @@ import kha.System;
 			i.font = aFont;
 		}
 		#end
+		
+		public function resize(availWidth:Int, availHeight:Int) 
+		{
+			Input.i.screenScale.setTo(virtualWidth / availWidth, virtualHeight / availHeight);
+			createBuffer(availWidth, availHeight);
+		}
 	
 		public function addResources(data:Blob):Array<String>
 		{
@@ -663,6 +682,8 @@ import kha.System;
 			mTextures[aA] = mTextures[aB];
 			mTextures[aB] = temp;
 		}
+		
+		
 		
 		
 	}
