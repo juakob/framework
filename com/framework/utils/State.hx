@@ -2,6 +2,7 @@ package com.framework.utils;
 
 import com.framework.Simulation;
 import com.gEngine.GEngine;
+import kha.Canvas;
 import kha.Framebuffer;
 
 
@@ -24,7 +25,7 @@ class State extends Entity
 	public function changeState(state:State):Void{
 		Simulation.i.changeState(state);
 	}
-	public function draw(aFramebuffer:Framebuffer):Void
+	public function draw(aFramebuffer:Canvas):Void
 	{
 		
 	}
