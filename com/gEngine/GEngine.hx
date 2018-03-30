@@ -147,7 +147,7 @@ import kha.System;
 			width = aWidth;
 			height = aHeight;
 			if (mTempBuffer != null) mTempBuffer.unload();
-			mTempBuffer = Image.createRenderTarget(width, height, null, DepthStencilFormat.NoDepthAndStencil, 1);
+			mTempBuffer = Image.createRenderTarget(width, height, null, DepthStencilFormat.NoDepthAndStencil, antiAliasing);
 			if (mTextures.length == 0)
 			{
 			mCurrentRenderTargetId = mTempBufferID = mTextures.push(mTempBuffer) - 1;
@@ -327,7 +327,7 @@ import kha.System;
 				atlasImage = mTextures[currentIndex];
 				textureId = currentIndex;
 			}else {
-				atlasImage = Image.createRenderTarget(2048, 2048, TextureFormat.RGBA32,DepthStencilFormat.NoDepthAndStencil);
+				atlasImage = Image.createRenderTarget(2048, 2048, TextureFormat.RGBA32,DepthStencilFormat.NoDepthAndStencil,0);
 				textureId = mTextures.push(atlasImage) - 1;
 				
 				
@@ -366,7 +366,7 @@ import kha.System;
 			}
 			
 			bitmaps.sort(sortArea);
-			var atlasMap = new ImageTree(aWidth, aHeight, 1);
+			var atlasMap = new ImageTree(aWidth, aHeight, 2);
 			
 			var linker:MyList<AnimationTilesheetLinker> = new MyList();
 			var g = atlasImage.g2;
@@ -375,7 +375,7 @@ import kha.System;
 			
 			g.pipeline = shaderPipeline;
 			g.color = aColor;
-			g.begin(true, 0);
+			g.begin(true, 0x00000);
 			
 			for (bitmap in bitmaps) 
 			{
@@ -387,10 +387,11 @@ import kha.System;
 				}
 				#end
 				g.drawSubImage(bitmap.image, rectangle.x, rectangle.y, bitmap.x, bitmap.y, bitmap.width, bitmap.height);
-				rectangle.x+=1;
-				rectangle.y+=1;
-				rectangle.width -= 4;
-				rectangle.height-=4;
+				rectangle.x-=1;
+				rectangle.y-=1;
+				
+				rectangle.width -= 2;
+				rectangle.height-=2;
 				linker.push(new AnimationTilesheetLinker(bitmap.name, rectangle, aWidth, aHeight));
 				
 			}
@@ -442,6 +443,7 @@ import kha.System;
 		private var renderCustomBuffer:Bool;
 		private var customBuffer:Image;
 		var shaderPipeline:kha.graphics4.PipelineState;
+		static private inline var antiAliasing:Float = 0;
 		
 		public static inline var virtualWidth:Float=1280;
 		public static inline var virtualHeight:Float=720;
@@ -651,7 +653,7 @@ import kha.System;
 			var id:Int = renderTargetPool.getFreeImageId();
 			if (id ==-1)
 			{
-				var target:Image = Image.createRenderTarget(width, height,null,DepthStencilFormat.NoDepthAndStencil,2);
+				var target:Image = Image.createRenderTarget(width, height,null,DepthStencilFormat.NoDepthAndStencil,antiAliasing);
 				id = mTextures.push(target) - 1;
 				renderTargetPool.addRenderTarget(id);
 			}

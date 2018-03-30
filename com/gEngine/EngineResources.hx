@@ -130,7 +130,6 @@ import com.helpers.Point;
 					for (data in uvData) 
 					{
 						frame.UVs.push(data);
-						//frame.UVs.push(0);
 					}
 				}
 				++currentFrame;
