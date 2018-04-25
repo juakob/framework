@@ -79,6 +79,7 @@ class Simulation
 	private var mLastRealFrameTime:Float = 0;
 	private function onEnterFrame():Void 
 	{
+		Input.i.screenScale.setTo(1280 / System.windowWidth(0), 720 / System.windowHeight(0));
 		if (!mPause) {
 			var time = Scheduler.time();
 			mFrameByFrameTime =  time- mLastFrameTime;

@@ -175,7 +175,7 @@ class BasicSprite implements IDraw
 				mFrameSkiped = Std.int(mCurrentTime / frameRate);
 				mCurrentTime -= frameRate*mFrameSkiped;
 				CurrentFrame += mFrameSkiped;
-				//mFrameSkiped -= 1;
+				mFrameSkiped -= 1;
 				if (CurrentFrame >=TotalFrames )
 				{
 					if (Loop)
