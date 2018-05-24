@@ -439,7 +439,7 @@ class BasicSprite implements IDraw
 		do {
 			if (frame.maskBatchs.length == 0)
 			{
-				drawTo = Std.int(vertexs.length / 8);
+				drawTo = Std.int(vertexs.length / 8) + frame.maskBatchs.length+frame.blurBatchs.length;
 			}else {
 				if (drawMask)
 				{
@@ -576,7 +576,7 @@ class BasicSprite implements IDraw
 			if (colorTrans.length != 0 || colorTransform) drawMode = DrawMode.ColorTint;
 			
 			
-			painter.validateBatch(mTextureId, Std.int(frame.vertexs.length / 8 + frame.UVs.length / 8), drawMode,blend);
+			painter.validateBatch(mTextureId, Std.int(frame.vertexs.length / 2 ), drawMode,blend);
 			
 			
 			if (colorTrans.length!=0||colorTransform)

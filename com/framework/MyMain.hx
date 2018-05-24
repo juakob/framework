@@ -3,6 +3,7 @@
 	import com.framework.utils.State;
 	import com.framework.utils.Input;
 	import com.gEngine.GEngine;
+	import com.helpers.CompilationConstatns;
 	import kha.System;
 
 
@@ -34,7 +35,7 @@
 			heigth = width;
 			width = temp;
 		}
-		Input.i.screenScale.setTo(1280 / width, 720 / heigth);
+		Input.i.screenScale.setTo(CompilationConstatns.getWidth() / width, CompilationConstatns.getHeight() / heigth);
 		
 		GEngine.init();
 		GEngine.i.createDefaultPainters();

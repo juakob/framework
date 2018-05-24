@@ -24,6 +24,7 @@ import com.gEngine.tempStructures.Bitmap;
 import com.gEngine.tempStructures.UVLinker;
 import com.gEngine.tempStructures.UVLinker;
 import com.MyList;
+import com.helpers.CompilationConstatns;
 import com.helpers.RenderTargetPool;
 import com.imageAtlas.ImageTree;
 import com.gEngine.display.Stage; 
@@ -115,6 +116,8 @@ import kha.System;
 			mStage = new Stage();
 
 			createBuffer(Screen.getWidth(), Screen.getHeight());
+			trace(Screen.getWidth()+"  "+ Screen.getHeight());
+			//createBuffer(720, 1280);
 			
 			var recTexture = Image.createRenderTarget(1, 1);
 			recTexture.g2.begin(true, Color.Black);
@@ -445,8 +448,8 @@ import kha.System;
 		var shaderPipeline:kha.graphics4.PipelineState;
 		static private inline var antiAliasing:Float = 0;
 		
-		public static inline var virtualWidth:Float=1280;
-		public static inline var virtualHeight:Float=720;
+		public static inline var virtualWidth:Float=CompilationConstatns.getWidth();
+		public static inline var virtualHeight:Float=CompilationConstatns.getHeight();
 		static inline public var backBufferId=0;
 		
 		public var scaleWidth:Float=1;
@@ -559,7 +562,7 @@ import kha.System;
 			
 			// Begin rendering
 			g.begin();
-			if(clear)g.clear(Color.fromFloats(0,0,0,0));
+			if(clear)g.clear(Color.fromFloats(1,1,1,0));
 			g.end();
 			mStage.render(mSpritePainter);
 			
