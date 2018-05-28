@@ -13,6 +13,7 @@ import com.MyList;
 import com.helpers.MinMax;
 import com.helpers.Rectangle;
 import kha.Color;
+import kha.arrays.Float32Array;
 import kha.math.FastMatrix3;
 import kha.math.FastVector2;
 import kha.math.Vector2;
@@ -584,6 +585,8 @@ class BasicSprite implements IDraw
 				var redMul, blueMul , greenMul,alphaMul:Float;
 				var redAdd, blueAdd , greenAdd, alphaAdd:Float;
 				var frameColorTransform:Bool = colorTrans.length != 0;
+				var buffer = painter.getVertexBuffer();
+				var vertexBufferCounter = painter.getVertexDataCounter();
 				for ( i in drawFrom...drawTo)
 					{
 						if (frameColorTransform)
@@ -613,97 +616,107 @@ class BasicSprite implements IDraw
 						vertexY = vertexs[i * 8 + 1] - pivotY;
 						writeColorVertex(_tx + vertexX * _1 + vertexY * _3, _ty + vertexX * _2 + vertexY * _4, 
 						uvs[i * 8 + 0], uvs[i * 8 + 1],
-						redMul, greenMul, blueMul, alphaMul, redAdd, greenAdd, blueAdd, alphaAdd,painter);
+						redMul, greenMul, blueMul, alphaMul, redAdd, greenAdd, blueAdd, alphaAdd, buffer, vertexBufferCounter);
+						vertexBufferCounter += 12;
 						
 						vertexX = vertexs[i * 8 + 2]-pivotX;
 						vertexY = vertexs[i * 8 + 3]-pivotY;
 						writeColorVertex(_tx + vertexX * _1 + vertexY * _3, _ty + vertexX * _2 + vertexY * _4, 
 						uvs[i * 8 + 2], uvs[i * 8 + 3],
-						redMul, greenMul, blueMul, alphaMul, redAdd, greenAdd, blueAdd, alphaAdd,painter);
+						redMul, greenMul, blueMul, alphaMul, redAdd, greenAdd, blueAdd, alphaAdd, buffer, vertexBufferCounter);
+						vertexBufferCounter += 12;
 						
 						vertexX = vertexs[i * 8 + 4]-pivotX;
 						vertexY = vertexs[i * 8 + 5]-pivotY;
 						writeColorVertex(_tx + vertexX * _1 + vertexY * _3, _ty + vertexX * _2 + vertexY * _4, 
 						uvs[i * 8 + 4], uvs[i * 8 + 5],
-						redMul, greenMul, blueMul, alphaMul, redAdd, greenAdd, blueAdd, alphaAdd,painter);
+						redMul, greenMul, blueMul, alphaMul, redAdd, greenAdd, blueAdd, alphaAdd, buffer, vertexBufferCounter);
+						vertexBufferCounter += 12;
 						
 						vertexX = vertexs[i * 8 + 6]-pivotX;
 						vertexY = vertexs[i * 8 + 7]-pivotY;
 						writeColorVertex(_tx + vertexX * _1 + vertexY * _3, _ty + vertexX * _2 + vertexY * _4, 
 						uvs[i * 8 + 6], uvs[i * 8 + 7],
-						redMul, greenMul, blueMul, alphaMul, redAdd, greenAdd, blueAdd, alphaAdd,painter);
+						redMul, greenMul, blueMul, alphaMul, redAdd, greenAdd, blueAdd, alphaAdd, buffer, vertexBufferCounter);
+						vertexBufferCounter += 12;
 					}
+				painter.setVertexDataCounter(vertexBufferCounter);
 			}else
 			if (alphas.length == 0)
 			{
+				var buffer = painter.getVertexBuffer();
+				var vertexBufferCounter = painter.getVertexDataCounter();
 				for ( i in drawFrom...drawTo)
 				{
 					vertexX = vertexs[i * 8 + 0]-pivotX;
 					vertexY = vertexs[i * 8 + 1]-pivotY;
-					painter.write( _tx + vertexX * _1 + vertexY * _3);
-					painter.write( _ty + vertexX * _2 + vertexY * _4);
-					painter.write(uvs[i * 8 + 0]);
-					painter.write(uvs[i * 8 + 1]);
+					buffer.set(vertexBufferCounter++, _tx + vertexX * _1 + vertexY * _3);
+					buffer.set(vertexBufferCounter++, _ty + vertexX * _2 + vertexY * _4);
+					buffer.set(vertexBufferCounter++,uvs[i * 8 + 0]);
+					buffer.set(vertexBufferCounter++,uvs[i * 8 + 1]);
 					
 					vertexX = vertexs[i * 8 + 2]-pivotX;
 					vertexY = vertexs[i * 8 + 3]-pivotY;
-					painter.write( _tx + vertexX * _1 + vertexY * _3);
-					painter.write( _ty + vertexX * _2 + vertexY * _4);
-					painter.write(uvs[i * 8 + 2]);
-					painter.write(uvs[i * 8 + 3]);
+					buffer.set(vertexBufferCounter++, _tx + vertexX * _1 + vertexY * _3);
+					buffer.set(vertexBufferCounter++, _ty + vertexX * _2 + vertexY * _4);
+					buffer.set(vertexBufferCounter++,uvs[i * 8 + 2]);
+					buffer.set(vertexBufferCounter++,uvs[i * 8 + 3]);
 					
 					vertexX = vertexs[i * 8 + 4]-pivotX;
 					vertexY = vertexs[i * 8 + 5]-pivotY;
-					painter.write( _tx + vertexX * _1 + vertexY * _3);
-					painter.write( _ty + vertexX * _2 + vertexY * _4);
-					painter.write(uvs[i * 8 + 4]);
-					painter.write(uvs[i * 8 + 5]);
+					buffer.set(vertexBufferCounter++, _tx + vertexX * _1 + vertexY * _3);
+					buffer.set(vertexBufferCounter++, _ty + vertexX * _2 + vertexY * _4);
+					buffer.set(vertexBufferCounter++,uvs[i * 8 + 4]);
+					buffer.set(vertexBufferCounter++,uvs[i * 8 + 5]);
 					
 					
 					vertexX = vertexs[i * 8 + 6]-pivotX;
 					vertexY = vertexs[i * 8 + 7]-pivotY;
-					painter.write( _tx + vertexX * _1 + vertexY * _3);
-					painter.write( _ty + vertexX * _2 + vertexY * _4);
-					painter.write(uvs[i * 8 + 6]);
-					painter.write(uvs[i * 8 + 7]);
+					buffer.set(vertexBufferCounter++, _tx + vertexX * _1 + vertexY * _3);
+					buffer.set(vertexBufferCounter++, _ty + vertexX * _2 + vertexY * _4);
+					buffer.set(vertexBufferCounter++,uvs[i * 8 + 6]);
+					buffer.set(vertexBufferCounter++,uvs[i * 8 + 7]);
 					
 				}
+				painter.setVertexDataCounter(vertexBufferCounter);
 			}else {
+				var buffer = painter.getVertexBuffer();
+				var vertexBufferCounter = painter.getVertexDataCounter();
 					for ( i in drawFrom...drawTo)
 					{
 						vertexX = vertexs[i * 8 + 0]-pivotX;
 						vertexY = vertexs[i * 8 + 1]-pivotY;
-						painter.write( _tx + vertexX * _1 + vertexY * _3);
-						painter.write( _ty + vertexX * _2 + vertexY * _4);
-						painter.write(uvs[i * 8 + 0]);
-						painter.write(uvs[i * 8 + 1]);
-						painter.write(alphas[i]);
+						buffer.set(vertexBufferCounter++, _tx + vertexX * _1 + vertexY * _3);
+						buffer.set(vertexBufferCounter++, _ty + vertexX * _2 + vertexY * _4);
+						buffer.set(vertexBufferCounter++,uvs[i * 8 + 0]);
+						buffer.set(vertexBufferCounter++,uvs[i * 8 + 1]);
+						buffer.set(vertexBufferCounter++,alphas[i]);
 						
 						vertexX = vertexs[i * 8 + 2]-pivotX;
 						vertexY = vertexs[i * 8 + 3]-pivotY;
-						painter.write( _tx + vertexX * _1 + vertexY * _3);
-						painter.write( _ty + vertexX * _2 + vertexY * _4);
-						painter.write(uvs[i * 8 + 2]);
-						painter.write(uvs[i * 8 + 3]);
-						painter.write(alphas[i]);
+						buffer.set(vertexBufferCounter++, _tx + vertexX * _1 + vertexY * _3);
+						buffer.set(vertexBufferCounter++, _ty + vertexX * _2 + vertexY * _4);
+						buffer.set(vertexBufferCounter++,uvs[i * 8 + 2]);
+						buffer.set(vertexBufferCounter++,uvs[i * 8 + 3]);
+						buffer.set(vertexBufferCounter++,alphas[i]);
 						
 						vertexX = vertexs[i * 8 + 4]-pivotX;
 						vertexY = vertexs[i * 8 + 5]-pivotY;
-						painter.write( _tx + vertexX * _1 + vertexY * _3);
-						painter.write( _ty + vertexX * _2 + vertexY * _4);
-						painter.write(uvs[i * 8 + 4]);
-						painter.write(uvs[i * 8 + 5]);
-						painter.write(alphas[i]);
+						buffer.set(vertexBufferCounter++, _tx + vertexX * _1 + vertexY * _3);
+						buffer.set(vertexBufferCounter++, _ty + vertexX * _2 + vertexY * _4);
+						buffer.set(vertexBufferCounter++,uvs[i * 8 + 4]);
+						buffer.set(vertexBufferCounter++,uvs[i * 8 + 5]);
+						buffer.set(vertexBufferCounter++,alphas[i]);
 						
 						vertexX = vertexs[i * 8 + 6]-pivotX;
 						vertexY = vertexs[i * 8 + 7]-pivotY;
-						painter.write( _tx + vertexX * _1 + vertexY * _3);
-						painter.write( _ty + vertexX * _2 + vertexY * _4);
-						painter.write(uvs[i * 8 + 6]);
-						painter.write(uvs[i * 8 + 7]);
-						painter.write(alphas[i]);
+						buffer.set(vertexBufferCounter++, _tx + vertexX * _1 + vertexY * _3);
+						buffer.set(vertexBufferCounter++, _ty + vertexX * _2 + vertexY * _4);
+						buffer.set(vertexBufferCounter++,uvs[i * 8 + 6]);
+						buffer.set(vertexBufferCounter++,uvs[i * 8 + 7]);
+						buffer.set(vertexBufferCounter++,alphas[i]);
 					}
-		
+				painter.setVertexDataCounter(vertexBufferCounter);
 			}
 			stuffToDraw -= drawTo-drawFrom;
 			drawFrom += drawTo-drawFrom;
@@ -728,19 +741,19 @@ class BasicSprite implements IDraw
 	}
 	
 	private static inline function writeColorVertex(aX:Float, aY:Float, aU:Float, aV:Float, aRedMul:Float, aGreenMul:Float, aBlueMul:Float, aAlphaMul:Float,
-												aRedAdd:Float,aGreenAdd:Float,aBlueAdd:Float,aAlphaAdd:Float,painter:IPainter) {
-			painter.write( aX);
-			painter.write(aY);
-			painter.write(aU);
-			painter.write(aV);
-			painter.write(aRedMul);
-			painter.write(aGreenMul);
-			painter.write(aBlueMul);
-			painter.write(aAlphaMul);
-			painter.write(aRedAdd);
-			painter.write(aGreenAdd);
-			painter.write(aBlueAdd);
-			painter.write(aAlphaAdd);	
+												aRedAdd:Float,aGreenAdd:Float,aBlueAdd:Float,aAlphaAdd:Float,buffer:Float32Array,offsetPos:Int) {
+			buffer.set(offsetPos++ , aX);
+			buffer.set(offsetPos++ , aY);
+			buffer.set(offsetPos++ , aU);
+			buffer.set(offsetPos++ , aV);
+			buffer.set(offsetPos++ , aRedMul);
+			buffer.set(offsetPos++ , aGreenMul);
+			buffer.set(offsetPos++ , aBlueMul);
+			buffer.set(offsetPos++ , aAlphaMul);
+			buffer.set(offsetPos++ , aRedAdd);
+			buffer.set(offsetPos++ , aGreenAdd);
+			buffer.set(offsetPos++ , aBlueAdd);
+			buffer.set(offsetPos++ , aAlphaAdd);	
 	}
 	
 	/* INTERFACE com.gEngine.display.IDraw */

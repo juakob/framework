@@ -4,6 +4,8 @@ import com.gEngine.display.BlendMode;
 import com.gEngine.display.DrawMode;
 import com.gEngine.painters.IPainter;
 import com.helpers.MinMax;
+import kha.arrays.Float32Array;
+import kha.graphics4.VertexBuffer;
 
 /**
  * @author Joaquin
@@ -19,6 +21,9 @@ interface IPainter
    function releaseTexture():Bool;
    function adjustRenderArea(aArea:MinMax):Void;
    function resetRenderArea():Void;
+   function getVertexBuffer():Float32Array;
+   function getVertexDataCounter():Int;
+   function setVertexDataCounter(aData:Int):Void;
    var textureID:Int;
    var resolution:Float;
 }

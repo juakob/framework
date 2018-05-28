@@ -3,6 +3,8 @@ import com.gEngine.display.Blend;
 import com.gEngine.display.BlendMode;
 import com.gEngine.display.DrawMode;
 import com.helpers.MinMax;
+import kha.arrays.Float32Array;
+import kha.graphics4.VertexBuffer;
 
 /**
  * ...
@@ -133,6 +135,23 @@ class SpritePainter implements IPainter
 	{
 		renderArea = null;
 		currentPainter.resetRenderArea();
+	}
+	
+	/* INTERFACE com.gEngine.painters.IPainter */
+	
+	public function getVertexBuffer():Float32Array 
+	{
+		return currentPainter.getVertexBuffer();
+	}
+	
+	public function getVertexDataCounter():Int 
+	{
+		return currentPainter.getVertexDataCounter();
+	}
+	
+	public function setVertexDataCounter(aData:Int):Void 
+	{
+		currentPainter.setVertexDataCounter(aData);
 	}
 	
 }

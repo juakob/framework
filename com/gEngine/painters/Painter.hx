@@ -48,7 +48,7 @@ class Painter implements IPainter
 	public var resolution:Float = 1;
 	
 	var ratioIndexVertex:Float = 6 / 4;
-	private var counter:Int=0;
+	public var counter:Int=0;
 	var buffer:Float32Array;
 	public var textureID:Int = -1;
 	
@@ -60,7 +60,7 @@ class Painter implements IPainter
 		if (aBlend == null) aBlend = Blend.blendDefault();
 		if (aAutoDestroy) PainterGarbage.i.add(this);
 		initShaders(aBlend);
-		buffer = getVertexBuffer();
+		buffer = downloadVertexBuffer();
 		mCustomBlend = false;
 		cropArea = new MinMax();
 		resetRenderArea();
@@ -68,11 +68,10 @@ class Painter implements IPainter
 	public inline function write(aValue:Float):Void
 	{
 		buffer.set(counter++, aValue);
-		
 	}
 	public inline function canDraw(aSize:Int):Bool
 	{
-		return (counter + aSize) <= MAX_VERTEX_PER_BUFFER;
+		return (counter + aSize*dataPerVertex) <= MAX_VERTEX_PER_BUFFER*dataPerVertex;
 	}
 	public function start()
 	{
@@ -109,7 +108,7 @@ class Painter implements IPainter
 			unsetTextures(g);
 			// End rendering	
 		
-			buffer = getVertexBuffer();
+			buffer = downloadVertexBuffer();
 			if(useScissor) g.disableScissor();
 			g.end();
 			
@@ -203,7 +202,7 @@ class Painter implements IPainter
 		{
 			g.setTexture(mTextureID, null);
 		}
-		inline function getVertexBuffer():Float32Array
+		 inline function downloadVertexBuffer():Float32Array
 		{
 			return vertexBuffer.lock();
 		}
@@ -253,6 +252,23 @@ class Painter implements IPainter
 			cropArea.min.y = 0;
 			cropArea.max.x = 0;
 			cropArea.max.y = 0;
+		}
+		
+		/* INTERFACE com.gEngine.painters.IPainter */
+		
+		public function getVertexDataCounter():Int 
+		{
+			return counter;
+		}
+		
+		public function setVertexDataCounter(aData:Int):Void 
+		{
+			counter = aData;
+		}
+		
+		public function getVertexBuffer():Float32Array 
+		{
+			return buffer;
 		}
 		
 		
