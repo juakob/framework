@@ -456,6 +456,8 @@ class BasicSprite implements IDraw
 					var vertex0:Int = 0;
 					maskOffset +=  maskBatch.masksCount;
 					
+					var buffer = painter.getVertexBuffer();
+					var vertexBufferCounter = painter.getVertexDataCounter();
 					for (vertexCount in maskBatch.vertexCount) 
 					{
 						var trianglesCount:Int = vertexCount - 2;
@@ -463,38 +465,38 @@ class BasicSprite implements IDraw
 						{
 							vertexX = polygons[vertex0]-pivotX;
 							vertexY = polygons[vertex0+1]-pivotY;
-							painter.write( _tx + vertexX * _1 + vertexY * _3);
-							painter.write( _ty + vertexX * _2 + vertexY * _4);
-							painter.write(polyUvs[vertex0]);
-							painter.write(polyUvs[vertex0+1]);
-							painter.write(maskUvs[vertex0+0]);
-							painter.write(maskUvs[vertex0+1]);
+							buffer.set(vertexBufferCounter++, _tx + vertexX * _1 + vertexY * _3);
+							buffer.set(vertexBufferCounter++, _ty + vertexX * _2 + vertexY * _4);
+							buffer.set(vertexBufferCounter++,polyUvs[vertex0]);
+							buffer.set(vertexBufferCounter++,polyUvs[vertex0+1]);
+							buffer.set(vertexBufferCounter++,maskUvs[vertex0+0]);
+							buffer.set(vertexBufferCounter++,maskUvs[vertex0+1]);
 							
 							
 							vertexX = polygons[vertex0+i*2  + 2]-pivotX;
 							vertexY = polygons[vertex0+i*2  + 3]-pivotY;
-							painter.write( _tx + vertexX * _1 + vertexY * _3);
-							painter.write( _ty + vertexX * _2 + vertexY * _4);
-							painter.write(polyUvs[vertex0+i*2  + 2]);
-							painter.write(polyUvs[vertex0+i*2  + 3]);
-							painter.write(maskUvs[vertex0+i*2  + 2]);
-							painter.write(maskUvs[vertex0+i*2 + 3]);
+							buffer.set(vertexBufferCounter++, _tx + vertexX * _1 + vertexY * _3);
+							buffer.set(vertexBufferCounter++, _ty + vertexX * _2 + vertexY * _4);
+							buffer.set(vertexBufferCounter++,polyUvs[vertex0+i*2  + 2]);
+							buffer.set(vertexBufferCounter++,polyUvs[vertex0+i*2  + 3]);
+							buffer.set(vertexBufferCounter++,maskUvs[vertex0+i*2  + 2]);
+							buffer.set(vertexBufferCounter++,maskUvs[vertex0+i*2 + 3]);
 							
 							vertexX = polygons[vertex0+i*2 + 4]-pivotX;
 							vertexY = polygons[vertex0+i*2 + 5]-pivotY;
-							painter.write( _tx + vertexX * _1 + vertexY * _3);
-							painter.write( _ty + vertexX * _2 + vertexY * _4);
-							painter.write(polyUvs[vertex0+i*2 + 4]);
-							painter.write(polyUvs[vertex0+i*2 + 5]);
-							painter.write(maskUvs[vertex0+i*2 + 4]);
-							painter.write(maskUvs[vertex0+i*2 + 5]);
+							buffer.set(vertexBufferCounter++, _tx + vertexX * _1 + vertexY * _3);
+							buffer.set(vertexBufferCounter++, _ty + vertexX * _2 + vertexY * _4);
+							buffer.set(vertexBufferCounter++,polyUvs[vertex0+i*2 + 4]);
+							buffer.set(vertexBufferCounter++,polyUvs[vertex0+i*2 + 5]);
+							buffer.set(vertexBufferCounter++,maskUvs[vertex0+i*2 + 4]);
+							buffer.set(vertexBufferCounter++,maskUvs[vertex0+i*2 + 5]);
 							
 							
 						}
 						
 						vertex0 += vertexCount * 2;
 					}
-					
+					painter.setVertexDataCounter(vertexBufferCounter);
 					++maskCounter;
 				}
 				
