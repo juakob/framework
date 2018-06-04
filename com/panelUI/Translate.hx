@@ -1,14 +1,14 @@
 package com.panelUI ;
-import com.helpers.Point;
+import com.helpers.FastPoint;
 /**
  * ...
  * @author Joaquin
  */
 class Translate extends Transition 
 {
-	private var mFrom:Point;
-	private var mTo:Point;
-	public function new (aComponent:Component,aFrom:Point,aTo:Point,aDuration:Float,aDelay:Float=0,TweenFunction:Float->Float=null)
+	private var mFrom:FastPoint;
+	private var mTo:FastPoint;
+	public function new (aComponent:Component,aFrom:FastPoint,aTo:FastPoint,aDuration:Float,aDelay:Float=0,TweenFunction:Float->Float=null)
 	{
 		mFrom = aFrom;
 		mTo = aTo;

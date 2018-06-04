@@ -13,6 +13,7 @@ import com.MyList;
 import com.helpers.MinMax;
 import com.helpers.Rectangle;
 import kha.Color;
+import kha.FastFloat;
 import kha.arrays.Float32Array;
 import kha.math.FastMatrix3;
 import kha.math.FastVector2;
@@ -23,22 +24,22 @@ import kha.math.Vector2;
 class BasicSprite implements IDraw
 {
 	
-	public var x:Float=0;
-	public var y:Float=0;
-	public var scaleX:Float;
-	public var scaleY:Float;
+	public var x:FastFloat=0;
+	public var y:FastFloat=0;
+	public var scaleX:FastFloat;
+	public var scaleY:FastFloat;
 	public var rotation(default, set):Float;
 	
 	public var blend:BlendMode = BlendMode.Default;
 	
-	private var cosAng:Float;
-	private var sinAng:Float;
+	private var cosAng:FastFloat;
+	private var sinAng:FastFloat;
 	
-	public var pivotX:Float=0;
-	public var pivotY:Float=0;
+	public var pivotX:FastFloat=0;
+	public var pivotY:FastFloat=0;
 	
-	public var offsetX:Float=0;
-	public var offsetY:Float = 0;
+	public var offsetX:FastFloat=0;
+	public var offsetY:FastFloat = 0;
 	
 	public var interpolateFrames:Bool;
 	
@@ -50,24 +51,24 @@ class BasicSprite implements IDraw
 	public var parent:IDrawContainer;
 	public var visible:Bool = true;
 	
-	public var alpha:Float = 1;
+	public var alpha:FastFloat = 1;
 	
-	public var skewX(default,set):Float = 0;
-	public var skewY(default,set):Float = 0;
+	public var skewX(default,set):FastFloat = 0;
+	public var skewY(default,set):FastFloat = 0;
 	
-	private var tanSkewX:Float = 0;
-	private var tanSkewY:Float = 0;
+	private var tanSkewX:FastFloat = 0;
+	private var tanSkewY:FastFloat = 0;
 	
 	private var colorTransform:Bool = false;
-	private var addRed:Float = 0;
-	private var addGreen:Float = 0;
-	private var addBlue:Float = 0;
-	private var addAlpha:Float = 0;
+	private var addRed:FastFloat = 0;
+	private var addGreen:FastFloat = 0;
+	private var addBlue:FastFloat = 0;
+	private var addAlpha:FastFloat = 0;
 	
-	private var mulRed:Float = 1;
-	private var mulGreen:Float = 1;
-	private var mulBlue:Float = 1;
-	private var mulAlpha:Float = 1;
+	private var mulRed:FastFloat = 1;
+	private var mulGreen:FastFloat = 1;
+	private var mulBlue:FastFloat = 1;
+	private var mulAlpha:FastFloat = 1;
 	
 	private var mTextureId:Int =-1;
 	
@@ -139,7 +140,7 @@ class BasicSprite implements IDraw
 		Playing = false;
 		CurrentFrame = 0;
 	}
-	public function set_rotation(aValue:Float):Float
+	public function set_rotation(aValue:Float):FastFloat
 	{
 		if (aValue != rotation)
 		{
@@ -403,20 +404,20 @@ class BasicSprite implements IDraw
 		var _3t = -scaleY * sinAng+cosAng*tanSkewX*scaleY;
 		var _4t = scaleY * cosAng+sinAng*tanSkewX*scaleY;
 		 
-		var _1:Float = _1t*transform.a  +_2t*transform.c;//new a
-		var _2:Float = _1t*transform.b+_2t*transform.d;//new b
-		var _3:Float = _3t * transform.a +_4t *transform.c;//new c
-		var _4:Float = _3t * transform.b + transform.d * _4t;//new d
+		var _1 = _1t*transform.a  +_2t*transform.c;//new a
+		var _2 = _1t*transform.b+_2t*transform.d;//new b
+		var _3 = _3t * transform.a +_4t *transform.c;//new c
+		var _4 = _3t * transform.b + transform.d * _4t;//new d
 	
-		var _tx:Float = x* transform.a+ y *transform.c + transform.tx;
-		var _ty:Float = x * transform.b + y * transform.d +transform.ty;
+		var _tx = x* transform.a+ y *transform.c + transform.tx;
+		var _ty = x * transform.b + y * transform.d +transform.ty;
 		
-		var vertexX:Float;
-		var vertexY:Float;
+		var vertexX:FastFloat;
+		var vertexY:FastFloat;
 		
 		
 		var frame = mAnimationData.frames[CurrentFrame];
-		var vertexs:MyList<Float>;
+		var vertexs:MyList<FastFloat>;
 		if (interpolateFrames && CurrentFrame<TotalFrames)
 		{
 			vertexs = interpolateFrame(CurrentFrame, mCurrentTime, frameRate, mAnimationData.frames);
@@ -450,9 +451,9 @@ class BasicSprite implements IDraw
 					var maskBatch:MaskBatch = frame.maskBatchs[maskCounter];
 					painter.validateBatch(mTextureId, Std.int(maskBatch.vertex.length/2), DrawMode.Mask,blend);
 					--stuffToDraw;
-					var polygons:MyList<Float> = maskBatch.vertex;
-					var polyUvs:MyList<Float> = maskBatch.uvs;
-					var maskUvs:MyList<Float> = maskBatch.maskUvs;
+					var polygons:MyList<FastFloat> = maskBatch.vertex;
+					var polyUvs:MyList<FastFloat> = maskBatch.uvs;
+					var maskUvs:MyList<FastFloat> = maskBatch.maskUvs;
 					var vertex0:Int = 0;
 					maskOffset +=  maskBatch.masksCount;
 					
@@ -648,36 +649,39 @@ class BasicSprite implements IDraw
 			{
 				var buffer = painter.getVertexBuffer();
 				var vertexBufferCounter = painter.getVertexDataCounter();
+				var vertexIndex:Int;
+				var uvIndex:Int;
 				for ( i in drawFrom...drawTo)
 				{
-					vertexX = vertexs[i * 8 + 0]-pivotX;
-					vertexY = vertexs[i * 8 + 1]-pivotY;
+					uvIndex=vertexIndex = i * 8;
+					vertexX = vertexs[vertexIndex]-pivotX;
+					vertexY = vertexs[++vertexIndex]-pivotY;
 					buffer.set(vertexBufferCounter++, _tx + vertexX * _1 + vertexY * _3);
 					buffer.set(vertexBufferCounter++, _ty + vertexX * _2 + vertexY * _4);
-					buffer.set(vertexBufferCounter++,uvs[i * 8 + 0]);
-					buffer.set(vertexBufferCounter++,uvs[i * 8 + 1]);
+					buffer.set(vertexBufferCounter++,uvs[uvIndex]);
+					buffer.set(vertexBufferCounter++,uvs[++uvIndex]);
 					
-					vertexX = vertexs[i * 8 + 2]-pivotX;
-					vertexY = vertexs[i * 8 + 3]-pivotY;
+					vertexX = vertexs[++vertexIndex]-pivotX;
+					vertexY = vertexs[++vertexIndex]-pivotY;
 					buffer.set(vertexBufferCounter++, _tx + vertexX * _1 + vertexY * _3);
 					buffer.set(vertexBufferCounter++, _ty + vertexX * _2 + vertexY * _4);
-					buffer.set(vertexBufferCounter++,uvs[i * 8 + 2]);
-					buffer.set(vertexBufferCounter++,uvs[i * 8 + 3]);
+					buffer.set(vertexBufferCounter++,uvs[++uvIndex]);
+					buffer.set(vertexBufferCounter++,uvs[++uvIndex]);
 					
-					vertexX = vertexs[i * 8 + 4]-pivotX;
-					vertexY = vertexs[i * 8 + 5]-pivotY;
+					vertexX = vertexs[++vertexIndex]-pivotX;
+					vertexY = vertexs[++vertexIndex]-pivotY;
 					buffer.set(vertexBufferCounter++, _tx + vertexX * _1 + vertexY * _3);
 					buffer.set(vertexBufferCounter++, _ty + vertexX * _2 + vertexY * _4);
-					buffer.set(vertexBufferCounter++,uvs[i * 8 + 4]);
-					buffer.set(vertexBufferCounter++,uvs[i * 8 + 5]);
+					buffer.set(vertexBufferCounter++,uvs[++uvIndex]);
+					buffer.set(vertexBufferCounter++,uvs[++uvIndex]);
 					
 					
-					vertexX = vertexs[i * 8 + 6]-pivotX;
-					vertexY = vertexs[i * 8 + 7]-pivotY;
+					vertexX = vertexs[++vertexIndex]-pivotX;
+					vertexY = vertexs[++vertexIndex]-pivotY;
 					buffer.set(vertexBufferCounter++, _tx + vertexX * _1 + vertexY * _3);
 					buffer.set(vertexBufferCounter++, _ty + vertexX * _2 + vertexY * _4);
-					buffer.set(vertexBufferCounter++,uvs[i * 8 + 6]);
-					buffer.set(vertexBufferCounter++,uvs[i * 8 + 7]);
+					buffer.set(vertexBufferCounter++,uvs[++uvIndex]);
+					buffer.set(vertexBufferCounter++,uvs[++uvIndex]);
 					
 				}
 				painter.setVertexDataCounter(vertexBufferCounter);
@@ -727,12 +731,12 @@ class BasicSprite implements IDraw
 		y -= offsetY+pivotY;
 	}
 	
-	private static var hInterpolated:MyList<Float>=new MyList<Float>();
-	private static inline function interpolateFrame(currentFrame:Int, deltaTime:Float, frameRate:Float, frames:MyList<Frame>):MyList<Float>
+	private static var hInterpolated:MyList<FastFloat>=new MyList<FastFloat>();
+	private static inline function interpolateFrame(currentFrame:Int, deltaTime:Float, frameRate:Float, frames:MyList<Frame>):MyList<FastFloat>
 	{
 		hInterpolated.splice(0, hInterpolated.length);
-		var frameA:MyList<Float> = frames[currentFrame].vertexs;
-		var frameB:MyList<Float> = frames[currentFrame+1].vertexs;
+		var frameA = frames[currentFrame].vertexs;
+		var frameB = frames[currentFrame+1].vertexs;
 		var s:Float = deltaTime / frameRate;
 		var total:Int = frameA.length;
 		for (i in 0...total) 

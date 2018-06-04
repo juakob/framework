@@ -4,6 +4,7 @@ import com.gEngine.AnimationData;
 import com.gEngine.Dummy;
 import com.gEngine.painters.IPainter;
 import com.helpers.Matrix;
+import kha.FastFloat;
 
 /**
  * ...
@@ -55,16 +56,16 @@ class ComplexSprite extends AnimationSprite
 		var _3t = -scaleY * sinAng+cosAng*tanSkewX*scaleY;
 		var _4t = scaleY * cosAng+sinAng*tanSkewX*scaleY;
 		 
-		var _1:Float = _1t*transform.a  +_2t*transform.c;//new a
-		var _2:Float = _1t*transform.b+_2t*transform.d;//new b
-		var _3:Float = _3t * transform.a +_4t *transform.c;//new c
-		var _4:Float = _3t * transform.b + transform.d * _4t;//new d
+		var _1 = _1t*transform.a  +_2t*transform.c;//new a
+		var _2 = _1t*transform.b+_2t*transform.d;//new b
+		var _3 = _3t * transform.a +_4t *transform.c;//new c
+		var _4 = _3t * transform.b + transform.d * _4t;//new d
 	
-		var _tx:Float = x* transform.a+ y *transform.c + transform.tx;
-		var _ty:Float = x * transform.b + y * transform.d +transform.ty;
+		var _tx = x* transform.a+ y *transform.c + transform.tx;
+		var _ty = x * transform.b + y * transform.d +transform.ty;
 		
-		var vertexX:Float;
-		var vertexY:Float;
+		var vertexX:FastFloat;
+		var vertexY:FastFloat;
 		
 		
 		var frame = mAnimationData.frames[CurrentFrame];
@@ -118,9 +119,9 @@ class ComplexSprite extends AnimationSprite
 				var maskBatch:MaskBatch = frame.maskBatchs[maskCounter];
 				painter.validateBatch(mTextureId, Std.int(maskBatch.vertex.length/2), DrawMode.Mask,blend);
 				
-				var polygons:MyList<Float> = maskBatch.vertex;
-				var polyUvs:MyList<Float> = maskBatch.uvs;
-				var maskUvs:MyList<Float> = maskBatch.maskUvs;
+				var polygons = maskBatch.vertex;
+				var polyUvs = maskBatch.uvs;
+				var maskUvs = maskBatch.maskUvs;
 				
 				var vertex0:Int = 0;
 				for (vertexCount in maskBatch.vertexCount) 

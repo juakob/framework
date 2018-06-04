@@ -4,7 +4,7 @@ import com.gEngine.painters.IPainter;
 import com.helpers.Matrix;
 import com.gEngine.display.IDraw;
 import com.helpers.MinMax;
-import com.helpers.Point;
+import com.helpers.FastPoint;
 import kha.math.FastMatrix3;
 import kha.math.FastVector2;
 

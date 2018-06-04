@@ -4,7 +4,7 @@ import com.gEngine.display.AnimationSprite;
 import com.gEngine.display.IDraw;
 import com.gEngine.display.Layer;
 import com.gEngine.GEngine;
-import com.helpers.Point;
+import com.helpers.FastPoint;
 import com.helpers.Rectangle;
 import com.panelUI.ITransition;
 import com.panelUI.TransitionPlayer;
@@ -23,7 +23,7 @@ class SimpleButton extends Entity implements UIComponent
 	public var y(get, set):Float;
 	public var width(get, set):Float;
 	public var height(get, set):Float;
-	public var offset(default, null):Point;
+	public var offset(default, null):FastPoint;
 	public var visible(get, set):Bool;
 	public var isPress(default, null):Bool;
 	
@@ -44,7 +44,7 @@ class SimpleButton extends Entity implements UIComponent
 	public function new(aLayer:Layer ,sprite:AnimationSprite=null) 
 	{
 		mArea = new Rectangle();
-		offset = new Point();
+		offset = new FastPoint();
 		
 		if (sprite == null)
 		{

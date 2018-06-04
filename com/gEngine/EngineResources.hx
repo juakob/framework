@@ -2,7 +2,7 @@ package com.gEngine;
 
 import com.gEngine.tempStructures.UVLinker;
 import com.MyList;
-import com.helpers.Point;
+import com.helpers.FastPoint;
 
 
 

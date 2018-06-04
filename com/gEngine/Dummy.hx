@@ -1,6 +1,6 @@
 package com.gEngine;
 import com.helpers.Matrix;
-import com.helpers.Point;
+import com.helpers.FastPoint;
 
 
 	/**
@@ -10,9 +10,9 @@ import com.helpers.Point;
 	 class Dummy 
 	{
 		public var name:String;
-		public var pos:Point;
-		public var widthV:Point;
-		public var heightV:Point;
+		public var pos:FastPoint;
+		public var widthV:FastPoint;
+		public var heightV:FastPoint;
 		public var drawIndex:Int;
 		
 		public var matrix:Matrix;

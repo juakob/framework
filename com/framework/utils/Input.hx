@@ -1,5 +1,5 @@
 package com.framework.utils;
-import com.helpers.Point;
+import com.helpers.FastPoint;
 import kha.input.KeyCode;
 import kha.input.Keyboard;
 import kha.input.Mouse;
@@ -40,14 +40,14 @@ class Input
 	var joysticks:Array<JoystickProxy>;
 	
 	
-	private var mMousePosition:Point;
+	private var mMousePosition:FastPoint;
 	static public inline var TOUCH_MAX:Float = 6;
 	
-	public var screenScale(default, null):Point;
+	public var screenScale(default, null):FastPoint;
 	
 	public function new() 
 	{
-		screenScale = new Point(1,1);
+		screenScale = new FastPoint(1,1);
 		
 		mMouseIsDown = false;
 		mMousePressed = false;
@@ -67,7 +67,7 @@ class Input
 			mTouchActive.push(false);
 		}
 		
-		mMousePosition = new Point();
+		mMousePosition = new FastPoint();
 		
 		joysticks = new Array();
 	}

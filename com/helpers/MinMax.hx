@@ -1,5 +1,6 @@
 package com.helpers;
 import com.helpers.Matrix;
+import kha.FastFloat;
 import kha.math.FastMatrix3;
 import kha.math.FastVector2;
 
@@ -9,13 +10,13 @@ import kha.math.FastVector2;
  */
 class MinMax
 {
-	public var min:Point;
-	public var max:Point;
+	public var min:FastPoint;
+	public var max:FastPoint;
 	public static var weak:MinMax = new MinMax();
 	public function new() 
 	{
-		min = new Point();
-		max = new Point();
+		min = new FastPoint();
+		max = new FastPoint();
 	}
 	public function reset():Void
 	{
@@ -94,13 +95,13 @@ class MinMax
 		
 	}
 	
-	public function addBorderWidth(aValue:Float) 
+	public function addBorderWidth(aValue:FastFloat) 
 	{
 		min.x -= aValue;
 		max.x += aValue;
 	}
 	
-	public function addBorderHeight(aValue:Float) 
+	public function addBorderHeight(aValue:FastFloat) 
 	{
 		min.y -= aValue;
 		max.y += aValue;
@@ -115,7 +116,7 @@ class MinMax
 		return max.x - min.x;
 	}
 	
-	static inline public function from(x:Float, y:Float, width:Float, height:Float):MinMax
+	static inline public function from(x:FastFloat, y:FastFloat, width:FastFloat, height:FastFloat):MinMax
 	{
 		var minMax:MinMax = new MinMax();
 		minMax.min.x = x;

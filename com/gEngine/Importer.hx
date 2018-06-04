@@ -2,7 +2,7 @@ package com.gEngine ;
 
 	import com.helpers.ByteArrayKha;
 	import com.helpers.MinMax;
-	import com.helpers.Point;
+	import com.helpers.FastPoint;
 	import com.MyList;
 	import kha.Blob;
 	/**
@@ -219,9 +219,9 @@ package com.gEngine ;
 					dummy.matrix.d = data.readFloat();
 					dummy.matrix.tx = data.readFloat();
 					dummy.matrix.ty = data.readFloat();
-					dummy.pos = new Point(data.readFloat(), data.readFloat());
-					dummy.widthV = new Point(data.readFloat(), data.readFloat());
-					dummy.heightV = new Point(data.readFloat(), data.readFloat());
+					dummy.pos = new FastPoint(data.readFloat(), data.readFloat());
+					dummy.widthV = new FastPoint(data.readFloat(), data.readFloat());
+					dummy.heightV = new FastPoint(data.readFloat(), data.readFloat());
 					dummysCurrentFrame.push(dummy);
 				}
 				dummysCurrentAnimation.push(dummysCurrentFrame);

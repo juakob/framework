@@ -4,7 +4,7 @@ import com.framework.utils.Entity;
 import com.gEngine.display.AnimationSprite;
 import com.gEngine.display.Layer;
 import com.gEngine.GEngine;
-import com.helpers.Point;
+import com.helpers.FastPoint;
 
 
 
@@ -19,7 +19,7 @@ class Particle extends Entity
 	private var mY:Float=0;
 	private var mLife:Float = 0;
 	private var mTotalLife:Float;
-	private var mVelocity:Point=new Point();
+	private var mVelocity:FastPoint=new FastPoint();
 	public var gravity:Float = 100;
 	public var accelerationX:Float = 0;
 	public var mAngularVelocity:Float=0;

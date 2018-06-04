@@ -1,5 +1,6 @@
 package com.gEngine;
 import com.MyList;
+import kha.FastFloat;
 
 /**
  * ...
@@ -8,9 +9,9 @@ import com.MyList;
 class MaskBatch
 {
 	public var start:Int;
-	public var vertex:MyList<Float>;
-	public var uvs:MyList<Float>;
-	public var maskUvs:MyList<Float>;
+	public var vertex:MyList<FastFloat>;
+	public var uvs:MyList<FastFloat>;
+	public var maskUvs:MyList<FastFloat>;
 	public var maskId:String;
 	public var textures:MyList<String>;
 	public var vertexCount:MyList<Int>;

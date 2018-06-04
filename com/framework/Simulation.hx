@@ -91,7 +91,7 @@ class Simulation
 			//	mFrameByFrameTime = 1 / 60;
 			//}
 			time = Scheduler.realTime();
-			TimeManager.setDelta(mFrameByFrameTime, time-mLastRealFrameTime);
+			TimeManager.setDelta(mFrameByFrameTime, Scheduler.realTime());
 			mLastRealFrameTime = time;
 			update( mFrameByFrameTime );
 			

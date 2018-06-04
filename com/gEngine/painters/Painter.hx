@@ -85,11 +85,11 @@ class Painter implements IPainter
 	{
 		if (counter == 0) return;
 		
-		
+		com.debug.Profiler.startMeasure("renderPainter");
 			var g = GEngine.i.currentCanvas().g4;
 			// Begin rendering
 			g.begin();
-			if(useScissor) g.scissor(Std.int(cropArea.min.x),Std.int(cropArea.min.y),Std.int(cropArea.max.x),Std.int(cropArea.max.y));
+			//if(useScissor) g.scissor(Std.int(cropArea.min.x),Std.int(cropArea.min.y),Std.int(cropArea.max.x),Std.int(cropArea.max.y));
 			uploadVertexBuffer();
 			// Clear screen
 			if(clear) g.clear(Color.fromFloats(red,green,blue,alpha));
@@ -101,7 +101,7 @@ class Painter implements IPainter
 			g.setPipeline(pipeline);
 
 			setParameter(g);
-			g.setTextureParameters(mTextureID, TextureAddressing.Clamp, TextureAddressing.Clamp, TextureFilter.LinearFilter, TextureFilter.LinearFilter, MipMapFilter.NoMipFilter);
+			g.setTextureParameters(mTextureID, TextureAddressing.Clamp, TextureAddressing.Clamp, TextureFilter.PointFilter, TextureFilter.PointFilter, MipMapFilter.NoMipFilter);
 			
 			g.drawIndexedVertices(0, Std.int(vertexCount() * ratioIndexVertex)); 
 			
@@ -109,13 +109,14 @@ class Painter implements IPainter
 			// End rendering	
 		
 			buffer = downloadVertexBuffer();
-			if(useScissor) g.disableScissor();
+		//	if(useScissor) g.disableScissor();
 			g.end();
 			
 			#if debugInfo
 			++GEngine.drawCount;
 			#end
 			counter = 0;
+			com.debug.Profiler.endMeasure("renderPainter");
 	}
 	public inline function vertexCount():Int
 	{
@@ -131,7 +132,7 @@ class Painter implements IPainter
 			defineVertexStructure(structure);
 			pipeline.inputLayout = [structure];
 			
-			pipeline.cullMode = CullMode.None;
+			//pipeline.cullMode = CullMode.None;
 			
 			setBlends(pipeline,aBlend);
 			pipeline.compile();

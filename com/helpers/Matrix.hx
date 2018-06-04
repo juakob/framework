@@ -1,18 +1,19 @@
 package com.helpers;
+import kha.FastFloat;
 
 //copy from openfl source
 class Matrix #if cpp implements cpp.rtti.FieldNumericIntegerLookup #end {
 	
 	
-	public var a:Float;
-	public var b:Float;
-	public var c:Float;
-	public var d:Float;
-	public var tx:Float;
-	public var ty:Float;
+	public var a:FastFloat;
+	public var b:FastFloat;
+	public var c:FastFloat;
+	public var d:FastFloat;
+	public var tx:FastFloat;
+	public var ty:FastFloat;
 	
 	
-	public function new (a:Float = 1, b:Float = 0, c:Float = 0, d:Float = 1, tx:Float = 0, ty:Float = 0) {
+	public function new (a:FastFloat = 1, b:FastFloat = 0, c:FastFloat = 0, d:FastFloat = 1, tx:FastFloat = 0, ty:FastFloat = 0) {
 		
 		this.a = a;
 		this.b = b;
@@ -169,7 +170,7 @@ class Matrix #if cpp implements cpp.rtti.FieldNumericIntegerLookup #end {
 	//}
 	
 	
-	public function createBox (scaleX:Float, scaleY:Float, rotation:Float = 0, tx:Float = 0, ty:Float = 0):Void {
+	public function createBox (scaleX:FastFloat, scaleY:FastFloat, rotation:FastFloat = 0, tx:FastFloat = 0, ty:FastFloat = 0):Void {
 		
 		a = scaleX;
 		d = scaleY;
@@ -180,7 +181,7 @@ class Matrix #if cpp implements cpp.rtti.FieldNumericIntegerLookup #end {
 	}
 	
 	
-	public function createGradientBox (width:Float, height:Float, rotation:Float = 0, tx:Float = 0, ty:Float = 0):Void {
+	public function createGradientBox (width:FastFloat, height:FastFloat, rotation:FastFloat = 0, tx:FastFloat = 0, ty:FastFloat = 0):Void {
 		
 		a = width / 1638.4;
 		d = height / 1638.4;
@@ -206,9 +207,9 @@ class Matrix #if cpp implements cpp.rtti.FieldNumericIntegerLookup #end {
 	}
 	
 	
-	public function deltaTransformPoint (point:Point):Point {
+	public function deltaTransformPoint (point:FastPoint):FastPoint {
 		
-		return new Point (point.x * a + point.y * c, point.x * b + point.y * d);
+		return new FastPoint (point.x * a + point.y * c, point.x * b + point.y * d);
 		
 	}
 	
@@ -272,7 +273,7 @@ class Matrix #if cpp implements cpp.rtti.FieldNumericIntegerLookup #end {
 	}
 	
 	
-	public function rotate (angle:Float):Void {
+	public function rotate (angle:FastFloat):Void {
 		
 		var cos = Math.cos (angle);
 		var sin = Math.sin (angle);
@@ -292,7 +293,7 @@ class Matrix #if cpp implements cpp.rtti.FieldNumericIntegerLookup #end {
 	}
 	
 	
-	public function scale (x:Float, y:Float):Void {
+	public function scale (x:FastFloat, y:FastFloat):Void {
 		
 		a *= x;
 		b *= y;
@@ -306,7 +307,7 @@ class Matrix #if cpp implements cpp.rtti.FieldNumericIntegerLookup #end {
 	}
 	
 	
-	public function setRotation (angle:Float, scale:Float = 1):Void {
+	public function setRotation (angle:FastFloat, scale:FastFloat = 1):Void {
 		
 		a = Math.cos (angle) * scale;
 		c = Math.sin (angle) * scale;
@@ -316,7 +317,7 @@ class Matrix #if cpp implements cpp.rtti.FieldNumericIntegerLookup #end {
 	}
 	
 	
-	public function setTo (a:Float, b:Float, c:Float, d:Float, tx:Float, ty:Float):Void {
+	public function setTo (a:FastFloat, b:FastFloat, c:FastFloat, d:FastFloat, tx:FastFloat, ty:FastFloat):Void {
 		
 		this.a = a;
 		this.b = b;
@@ -335,14 +336,14 @@ class Matrix #if cpp implements cpp.rtti.FieldNumericIntegerLookup #end {
 	}
 	
 	
-	public function transformPoint (point:Point):Point {
+	public function transformPoint (point:FastPoint):FastPoint {
 		
-		return new Point (point.x * a + point.y * c + tx, point.x * b + point.y * d + ty);
+		return new FastPoint (point.x * a + point.y * c + tx, point.x * b + point.y * d + ty);
 		
 	}
 	
 	
-	public function translate (x:Float, y:Float):Void {
+	public function translate (x:FastFloat, y:FastFloat):Void {
 		
 		tx += x;
 		ty += y;

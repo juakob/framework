@@ -1,5 +1,5 @@
 package com.framework.utils;
-import com.helpers.Point;
+import com.helpers.FastPoint;
 
 /**
  * ...
@@ -7,11 +7,11 @@ import com.helpers.Point;
  */
  class Camera
 {
-	private var mTargetPos:Point;
-	private var mPosition:Point;
+	private var mTargetPos:FastPoint;
+	private var mPosition:FastPoint;
 	
-	public var mMin:Point;
-	private var mMax:Point;
+	public var mMin:FastPoint;
+	private var mMax:FastPoint;
 	
 	private var mScreenWidth:Float;
 	private var mScreenHeight:Float;
@@ -31,8 +31,8 @@ import com.helpers.Point;
 	
 	public function new(screenWidth:Float = 0,screenHeight:Float=0 ) 
 	{
-		mTargetPos = new Point();
-		mPosition = new Point();
+		mTargetPos = new FastPoint();
+		mPosition = new FastPoint();
 		mScreenWidth = screenWidth;
 		mScreenHeight = screenHeight;
 		
@@ -40,8 +40,8 @@ import com.helpers.Point;
 	
 	public function limits(minX:Float, maxX:Float, minY:Float, maxY:Float):Void
 	{
-		mMin = new Point(minX, minY);
-		mMax = new Point(maxX, maxY);
+		mMin = new FastPoint(minX, minY);
+		mMax = new FastPoint(maxX, maxY);
 		if (mMax.x - mMin.x < mScreenWidth*scale)
 		{
 			mMax.x = mMin.x + mScreenWidth*scale;

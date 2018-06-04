@@ -86,7 +86,7 @@ import kha.System;
 		var finalViewMatrix:FastMatrix4;
 		var finalViewMatrixMirrorY:FastMatrix4;
 		private var mPainter:Painter;
-		private var mSpritePainter:SpritePainter;
+		private var mSpritePainter:IPainter;
 		inline static var initialIndex:Int = 2;
 		var currentIndex:Int = initialIndex;
 		
@@ -145,7 +145,6 @@ import kha.System;
 		}
 		function createBuffer(aWidth:Int, aHeight:Int)
 		{
-			
 			if (width == aWidth && height == aHeight) return;
 			width = aWidth;
 			height = aHeight;
@@ -198,7 +197,7 @@ import kha.System;
 		public function createDefaultPainters():Void
 		{
 			mPainter = new Painter(false,Blend.blendNone());
-			mSpritePainter = new SpritePainter(false);
+			mSpritePainter = new Painter(false);
 			
 			blurX = new ShBlurH(false,1,Blend.blendDefault());
 			blurY = new ShBlurV(false,1, Blend.blendDefault());
@@ -330,7 +329,7 @@ import kha.System;
 				atlasImage = mTextures[currentIndex];
 				textureId = currentIndex;
 			}else {
-				atlasImage = Image.createRenderTarget(2048, 2048, TextureFormat.RGBA32,DepthStencilFormat.NoDepthAndStencil,0);
+				atlasImage = Image.createRenderTarget(aWidth, aHeight, TextureFormat.RGBA32,DepthStencilFormat.NoDepthAndStencil,0);
 				textureId = mTextures.push(atlasImage) - 1;
 				
 				
@@ -386,7 +385,7 @@ import kha.System;
 				var rectangle = atlasMap.insertImage(bitmap);
 				#if debug
 				if (rectangle == null) {
-					throw "not enough space on the atlas texture , atlas id" + textureId +", create another atlas";
+					throw "not enough space on the atlas texture , atlas id " + textureId +", create another atlas";
 				}
 				#end
 				g.drawSubImage(bitmap.image, rectangle.x, rectangle.y, bitmap.x, bitmap.y, bitmap.width, bitmap.height);
@@ -564,7 +563,10 @@ import kha.System;
 			g.begin();
 			if(clear)g.clear(Color.fromFloats(1,1,1,0));
 			g.end();
+			com.debug.Profiler.startMeasure("renderStage");
 			mStage.render(mSpritePainter);
+			com.debug.Profiler.endMeasure("renderStage");
+			
 			
 			mPainter.textureID = mTempBufferID;
 			renderFinal = true;

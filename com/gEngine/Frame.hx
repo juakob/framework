@@ -1,5 +1,6 @@
 package com.gEngine;
 import com.MyList;
+import kha.FastFloat;
 
 /**
  * ...
@@ -7,10 +8,10 @@ import com.MyList;
  */
 class Frame
 {
-	public var vertexs:MyList<Float>;
-	public var UVs:MyList<Float>;
-	public var alphas:MyList<Float>;
-	public var colortTransform:MyList<Float>;
+	public var vertexs:MyList<FastFloat>;
+	public var UVs:MyList<FastFloat>;
+	public var alphas:MyList<FastFloat>;
+	public var colortTransform:MyList<FastFloat>;
 	public var maskBatchs:MyList<MaskBatch>;
 	public var drawArea:DrawArea;
 	public var blurBatchs:MyList<BlurBatch>;

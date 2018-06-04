@@ -8,7 +8,7 @@ import com.gEngine.GEngine;
 import com.gEngine.helper.AtlasExtractor;
 import com.gEngine.helper.AtlasType;
 import com.gEngine.tempStructures.Bitmap;
-import com.helpers.Point;
+import com.helpers.FastPoint;
 import com.soundLib.SoundManager.SM;
 import kha.Assets;
 import kha.Blob;
@@ -62,7 +62,7 @@ class Resource
 		public function startTexture(aWidth:Int, aHeight:Int,?aColor:Color):Void
 		{
 			var texture:TextureProxy = new TextureProxy();
-			texture.size = new Point(aWidth, aHeight);
+			texture.size = new FastPoint(aWidth, aHeight);
 			mTextures.push(texture);
 			if (aColor != null)
 			{
@@ -253,7 +253,7 @@ class TextureProxy
 	public var animations:Array<String> = new Array();
 	public var atlas:Array<AtlasInfo> = new Array();
 	public var color:Color=Color.fromFloats(1,1, 1, 1);
-	public var size:Point;
+	public var size:FastPoint;
 	public function new()
 	{
 		
