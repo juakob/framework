@@ -197,7 +197,7 @@ import kha.System;
 		public function createDefaultPainters():Void
 		{
 			mPainter = new Painter(false,Blend.blendNone());
-			mSpritePainter = new Painter(false);
+			mSpritePainter = new SpritePainter(false);
 			
 			blurX = new ShBlurH(false,1,Blend.blendDefault());
 			blurY = new ShBlurV(false,1, Blend.blendDefault());
