@@ -34,6 +34,8 @@ class Resource
 		private var mImageResources:Array<String> = new Array();
 		private var mSoundResources:Array<String> = new Array();
 		private var mTextures:Array<TextureProxy> = new Array();
+		private var mImagesToKeep:Array<String> = new Array();
+		private var mImages:Array<TextureProxy> = new Array();
 		private var mDataResources:Array<String> = new Array();
 		private var mAnimationsLoaded:Int = 0;
 		private var mImagesLoaded:Int = 0;
@@ -101,7 +103,10 @@ class Resource
 		public function load(onFinish:Void->Void):Void
 		{
 			mOnFinish = onFinish;
-			
+			for (image in mImagesToKeep)
+			{
+				loadImage(image);
+			}
 			for (animation in mAnimationsResources) 
 			{
 				Assets.loadBlob(animation, onAnimationLoad);
@@ -118,24 +123,24 @@ class Resource
 			{
 				for (atlas in texture.atlas) 
 				{
-					loadImage(atlas.image);
+					if (imageNotLoaded(atlas.image))
+					{
+						mImageResources.push(atlas.image);
+						loadImage(atlas.image);
+					}
 				}
 			}
+			
 		}
 		
 		
 		private function loadImage(aName:String):Void {
-			if (mImageResources.indexOf(aName) < 0)
-			{
-				//trace("image load: " + aName);
-				mImageResources.push(aName);
-				//Assets.loadBlob(aName, addImage
-				#if debug
-				trace(aName);
-				if (Assets.images.names.indexOf(aName) ==-1) throw "image " + aName+" not found";
-				#end
-				Assets.loadImage(aName, addImage);
-			}
+			
+			#if debug
+			trace(aName);
+			if (Assets.images.names.indexOf(aName) ==-1) throw "image " + aName+" not found";
+			#end
+			Assets.loadImage(aName, addImage);
 		}
 		
 		public function checkFinishLoading()
@@ -166,7 +171,11 @@ class Resource
 			var images = GEngine.i.addResources(aBlob);
 			for (image in images) 
 			{
-				loadImage(image);
+				if (imageNotLoaded(image))
+				{
+					mImageResources.push(image);
+					loadImage(image);
+				}
 			}
 			++mAnimationsLoaded;
 			checkFinishLoading();
@@ -184,6 +193,11 @@ class Resource
 			checkFinishLoading(); } );
 			
 		}
+		
+		inline function  imageNotLoaded(aName:String):Bool 
+		{
+			return mImageResources.indexOf(aName) < 0;
+		}
 		public function unload():Void
 		{
 			
@@ -194,8 +208,13 @@ class Resource
 			for (data in mDataResources) {
 				Reflect.callMethod(Assets.blobs, Reflect.field(Assets.blobs, data + "Unload"), []);
 			}
+			for (image in mImagesToKeep) 
+			{
+				Reflect.callMethod(Assets.images, Reflect.field(Assets.images, image + "Unload"), []);
+			}
 			mSoundResources.splice(0, mSoundResources.length);
 			mDataResources.splice(0, mDataResources.length);
+			mImagesToKeep.splice(0, mImagesToKeep.length);
 			mAnimationsLoaded = 0;
 			mSoundsLoaded = 0;
 			mImagesLoaded = 0;
@@ -204,7 +223,7 @@ class Resource
 		public inline function isAllLoaded():Bool
 		{	
 			return mAnimationsResources.length == mAnimationsLoaded &&
-				mImageResources.length == mImagesLoaded &&
+				(mImageResources.length+mImagesToKeep.length) == mImagesLoaded &&
 				mSoundResources.length == mSoundsLoaded &&
 				mDataResources.length == mDataLoaded;
 		}
@@ -213,7 +232,16 @@ class Resource
 		{
 			mDataResources.push(aName);
 		}
-		
+		public function addImageFile(aName:String) 
+		{
+			#if debug
+			if (mTextures.length == 0)
+			{
+				throw "Call startTexture before adding an animation";
+			}
+			#end
+			mImagesToKeep.push(aName);
+		}
 		public function addAtlas(aName:String,aImage:String, aData:String,aType:AtlasType) 
 		{
 			#if debug
