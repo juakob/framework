@@ -69,10 +69,7 @@ class Painter implements IPainter
 	{
 		buffer.set(counter++, aValue);
 	}
-	public inline function canDraw(aSize:Int):Bool
-	{
-		return (counter + aSize*dataPerVertex) <= MAX_VERTEX_PER_BUFFER*dataPerVertex;
-	}
+	
 	public function start()
 	{
 		
@@ -101,7 +98,7 @@ class Painter implements IPainter
 			g.setPipeline(pipeline);
 
 			setParameter(g);
-			g.setTextureParameters(mTextureID, TextureAddressing.Clamp, TextureAddressing.Clamp, TextureFilter.PointFilter, TextureFilter.PointFilter, MipMapFilter.NoMipFilter);
+			g.setTextureParameters(mTextureID, TextureAddressing.Clamp, TextureAddressing.Clamp, TextureFilter.LinearFilter, TextureFilter.LinearFilter, MipMapFilter.NoMipFilter);
 			
 			g.drawIndexedVertices(0, Std.int(vertexCount() * ratioIndexVertex)); 
 			
@@ -223,7 +220,7 @@ class Painter implements IPainter
 		var mCustomBlend:Bool = false;
 		public function validateBatch(aTexture:Int, aSize:Int, aDrawMode:DrawMode, aBlend:BlendMode):Void 
 		{
-			if (aTexture != textureID || !canDraw(aSize)  )
+			if (aTexture != textureID || ((counter + aSize*dataPerVertex) >= MAX_VERTEX_PER_BUFFER*dataPerVertex)  )
 			{
 				render();
 				textureID = aTexture;

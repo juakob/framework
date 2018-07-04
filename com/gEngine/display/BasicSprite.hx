@@ -157,41 +157,38 @@ class BasicSprite implements IDraw
 	/** @inheritDoc */
 	public function update(passedTime:Float):Void
 	{
-		previousFrame = CurrentFrame;
-		var finalFrame:Int;
-
-		var breakAfterFrame:Bool = false;
-		
 		mFrameSkiped = 0;
+		if (!Playing ) return;
+		previousFrame = CurrentFrame;
+
 		#if debug
 			if (CurrentFrame == TotalFrames)
 			{
 				throw "Error()";
 			}
 		#end
-		if (Playing && passedTime > 0.0) 
-		{	
-			mCurrentTime += passedTime;
-			if (mCurrentTime >= frameRate)
+	
+		mCurrentTime += passedTime;
+		if (mCurrentTime < frameRate) return;
+		
+		mFrameSkiped = Std.int(mCurrentTime / frameRate);
+		mCurrentTime -= frameRate*mFrameSkiped;
+		CurrentFrame += mFrameSkiped;
+		mFrameSkiped -= 1;
+		if (CurrentFrame >=TotalFrames )
+		{
+			if (Loop)
 			{
-				mFrameSkiped = Std.int(mCurrentTime / frameRate);
-				mCurrentTime -= frameRate*mFrameSkiped;
-				CurrentFrame += mFrameSkiped;
-				mFrameSkiped -= 1;
-				if (CurrentFrame >=TotalFrames )
-				{
-					if (Loop)
-					{
-						CurrentFrame =CurrentFrame%(TotalFrames);
-					}
-					else
-					{
-					CurrentFrame = TotalFrames - 1;
-						Playing = false;
-					}
-				}
+				CurrentFrame =CurrentFrame%(TotalFrames);
+			}
+			else
+			{
+			CurrentFrame = TotalFrames - 1;
+				Playing = false;
 			}
 		}
+		
+		
 	}
 	public inline function frameDiferent():Bool
 	{
