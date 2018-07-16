@@ -11,6 +11,7 @@ import com.helpers.Matrix;
 import com.helpers.MinMax;
 import kha.Color;
 import kha.FastFloat;
+import entitySystem.debug.Expose;
 
 /**
  * ...
@@ -69,13 +70,14 @@ class Filter
 			{
 				length -= 1;
 			}
-			for (i in 0...length) 
-			{
-			//	aFilters[i].multipassBlend();
-			}
+			//for (i in 0...length) 
+			//{
+				//aFilters[i].multipassBlend();
+			//}
 		}
+		Expose.exposeFloat(this,"magicNumber","magicNumber");
 	}
-	
+	public  var magicNumber:Float=1;
 	public function render(aLayer:Layer,aDisplay:MyList<IDraw>,aPainter:IPainter,aMatrix:Matrix):Void
 	{
 		if (renderPass.length == 0)
@@ -132,7 +134,9 @@ class Filter
 				GEngine.i.setCanvas(workTargetId);
 				var filter:IPainter = filters[i];
 				filter.adjustRenderArea(drawArea);
-				GEngine.i.renderBuffer(sourceImg, filter, drawArea.min.x * resolution, drawArea.min.y * resolution, drawArea.width() * resolution, drawArea.height() * resolution, 1280, 720, true, filter.resolution);
+				
+				trace(drawArea);
+				GEngine.i.renderBuffer(sourceImg, filter, drawArea.min.x , drawArea.min.y , drawArea.width() , drawArea.height() ,1/resolution, true,resolution*filter.resolution);
 				resolution *= filter.resolution;
 				if (filter.releaseTexture()) GEngine.i.releaseRenderTarget(sourceImg);
 			}
@@ -141,7 +145,8 @@ class Filter
 				GEngine.i.setCanvas(finishTarget);
 				var filter:IPainter = filters[filters.length - 1];
 				filter.adjustRenderArea(drawArea);
-				GEngine.i.renderBuffer(workTargetId, filter,drawArea.min.x, drawArea.min.y,drawArea.width(), drawArea.height(), 1280/resolution, 720/resolution, false);
+				var scale=1/resolution;
+				GEngine.i.renderBuffer(workTargetId, filter,drawArea.min.x, drawArea.min.y,drawArea.width(), drawArea.height(), scale, false);
 				if (filter.releaseTexture()&&counter==0) GEngine.i.releaseRenderTarget(workTargetId);
 			}
 		}

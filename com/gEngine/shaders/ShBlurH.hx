@@ -30,7 +30,7 @@ class ShBlurH extends Painter
 	override public function adjustRenderArea(aArea:MinMax):Void 
 	{
 		aArea.addBorderHeight(4);
-		height = aArea.height();
+		//height = aArea.height();
 	}
 	public var height:Float=1280;
 	override function getConstantLocations(aPipeline:PipelineState) 

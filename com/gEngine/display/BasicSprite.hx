@@ -552,13 +552,13 @@ class BasicSprite implements IDraw
 					var middleStep = GEngine.i.getRenderTarget();
 					GEngine.i.setCanvas(middleStep);
 					
-					GEngine.i.renderBuffer(workTargetId, filter, drawArea.min.x * resolution, drawArea.min.y * resolution, drawArea.width() * resolution, drawArea.height() * resolution, 1280, 720, true, filter.resolution);
+					GEngine.i.renderBuffer(workTargetId, filter, drawArea.min.x * resolution, drawArea.min.y * resolution, drawArea.width() * resolution, drawArea.height() * resolution, 1, true, filter.resolution);
 					GEngine.i.setCanvas(finishTarget);
 					GEngine.i.releaseRenderTarget(workTargetId);
 					var filter2 = GEngine.i.blurY;
 					filter2.resolution = 2;
 					filter2.mFactor = frame.blurBatchs[blurCounter].blurY/5;
-					GEngine.i.renderBuffer(middleStep, filter2, drawArea.min.x * resolution, drawArea.min.y * resolution, drawArea.width() * resolution, drawArea.height() * resolution, 1280*2, 720*2, false,1);
+					GEngine.i.renderBuffer(middleStep, filter2, drawArea.min.x * resolution, drawArea.min.y * resolution, drawArea.width() * resolution, drawArea.height() * resolution, 2, false,1);
 					GEngine.i.releaseRenderTarget(middleStep);
 					
 					

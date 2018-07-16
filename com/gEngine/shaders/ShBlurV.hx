@@ -30,7 +30,7 @@ class ShBlurV extends Painter
 	override public function adjustRenderArea(aArea:MinMax):Void 
 	{
 		aArea.addBorderWidth(4);
-		width = aArea.width();
+		//width = aArea.width();
 	}
 	public var width:Float=720;
 	override function getConstantLocations(aPipeline:PipelineState) 

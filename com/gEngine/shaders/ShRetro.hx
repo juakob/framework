@@ -2,6 +2,7 @@ package com.gEngine.shaders;
 
 import com.TimeManager;
 import com.gEngine.GEngine;
+import com.gEngine.display.Blend;
 import com.gEngine.painters.Painter;
 import kha.Shaders;
 import kha.graphics4.ConstantLocation;
@@ -15,9 +16,9 @@ import kha.graphics4.PipelineState;
 class ShRetro extends Painter
 {
 
-	public function new() 
+	public function new(aBlend:Blend) 
 	{
-		super();
+		super(true,aBlend);
 		
 	}
 	var mTimer:ConstantLocation;

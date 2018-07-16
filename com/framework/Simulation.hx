@@ -49,7 +49,7 @@ class Simulation
 		initialState = null;
 		
 		Scheduler.addTimeTask(onEnterFrame, 0, 1 /60);
-		System.notifyOnRender(onRender);
+		System.notifyOnFrames(onRender);
 		
 		
 		//stage.addEventListener(Event.ACTIVATE, onActive);
@@ -101,8 +101,9 @@ class Simulation
 		Input.i.update();
 		}
 	}
-	function onRender(aFramebuffer:Framebuffer) 
+	function onRender(aFramebuffers:Array<Framebuffer>) 
 	{	
+		var aFramebuffer = aFramebuffers[0];
 		if (uploadTextures)
 		{
 			mResources.uploadTextures();

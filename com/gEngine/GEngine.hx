@@ -115,9 +115,9 @@ import kha.System;
 			mTextures = new MyList();
 			mStage = new Stage();
 
-			createBuffer(Screen.getWidth(), Screen.getHeight());
+			//createBuffer(Screen.getWidth(), Screen.getHeight());
 			trace(Screen.getWidth()+"  "+ Screen.getHeight());
-			//createBuffer(720, 1280);
+			createBuffer(1280, 720);
 			
 			var recTexture = Image.createRenderTarget(1, 1);
 			recTexture.g2.begin(true, Color.Black);
@@ -508,25 +508,28 @@ import kha.System;
 			}
 			return modelViewMatrix;
 		}
-		public function renderBuffer(aSource:Int,aPainter:IPainter,x:Float,y:Float,aWidth:Float,aHeight:Float,aTexWidth:Float,aTexHeight:Float,aClear:Bool,aResolution:Float=1)
+		public function renderBuffer(aSource:Int,aPainter:IPainter,x:Float,y:Float,aWidth:Float,aHeight:Float,aSourceScale:Float,aClear:Bool,aOutScale:Float=1)
 		{
 			aPainter.textureID = aSource;
+			var tex = mTextures[aSource];
+			var texWidth = tex.realWidth*aSourceScale;
+			var texHeight = tex.realHeight*aSourceScale;
 			
-			writeVertex(aPainter,x, y,aTexWidth,aTexHeight,aResolution);
+			writeVertex(aPainter,x, y,texWidth,texHeight,aOutScale);
 
-			writeVertex(aPainter,x+aWidth, y,aTexWidth,aTexHeight,aResolution);
+			writeVertex(aPainter,x+aWidth, y,texWidth,texHeight,aOutScale);
 				
-			writeVertex(aPainter,x, y+aHeight,aTexWidth,aTexHeight,aResolution);
+			writeVertex(aPainter,x, y+aHeight,texWidth,texHeight,aOutScale);
 
-			writeVertex(aPainter,x+aWidth, y+aHeight,aTexWidth,aTexHeight,aResolution);
+			writeVertex(aPainter,x+aWidth, y+aHeight,texWidth,texHeight,aOutScale);
 			
 			aPainter.render(aClear);
 		}
 		public  inline function  writeVertex(aPainter:IPainter,aX:Float,aY:Float,aSWidth:Float,aSHeight:Float,aResolution:Float) {
 				aPainter.write(aX*aResolution);
 				aPainter.write(aY*aResolution);
-				aPainter.write(aX/aSWidth*realU);
-				aPainter.write(aY/aSHeight*realV);	
+				aPainter.write(aX/aSWidth);
+				aPainter.write(aY/aSHeight);	
 		}
 	
 		public function getTexture(aId:Int):Image
@@ -563,11 +566,8 @@ import kha.System;
 			g.begin();
 			if(clear)g.clear(Color.fromFloats(1,1,1,0));
 			g.end();
-			com.debug.Profiler.startMeasure("renderStage");
 			mStage.render(mSpritePainter);
-			com.debug.Profiler.endMeasure("renderStage");
-			
-			
+
 			mPainter.textureID = mTempBufferID;
 			renderFinal = true;
 			if (mFrameBuffer.g4.renderTargetsInvertedY())

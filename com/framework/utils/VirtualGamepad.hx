@@ -1,4 +1,4 @@
-package;
+package com.framework.utils;
 import kha.input.Surface;
 import kha.input.Mouse;
 
@@ -19,18 +19,17 @@ class VirtualGamepad
 	var onAxisChange:Int->Float->Void;
 	var onButtonChange:Int->Float->Void;
 	
-	public function new(width:Int,height:Int) 
+	public function new() 
 	{
 		Surface.get().notify(onTouchStart, onTouchEnd, onTouchMove);
-		//Mouse.get().notify(onTouchStart, onTouchEnd, onTouchMove2,null,null);
 		buttons = new Array();
 		sticks = new Array();
-		this.width=width;
-		this.height=height;
 	}
 	public function destroy()
 	{
 		Surface.get().remove(onTouchStart, onTouchEnd, onTouchMove);
+		onAxisChange = null;
+		onButtonChange = null;
 	}
 	
 	public function addButton(id:Int, x:Float, y:Float, radio:Float)
@@ -54,26 +53,21 @@ class VirtualGamepad
 		sticks.push(stick);
 	}
 	
-	public function resize(width:Int, height:Int)
-	{
-		scaleX =   this.width/width;
-		scaleY = this.height/height;
-	}
 	public function notify(onAxis:Int->Float->Void, onButton:Int->Float->Void):Void
 	{
 		onAxisChange = onAxis;
 		onButtonChange = onButton;
 	}
-	function onTouchMove2(id:Int,x:Int,y:Int,w:Int=0) 
-	{
-		onTouchMove(id,x,y);
-	}
+	
 	function onTouchMove(id:Int,x:Int,y:Int) 
 	{
+		scaleX = Input.i.screenScale.x;
+		scaleY = Input.i.screenScale.y;
 		for (stick in sticks) 
 		{
-			if (stick.handleInput(x * scaleX , y * scaleY))
+			if (stick.touchId==id)
 			{
+				stick.handleInput(x * scaleX , y * scaleY);  
 				onAxisChange(stick.idX, stick.axisX);
 				onAxisChange(stick.idY, stick.axisY);
 				stick.active = true;
@@ -86,7 +80,7 @@ class VirtualGamepad
 	{
 		for (button in buttons)
 		{
-			if (button.active)
+			if (button.touchId==id)
 			{
 				button.active = false;
 				onButtonChange(button.id, 0);
@@ -94,22 +88,26 @@ class VirtualGamepad
 		}
 		for (stick in sticks) 
 		{
-			if (stick.active)
+			if (stick.touchId==id)
 			{
 				onAxisChange(stick.idX, 0);
 				onAxisChange(stick.idY, 0);
 				stick.active = false;
+				stick.touchId =-1;
 			}
 		}
 	}
 	
 	function onTouchStart(id:Int,x:Int,y:Int) 
 	{
+		scaleX = Input.i.screenScale.x;
+		scaleY = Input.i.screenScale.y;
 		for (button in buttons)
 		{
 			if (button.handleInput(x * scaleX, y * scaleY))
 			{
 				button.active = true;
+				button.touchId = id;
 				onButtonChange(button.id, 1);
 			}
 		}
@@ -120,6 +118,7 @@ class VirtualGamepad
 				onAxisChange(stick.idX, stick.axisX);
 				onAxisChange(stick.idY, stick.axisY);
 				stick.active = true;
+				stick.touchId = id;
 			}
 		}
 		
@@ -128,6 +127,7 @@ class VirtualGamepad
 }
 class VirtualButton
 {
+	public var touchId:Int=-1;
 	public var id:Int;
 	public var x:Float;
 	public var y:Float;
@@ -141,6 +141,7 @@ class VirtualButton
 }
 class VirtualStick
 {
+	public var touchId:Int =-1;
 	public var idX:Int;
 	public var idY:Int;
 	public var x:Float;

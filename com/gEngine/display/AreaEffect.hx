@@ -57,7 +57,7 @@ class AreaEffect implements IDraw
 		
 		aPainter.start();
 //tempBuffer  =0
-		GEngine.i.renderBuffer(GEngine.backBufferId, aPainter, x, y, width, height, 1280,720, true);
+		GEngine.i.renderBuffer(GEngine.backBufferId, aPainter, x, y, width, height, 1, true);
 
 		aPainter.finish();
 	
@@ -68,7 +68,7 @@ class AreaEffect implements IDraw
 			GEngine.i.setCanvas(lastTarger);
 			aPainter.start();
 
-			GEngine.i.renderBuffer(renderTarget, aPainter, x, y, width, height, 1280,720, false);
+			GEngine.i.renderBuffer(renderTarget, aPainter, x, y, width, height, 1, false);
 
 			aPainter.finish();
 		}else {

@@ -25,6 +25,7 @@ import kha.graphics4.Usage;
 import kha.graphics4.VertexBuffer;
 import kha.graphics4.VertexData;
 import kha.graphics4.VertexStructure;
+import kha.math.FastMatrix4;
 
 /**
  * ...
@@ -131,7 +132,8 @@ class Painter implements IPainter
 			
 			//pipeline.cullMode = CullMode.None;
 			
-			setBlends(pipeline,aBlend);
+			setBlends(pipeline, aBlend);
+			//pipeline.colorWriteMaskAlpha = false;
 			pipeline.compile();
 			
 			getConstantLocations(pipeline);
@@ -192,7 +194,7 @@ class Painter implements IPainter
 		}
 		private function setParameter(g:Graphics):Void
 		{
-			g.setMatrix(mMvpID, GEngine.i.getMatrix());
+			g.setMatrix(mMvpID, GEngine.i.getMatrix());//.multmat(FastMatrix4.scale(resolution,resolution,1))
 
 			g.setTexture(mTextureID, GEngine.i.mTextures[textureID]);
 		}

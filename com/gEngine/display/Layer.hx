@@ -16,7 +16,7 @@ import kha.math.FastMatrix3;
  */
 class Layer implements IDrawContainer
 {
-	private var mChildren:MyList<BasicSprite>;
+	private var mChildren:MyList<IDraw>;
 	public var mTransformation:Matrix;
 	private var mBlendMode:Int;
 	private var mTexture:Int;
@@ -79,7 +79,7 @@ class Layer implements IDrawContainer
 			com.debug.Profiler.endMeasure("renderChildren");
 		}else {
 			
-			//filter.render(this, mChildren, aPainter, mHlpMatrix);
+			filter.render(this, mChildren, aPainter, mHlpMatrix);
 			
 		}
 		if (drawArea != null)

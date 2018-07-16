@@ -83,7 +83,7 @@ class Input
 		}
 		for (j in 0...4) 
 		{
-			joysticks.push(new JoystickProxy(j));
+			//joysticks.push(new JoystickProxy(j));
 		}
 	}
 	

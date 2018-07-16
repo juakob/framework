@@ -18,9 +18,9 @@ class ShRgbSplit extends Painter
 	var resolutionID:ConstantLocation;
 	var resX:Float;
 	var resY:Float;
-	public function new() 
+	public function new(aBlend:Blend ) 
 	{
-		super(true,Blend.blendMultipass());
+		super(true,aBlend);
 		resX = 2 / GEngine.i.realWidth;
 		resY = 2 / GEngine.i.realHeight;
 	}
