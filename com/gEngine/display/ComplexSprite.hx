@@ -4,7 +4,10 @@ import com.gEngine.AnimationData;
 import com.gEngine.Dummy;
 import com.gEngine.painters.IPainter;
 import com.helpers.Matrix;
+import com.helpers.MinMax;
 import kha.FastFloat;
+import kha.math.FastMatrix3;
+import kha.math.FastVector2;
 
 /**
  * ...
@@ -369,6 +372,51 @@ class ComplexSprite extends AnimationSprite
 			child.animation.update(elapsed);
 		}
 	}
+	public override function getDrawArea(aValue:MinMax):Void 
+	{
+		
+		var a = scaleX * cosAng-sinAng*tanSkewY*scaleX;
+		var b = scaleX * sinAng+cosAng*tanSkewY*scaleX;
+		var c = -scaleY * sinAng+cosAng*tanSkewX*scaleY;
+		var d = scaleY * cosAng + sinAng * tanSkewX * scaleY;
+		
+		var x = this.x+offsetX+pivotX;
+		var y = this.y + offsetY + pivotY;
+		
+		var drawArea = mAnimationData.frames[CurrentFrame].drawArea;
+		
+		var matrix:FastMatrix3 = new FastMatrix3(a, c, x, b, d, y, 0, 0, 1);
+		aValue.mergeVec(matrix.multvec(new FastVector2(   drawArea.x, drawArea.y)));
+		aValue.mergeVec(matrix.multvec(new FastVector2(  drawArea.side,   drawArea.y)));
+		aValue.mergeVec(matrix.multvec(new FastVector2( drawArea.x,  drawArea.up)));
+		aValue.mergeVec(matrix.multvec(new FastVector2(  drawArea.side,   drawArea.up)));
+		
+		for(display in mChildren)
+		{
+			var dummy:Dummy = getDummy(display.dummyName);
+			if (dummy == null) continue;
+
+			
+			a = dummy.matrix.a *a +dummy.matrix.b*c;
+			b = dummy.matrix.a*b+dummy.matrix.b*d;
+			c = dummy.matrix.c *a +dummy.matrix.d *c;
+			d = dummy.matrix.c*b+dummy.matrix.d*d;
+			
+
+			var tx = dummy.matrix.tx * a+ dummy.matrix.ty * c + x;
+			var ty = dummy.matrix.tx * b + dummy.matrix.ty * d + y;
+
+			matrix = new FastMatrix3(a, c, tx, b, d, ty, 0, 0, 1);
+			var childArea = MinMax.weak;
+			childArea.reset();
+			display.animation.getDrawArea(childArea);
+			aValue.mergeVec(matrix.multvec(new FastVector2(   childArea.min.x, childArea.min.y)));
+			aValue.mergeVec(matrix.multvec(new FastVector2(  childArea.max.x,   childArea.min.y)));
+			aValue.mergeVec(matrix.multvec(new FastVector2( childArea.min.x,  childArea.max.y)));
+			aValue.mergeVec(matrix.multvec(new FastVector2(  childArea.max.x,   childArea.max.y)));
+		}
+	}
+	
 }
 
 class DisplayDummyLink
