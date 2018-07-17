@@ -29,7 +29,7 @@ class ShBlurH extends Painter
 	}
 	override public function adjustRenderArea(aArea:MinMax):Void 
 	{
-		aArea.addBorderHeight(4);
+		aArea.addBorderHeight(2*mFactor);
 		//height = aArea.height();
 	}
 	public var height:Float=1280;

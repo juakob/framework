@@ -1,6 +1,7 @@
 package com.gEngine.shaders;
 
 import com.gEngine.GEngine;
+import com.gEngine.display.Blend;
 import com.gEngine.painters.CacheTexture;
 import com.gEngine.painters.Painter;
 import kha.Shaders;
@@ -18,11 +19,11 @@ class ShMask extends Painter
 {
 	public var textureMask:CacheTexture;
 	var mMaskTextureID:TextureUnit;
-	public function new(aMask:CacheTexture) 
+	public function new(aMask:CacheTexture,aBlend:Blend) 
 	{
 		textureMask = aMask;
 		textureMask.addReference();
-		super();
+		super(true,aBlend);
 		
 	}
 	//override private function setBlends(aPipeline:PipelineState) 

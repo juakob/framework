@@ -1,5 +1,6 @@
 package com.gEngine.shaders;
 
+import com.gEngine.display.Blend;
 import com.gEngine.painters.CacheTexture;
 import com.gEngine.painters.Painter;
 import kha.Shaders;
@@ -13,9 +14,9 @@ import kha.graphics4.PipelineState;
 class ShInverseMask extends ShMask
 {
 
-	public function new(aMask:CacheTexture) 
+	public function new(aMask:CacheTexture,aBlend:Blend) 
 	{
-		super(aMask);
+		super(aMask,aBlend);
 		
 	}
 	override function setShaders(aPipeline:PipelineState):Void 

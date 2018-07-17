@@ -194,7 +194,7 @@ class Painter implements IPainter
 		}
 		private function setParameter(g:Graphics):Void
 		{
-			g.setMatrix(mMvpID, GEngine.i.getMatrix());//.multmat(FastMatrix4.scale(resolution,resolution,1))
+			g.setMatrix(mMvpID, GEngine.i.getMatrix());
 
 			g.setTexture(mTextureID, GEngine.i.mTextures[textureID]);
 		}

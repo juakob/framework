@@ -134,8 +134,6 @@ class Filter
 				GEngine.i.setCanvas(workTargetId);
 				var filter:IPainter = filters[i];
 				filter.adjustRenderArea(drawArea);
-				
-				trace(drawArea);
 				GEngine.i.renderBuffer(sourceImg, filter, drawArea.min.x , drawArea.min.y , drawArea.width() , drawArea.height() ,1/resolution, true,resolution*filter.resolution);
 				resolution *= filter.resolution;
 				if (filter.releaseTexture()) GEngine.i.releaseRenderTarget(sourceImg);

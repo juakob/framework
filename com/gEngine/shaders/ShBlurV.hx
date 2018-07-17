@@ -29,7 +29,7 @@ class ShBlurV extends Painter
 	}
 	override public function adjustRenderArea(aArea:MinMax):Void 
 	{
-		aArea.addBorderWidth(4);
+		aArea.addBorderWidth(2*mFactor);
 		//width = aArea.width();
 	}
 	public var width:Float=720;

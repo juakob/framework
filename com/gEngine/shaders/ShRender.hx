@@ -9,9 +9,11 @@ import com.gEngine.painters.Painter;
 class ShRender extends Painter
 {
 
-	public function new(aAutoDestroy:Bool=true) 
+	public var directDraw:Bool;
+	public function new(directDraw:Bool=true) 
 	{
-		super(aAutoDestroy);
+		this.directDraw=directDraw;
+		super(true);
 		
 	}
 	

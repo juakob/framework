@@ -26,15 +26,14 @@ class ShHighLight extends Painter
 	}
 	override private function setBlends(aPipeline:PipelineState, aBlend:Blend ) 
 		{
-			aPipeline.blendOperation=BlendingOperation.Max;
-			super.setBlends(aPipeline,aBlend);
+			super.setBlends(aPipeline,Blend.blendMultipass());
 		}
 	
-	//override function setShaders(aPipeline:PipelineState):Void 
-	//{
-		//aPipeline.vertexShader = Shaders.simple_vert;
-		//aPipeline.fragmentShader = Shaders.simpleLight_frag;
-	//}
+	override function setShaders(aPipeline:PipelineState):Void 
+	{
+		aPipeline.vertexShader = Shaders.simple_vert;
+		aPipeline.fragmentShader = Shaders.HighPassFilter_frag;
+	}
 	//override function getConstantLocations(aPipeline:PipelineState) 
 	//{
 		//super.getConstantLocations(aPipeline);
