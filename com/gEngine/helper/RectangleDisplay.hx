@@ -3,13 +3,14 @@ import com.MyList;
 import com.gEngine.AnimationData;
 import com.gEngine.DrawArea;
 import com.gEngine.Frame;
+import com.gEngine.display.AnimationSprite;
 import com.gEngine.display.BasicSprite;
 
 /**
  * ...
  * @author Joaquin
  */
-class RectangleDisplay extends BasicSprite
+class RectangleDisplay extends AnimationSprite
 {
 	public static var data:AnimationData;
 	public static function init(aTextureID:Int):Void

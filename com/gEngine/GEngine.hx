@@ -62,8 +62,6 @@ import kha.System;
 	{
 		
 		 public static var i(get, null):GEngine;
-		
-		 private static var initialized:Bool;
 		 
 		 private static function get_i():GEngine
 		 {
@@ -103,6 +101,7 @@ import kha.System;
 			public static var drawCount:Int = 0;
 			private var font:kha.Font;
 			public static var extraInfo:String = "";
+			var fontLoaded:Bool;
 		#end
 		
 		private function new() 
@@ -117,7 +116,7 @@ import kha.System;
 
 			//createBuffer(Screen.getWidth(), Screen.getHeight());
 			trace(Screen.getWidth()+"  "+ Screen.getHeight());
-			createBuffer(1280, 720);
+			createBuffer( Screen.getWidth(),Screen.getHeight());
 			
 			var recTexture = Image.createRenderTarget(1, 1);
 			recTexture.g2.begin(true, Color.Black);
@@ -171,7 +170,7 @@ import kha.System;
 			scaleHeigth =  (height / realHeight   ) ;
 			#end
 			
-			
+			trace(virtualWidth + "  " + virtualHeight);
 			
 			modelViewMatrix = FastMatrix4.identity();
 			modelViewMatrix=modelViewMatrix.multmat(FastMatrix4.scale((2.0*renderScale) / virtualWidth*scaleWidth, -(2.0*renderScale) / virtualHeight*scaleHeigth, 1));
@@ -208,13 +207,13 @@ import kha.System;
 			#if debugInfo
 			Assets.loadFont("mainfont", setFont);
 			#end
-			initialized = true;
 		}
 		
 		#if debugInfo
 		static private function setFont(aFont:kha.Font) 
 		{
 			i.font = aFont;
+			i.fontLoaded=true;
 		}
 		#end
 		
@@ -616,15 +615,15 @@ import kha.System;
 			renderFinal = false;
 			
 			#if debugInfo
-			
-			aFrameBuffer.g2.font = font;
-			aFrameBuffer.g2.fontSize = 16;
-			aFrameBuffer.g2.color = 0xFF000000;
-			aFrameBuffer.g2.fillRect(0, 0, 300, 20);
-			aFrameBuffer.g2.color = 0xFFFFFFFF;
-			aFrameBuffer.g2.drawString("drawCount: " + drawCount + "         fps: " + fps +"\n"+extraInfo, 10, 2);
-			aFrameBuffer.g2.end();
-			
+			if(fontLoaded){
+				aFrameBuffer.g2.font = font;
+				aFrameBuffer.g2.fontSize = 16;
+				aFrameBuffer.g2.color = 0xFF000000;
+				aFrameBuffer.g2.fillRect(0, 0, 300, 20);
+				aFrameBuffer.g2.color = 0xFFFFFFFF;
+				aFrameBuffer.g2.drawString("drawCount: " + drawCount + "         fps: " + fps +"\n"+extraInfo, 10, 2);
+				aFrameBuffer.g2.end();
+			}
 			drawCount = 0;
 			#end
 			

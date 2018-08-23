@@ -75,9 +75,7 @@ class Filter
 				//aFilters[i].multipassBlend();
 			//}
 		}
-		Expose.exposeFloat(this,"magicNumber","magicNumber");
 	}
-	public  var magicNumber:Float=1;
 	public function render(aLayer:Layer,aDisplay:MyList<IDraw>,aPainter:IPainter,aMatrix:Matrix):Void
 	{
 		if (renderPass.length == 0)

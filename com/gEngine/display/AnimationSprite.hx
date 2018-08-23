@@ -26,6 +26,9 @@ class AnimationSprite extends BasicSprite
 	override public function clone():BasicSprite
 	{
 		var cl:AnimationSprite = new AnimationSprite(mAnimationData);
+		cl.scaleX = scaleX;
+		cl.scaleY = scaleY;
+		cl.colorAdd(addRed, addGreen, addBlue, addAlpha);
 		return cl;
 	}
 	

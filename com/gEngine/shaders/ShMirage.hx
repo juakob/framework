@@ -16,9 +16,9 @@ class ShMirage extends Painter
 {
 	var time:kha.graphics4.ConstantLocation;
 	
-	public function new() 
+	public function new(aBlend:Blend) 
 	{
-		super(true);
+		super(true,aBlend);
 		
 	}
 	override function setShaders(aPipeline:PipelineState):Void 
@@ -34,13 +34,7 @@ class ShMirage extends Painter
 	override function setParameter(g:Graphics):Void 
 	{
 		super.setParameter(g);
-		g.setFloat(time, TimeManager.time*2);
+		g.setFloat(time, TimeManager.time);
 	}
-	override private function setBlends(aPipeline:PipelineState,aBlend:Blend) 
-		{
-			aPipeline.blendSource = BlendingFactor.BlendOne;
-			aPipeline.blendDestination = BlendingFactor.BlendZero;
-			aPipeline.alphaBlendSource = BlendingFactor.BlendOne;
-			aPipeline.alphaBlendDestination = BlendingFactor.BlendZero;
-		}
+	
 }
