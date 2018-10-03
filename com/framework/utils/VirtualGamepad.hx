@@ -15,6 +15,7 @@ class VirtualGamepad
 	private var scaleY:Float=1;
 	var buttons:Array<VirtualButton>;
 	var sticks:Array<VirtualStick>;
+	var globalStick:VirtualStick;
 	
 	var onAxisChange:Int->Float->Void;
 	var onButtonChange:Int->Float->Void;
@@ -24,6 +25,7 @@ class VirtualGamepad
 		Surface.get().notify(onTouchStart, onTouchEnd, onTouchMove);
 		buttons = new Array();
 		sticks = new Array();
+		globalStick = new VirtualStick();
 	}
 	public function destroy()
 	{
@@ -52,13 +54,57 @@ class VirtualGamepad
 		stick.radio = radio;
 		sticks.push(stick);
 	}
+	public function globalStickData(idX:Int, idY:Int, radio:Float)
+	{
+		globalStick.idX = idX;
+		globalStick.idY = idY;
+		globalStick.radio = radio;
+	}
 	
 	public function notify(onAxis:Int->Float->Void, onButton:Int->Float->Void):Void
 	{
 		onAxisChange = onAxis;
 		onButtonChange = onButton;
 	}
-	
+
+	function onTouchStart(id:Int,x:Int,y:Int) 
+	{
+		scaleX = Input.i.screenScale.x;
+		scaleY = Input.i.screenScale.y;
+		for (button in buttons)
+		{
+			if (button.handleInput(x * scaleX, y * scaleY))
+			{
+				button.active = true;
+				button.touchId = id;
+				onButtonChange(button.id, 1);
+				trace("button active " + id);
+				return;
+			}
+		}
+		for (stick in sticks) 
+		{
+			if (stick.handleInput(x * scaleX, y * scaleY))
+			{
+				onAxisChange(stick.idX, stick.axisX);
+				onAxisChange(stick.idY, stick.axisY);
+				stick.active = true;
+				stick.touchId = id;
+				return;
+			}
+		}
+		if(!globalStick.active){
+			globalStick.active=true;
+			globalStick.x = x*scaleX;
+			globalStick.y = y*scaleY;
+			globalStick.axisX = 0;
+			globalStick.axisY = 0;
+			globalStick.touchId = id;
+			trace("globalStick active " + id);
+		}
+		
+	}
+
 	function onTouchMove(id:Int,x:Int,y:Int) 
 	{
 		scaleX = Input.i.screenScale.x;
@@ -71,7 +117,14 @@ class VirtualGamepad
 				onAxisChange(stick.idX, stick.axisX);
 				onAxisChange(stick.idY, stick.axisY);
 				stick.active = true;
+				return;
 			}
+		}
+		if(globalStick.touchId==id)
+		{
+			globalStick.handleInputNoBound(x * scaleX , y * scaleY);  
+			onAxisChange(globalStick.idX, globalStick.axisX);
+			onAxisChange(globalStick.idY, globalStick.axisY);
 		}
 	}
 	
@@ -84,6 +137,8 @@ class VirtualGamepad
 			{
 				button.active = false;
 				onButtonChange(button.id, 0);
+				button.touchId =-1;
+				return;
 			}
 		}
 		for (stick in sticks) 
@@ -94,34 +149,17 @@ class VirtualGamepad
 				onAxisChange(stick.idY, 0);
 				stick.active = false;
 				stick.touchId =-1;
+				return;
 			}
 		}
-	}
-	
-	function onTouchStart(id:Int,x:Int,y:Int) 
-	{
-		scaleX = Input.i.screenScale.x;
-		scaleY = Input.i.screenScale.y;
-		for (button in buttons)
+		if (globalStick.touchId==id)
 		{
-			if (button.handleInput(x * scaleX, y * scaleY))
-			{
-				button.active = true;
-				button.touchId = id;
-				onButtonChange(button.id, 1);
-			}
+			onAxisChange(globalStick.idX, 0);
+			onAxisChange(globalStick.idY, 0);
+			globalStick.active = false;
+			globalStick.touchId =-1;
+			return;
 		}
-		for (stick in sticks) 
-		{
-			if (stick.handleInput(x * scaleX, y * scaleY))
-			{
-				onAxisChange(stick.idX, stick.axisX);
-				onAxisChange(stick.idY, stick.axisY);
-				stick.active = true;
-				stick.touchId = id;
-			}
-		}
-		
 	}
 	
 }
@@ -163,5 +201,21 @@ class VirtualStick
 			return true;
 		}
 		return false;
+	}
+	public function handleInputNoBound(x:Float, y:Float):Bool
+	{
+		var sqrDistance =  (x -this.x)*(x -this.x) + (y - this.y)*(y - this.y);
+		var length = Math.sqrt(sqrDistance);
+		
+		if (length > radio )
+		{
+			axisX = ((x -this.x) / length) ;
+			axisY = -((y - this.y) / length );
+			this.x = x-axisX;
+			this.y = y-axisY;
+			
+		}
+		return true;
+		
 	}
 }

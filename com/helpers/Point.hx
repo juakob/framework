@@ -25,4 +25,12 @@ class Point
 		x = aX;
 		y = aY;
 	}
+	public inline function length():Float {
+		return Math.sqrt(x * x + y * y);
+	}
+	public inline function normalize():Void {
+			var length = length();
+			x /= length;
+			y /= length;
+	}
 }

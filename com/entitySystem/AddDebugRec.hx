@@ -9,7 +9,7 @@ import entitySystem.EntityChild;
 import entitySystem.Message;
 import entitySystem.SystemManager.ES;
 import entitySystem.listeners.RsCallFunctionPassMessage;
-import myComponents.properties.PrDisplay;
+import myComponents.properties.PrAnimation;
 #end
 /**
  * ...
@@ -26,7 +26,7 @@ class AddDebugRec
 		ES.i.subscribeEntity(entity, Msg.id("showMeta"), RsCallFunctionPassMessage.ID, 
 		function(aMessage:Message) {
 			
-			var prdisplay:PrDisplay = new PrDisplay();
+			var prdisplay:PrAnimation = new PrAnimation();
 			prdisplay.sprite = GEngine.i.getNewAnimation("recDebug");
 			prdisplay.sprite.recenter();
 

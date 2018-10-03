@@ -224,6 +224,26 @@ class Layer implements IDrawContainer
 	//	transform = transform.multmat(FastMatrix3.rotation(rotation));
 		return transform;
 	}
+	
+	/* INTERFACE com.gEngine.display.IDrawContainer */
+	
+	public var offsetX:FastFloat;
+	
+	public var offsetY:FastFloat;
+	
+	public var rotation(default, set):Float;
+	
+	public function set_rotation(aValue:Float):FastFloat
+	{
+		//if (aValue != rotation)
+		//{
+			//rotation = aValue;
+			//sinAng = Math.sin(aValue);
+			//cosAng = Math.cos(aValue);
+		//}
+		return rotation;
+	}
+	
 	private function sortYCompare(a:IDraw, b:IDraw):Int
 	{
 		if (a.y < b.y)

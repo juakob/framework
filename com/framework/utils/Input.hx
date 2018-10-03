@@ -41,7 +41,7 @@ class Input
 	
 	
 	private var mMousePosition:FastPoint;
-	static public inline var TOUCH_MAX:Float = 6;
+	static public inline var TOUCH_MAX:Int = 6;
 	
 	public var screenScale(default, null):FastPoint;
 	

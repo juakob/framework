@@ -104,8 +104,10 @@ import kha.System;
 			var fontLoaded:Bool;
 		#end
 		
-		private function new() 
+		private function new(antiAlias:Int) 
 		{
+			antiAliasing = antiAlias;
+			
 			PainterGarbage.init();
 			
 			renderTargetPool = new RenderTargetPool();
@@ -151,9 +153,9 @@ import kha.System;
 			mTempBuffer = Image.createRenderTarget(width, height, null, DepthStencilFormat.NoDepthAndStencil, antiAliasing);
 			if (mTextures.length == 0)
 			{
-			mCurrentRenderTargetId = mTempBufferID = mTextures.push(mTempBuffer) - 1;
+				mCurrentRenderTargetId = mTempBufferID = mTextures.push(mTempBuffer) - 1;
 			}else {
-			mTextures[mTempBufferID] = mTempBuffer;	
+				mTextures[mTempBufferID] = mTempBuffer;	
 			}
 			
 			realWidth = mTempBuffer.realWidth;
@@ -163,14 +165,14 @@ import kha.System;
 			realU =   width / realWidth ;
 			realV =  height / realHeight ;
 			
-			scaleWidth =  1;// (width / realWidth   );
-			scaleHeigth = 1;// (height / realHeight   ) ;
+			scaleWidth =  1;//(width / realWidth   );
+			scaleHeigth = 1;//(height / realHeight   ) ;
 			#if flash
 			scaleWidth =   (width / realWidth   );
 			scaleHeigth =  (height / realHeight   ) ;
 			#end
 			
-			trace(virtualWidth + "  " + virtualHeight);
+			trace(realWidth + "  " + realHeight+" width"+width+" height"+height);
 			
 			modelViewMatrix = FastMatrix4.identity();
 			modelViewMatrix=modelViewMatrix.multmat(FastMatrix4.scale((2.0*renderScale) / virtualWidth*scaleWidth, -(2.0*renderScale) / virtualHeight*scaleHeigth, 1));
@@ -201,9 +203,9 @@ import kha.System;
 			blurX = new ShBlurH(false,1,Blend.blendDefault());
 			blurY = new ShBlurV(false,1, Blend.blendDefault());
 		}
-		public static function init():Void
+		public static function init(antiAlias:Int):Void
 		{	
-			i = new GEngine();
+			i = new GEngine(antiAlias);
 			#if debugInfo
 			Assets.loadFont("mainfont", setFont);
 			#end
@@ -444,7 +446,7 @@ import kha.System;
 		private var renderCustomBuffer:Bool;
 		private var customBuffer:Image;
 		var shaderPipeline:kha.graphics4.PipelineState;
-		static private inline var antiAliasing:Float = 0;
+		private  var antiAliasing:Int = 4;
 		
 		public static inline var virtualWidth:Float=CompilationConstatns.getWidth();
 		public static inline var virtualHeight:Float=CompilationConstatns.getHeight();
@@ -558,7 +560,7 @@ import kha.System;
 			 previousTime = currentTime;
 			#end
 			mFrameBuffer = aFrameBuffer;
-			
+			if(mTempBuffer==null)return;
 			var g = mTempBuffer.g4;
 			
 			// Begin rendering

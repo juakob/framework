@@ -5,7 +5,7 @@ import entitySystem.EntitySystem;
 import entitySystem.Property;
 import com.entitySystem.properties.PrRecDebugDisplay;
 import entitySystem.PropertyNode;
-import myComponents.properties.PrDisplay;
+import myComponents.properties.PrAnimation;
 
 /**
  * ...
@@ -41,5 +41,5 @@ class NdRecDebugDisplay extends PropertyNode
 {
 	public var displayData:PrRecDebugDisplay;
 	@local public var properties:Array<Property>;
-	public var display:PrDisplay;
+	public var display:PrAnimation;
 }

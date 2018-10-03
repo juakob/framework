@@ -21,6 +21,9 @@ interface IDraw
    function removeFromParent():Void;
     public var x:FastFloat;
 	public var y:FastFloat;
+	public var offsetX:FastFloat;
+	public var offsetY:FastFloat;
+	public var rotation(default, set):Float;
 	public var scaleX:FastFloat;
 	public var scaleY:FastFloat;
 	public function getDrawArea(aValue:MinMax):Void;

@@ -50,8 +50,14 @@ class SpritePainter implements IPainter
 												new PainterMaskSimple(aAutoDelete, multipassBlend),
 												new PainterMaskSimple(aAutoDelete, AddBlend)
 											];
+											
+		var polyPainters:Array<IPainter> =  [
+												new ShapePainter(aAutoDelete, defaultBlend),
+												new ShapePainter(aAutoDelete, multipassBlend),
+												new ShapePainter(aAutoDelete, AddBlend)
+											];
 
-		painters = [simplePainters,alphaPainters,colorPainters,maskPainters];
+		painters = [simplePainters,alphaPainters,colorPainters,maskPainters,polyPainters];
 		
 		currentPainter = painters[cast DrawMode.Default][cast BlendMode.Default];
 	}

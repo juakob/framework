@@ -65,7 +65,7 @@ class ShapePainter implements IPainter
 	}
 	public inline function write(aValue:Float):Void
 	{
-	//	buffer.set(counter++, aValue);
+		buffer.set(counter++, aValue);
 		
 	}
 	public inline function canDraw(aSize:Int):Bool
@@ -90,7 +90,7 @@ class ShapePainter implements IPainter
 			// Begin rendering
 			g.begin();
 			g.scissor(0, 0, GEngine.i.width, GEngine.i.height);
-			//uploadVertexBuffer();
+			uploadVertexBuffer();
 			// Clear screen
 			if(clear) g.clear(Color.fromFloats(red,green,blue,alpha));
 			// Bind data we want to draw
@@ -103,13 +103,13 @@ class ShapePainter implements IPainter
 			setParameter(g);
 			//g.setTextureParameters(mTextureID, TextureAddressing.Clamp, TextureAddressing.Clamp, TextureFilter.LinearFilter, TextureFilter.LinearFilter, MipMapFilter.NoMipFilter);
 			
-			g.drawIndexedVertices(); 
+			g.drawIndexedVertices(0,counter); 
 			
 			//unsetTextures(g);
 			// End rendering	
 			g.disableScissor();
 			g.end();
-			//buffer = getVertexBuffer();
+			buffer = getVertexBuffer();
 			#if debugInfo
 			++GEngine.drawCount;
 			#end
@@ -129,7 +129,7 @@ class ShapePainter implements IPainter
 			defineVertexStructure(structure);
 			pipeline.inputLayout = [structure];
 			
-			//pipeline.cullMode = CullMode.None;
+			pipeline.cullMode = CullMode.None;
 			
 			//setBlends(pipeline,aBlend);
 			pipeline.compile();
@@ -140,17 +140,9 @@ class ShapePainter implements IPainter
 			vertexBuffer=new VertexBuffer(
 				MAX_VERTEX_PER_BUFFER,
 				structure, 
-				Usage.StaticUsage 
+				Usage.DynamicUsage 
 				);
 			buffer = getVertexBuffer();
-			var counter:Int = 0;
-			for (i in 1...(Std.int(MAX_VERTEX_PER_BUFFER/3))) 
-			{
-				writeVertex(0, 0, 0, 0, 1, 1, 0+counter);
-				writeVertex(25,32, 0, 1, 0, 1, 6+counter);
-				writeVertex(0, 32, 0, 1, 1, 0, 12 + counter);
-				counter += 18;
-			}
 				
 			uploadVertexBuffer();
 			createIndexBuffer();
@@ -218,7 +210,7 @@ class ShapePainter implements IPainter
 		}
 		private function setParameter(g:Graphics):Void
 		{
-			g.setMatrix(mMvpID, GEngine.i.getMatrix().multmat(FastMatrix4.translation(Math.random()*1180,Math.random()*620,0)));
+			g.setMatrix(mMvpID, GEngine.i.getMatrix());
 
 			//g.setTexture(mTextureID, GEngine.i.mTextures[textureID]);
 		}
@@ -226,7 +218,7 @@ class ShapePainter implements IPainter
 		{
 		//	g.setTexture(mTextureID, null);
 		}
-		inline function getVertexBuffer():Float32Array
+		public inline function getVertexBuffer():Float32Array
 		{
 			return vertexBuffer.lock();
 		}
@@ -246,9 +238,7 @@ class ShapePainter implements IPainter
 		var mCustomBlend:Bool = false;
 		public function validateBatch(aTexture:Int, aSize:Int, aDrawMode:DrawMode, aBlend:BlendMode):Void 
 		{
-			
 				render();
-		
 		}
 		
 		/* INTERFACE com.gEngine.painters.IPainter */
@@ -264,4 +254,22 @@ class ShapePainter implements IPainter
 		{
 			
 		}
+		
+		/* INTERFACE com.gEngine.painters.IPainter */
+		
+		public function resetRenderArea():Void 
+		{
+			
+		}
+		
+		public function getVertexDataCounter():Int 
+		{
+			return counter;
+		}
+		
+		public function setVertexDataCounter(aData:Int):Void 
+		{
+			counter = aData;
+		}
+		
 }

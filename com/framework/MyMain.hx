@@ -16,14 +16,14 @@
 	private var mGameState:Class<State>;
 	
 	//////////////////////////////////////////////////////////////////////
-	public function new(gameState:Class<State> )
+	public function new(gameState:Class<State> ,antiAlias:Int=0)
 	{
 		mGameState = gameState;
-		initGEngine();
+		initGEngine(antiAlias);
 		init();
 	}
 	
-	private function initGEngine():Void 
+	private function initGEngine(antiAlias:Int):Void 
 	{
 
 		Input.init();
@@ -37,7 +37,7 @@
 		}
 		Input.i.screenScale.setTo(CompilationConstatns.getWidth() / width, CompilationConstatns.getHeight() / heigth);
 		
-		GEngine.init();
+		GEngine.init(antiAlias);
 		GEngine.i.createDefaultPainters();
 	}
 	
