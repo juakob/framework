@@ -51,11 +51,19 @@ class LineSprite{
 		if (spriteWidth == 0) throw A+","+B+","+C+","+D;
 		spriteHeight = Math.abs(A.y - C.y);
 	}
-	public function makeLine(aStart:Point,aEnd:Point) {
+	
+	public function makePath(paths:Array<Point>) {
 		v.splice(0, v.length);
 		uv.splice(0, uv.length);
 		while (offset < 0) offset += spriteWidth;
 		offset = offset % spriteWidth;
+		var amountOfPaths:Int = Math.floor(paths.length / 2);
+		for (i in 0...amountOfPaths) {
+			offset=makeLine(paths[i * 2], paths[i * 2 + 1]);
+		}
+	}
+	 function makeLine(aStart:Point,aEnd:Point):Float {
+		
 		var totalLength = Point.Length(aStart, aEnd)+offset;
 		
 		var originalStart = aStart.clone();
@@ -121,6 +129,7 @@ class LineSprite{
 				uv.push(Point.Lerp(uvA.x, uvB.x, s)); uv.push(Point.Lerp(uvA.y, uvB.y, s));
 				uv.push(uvC.x);	uv.push(uvC.y);
 				uv.push(Point.Lerp(uvC.x, uvD.x, s)); uv.push(Point.Lerp(uvC.y, uvD.y, s));
+				return s * spriteWidth;
 			}else{
 				v.push(Point.Lerp(aStart.x, aEnd.x, s));	v.push(Point.Lerp(aStart.y, aEnd.y, s));
 				v.push(Point.Lerp(aStart.x, aEnd.x, s2));	v.push(Point.Lerp(aStart.y, aEnd.y, s2));
@@ -132,11 +141,7 @@ class LineSprite{
 				uv.push(uvC.x);	uv.push(uvC.y);
 				uv.push(uvD.x);	uv.push(uvD.y);
 			}
-			
-			//uv.push(Point.Lerp(uvA.x, uvB.x, s));	uv.push(Point.Lerp(uvA.y, uvB.y, s));
-			//uv.push(Point.Lerp(uvA.x, uvB.x, s2));	uv.push(Point.Lerp(uvA.y, uvB.y, s2));
-			//uv.push(Point.Lerp(uvC.x, uvD.x, s));	uv.push(Point.Lerp(uvC.y, uvD.y, s));
-			//uv.push(Point.Lerp(uvC.x, uvD.x, s2));	uv.push(Point.Lerp(uvC.y, uvD.y, s2));
 		}	
+		return 0;
 	}
 }
