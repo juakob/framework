@@ -38,6 +38,7 @@ import kha.graphics4.DepthStencilFormat;
 import kha.graphics4.PipelineState;
 import kha.graphics4.VertexData;
 import kha.graphics4.VertexStructure;
+import kha.graphics4.TextureFilter;
 
 import kha.Color;
 import kha.Framebuffer;
@@ -197,7 +198,8 @@ import kha.System;
 		}
 		public function createDefaultPainters():Void
 		{
-			mPainter = new Painter(false,Blend.blendNone());
+			mPainter = new Painter(false, Blend.blendNone());
+			mPainter.filter = TextureFilter.PointFilter;
 			mSpritePainter = new SpritePainter(false);
 			
 			blurX = new ShBlurH(false,1,Blend.blendDefault());

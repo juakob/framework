@@ -33,4 +33,14 @@ class Point
 			x /= length;
 			y /= length;
 	}
+	
+	public static inline function Lerp(A:Float,B:Float,s:Float ):Float {
+			return A * (1 - s) + B * s;
+	}
+	public static inline function Length(A:Point, B:Point ):Float {
+		var deltaX:Float = A.x - B.x;
+		var deltaY:Float = A.y - B.y;
+		return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+	}
+	
 }

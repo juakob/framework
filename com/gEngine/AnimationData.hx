@@ -16,4 +16,34 @@ class AnimationData
 	{
 		
 	}
+	
+	public function clone() 
+	{
+		var cl = new AnimationData();
+		cl.name = name;
+		cl.texturesID = texturesID;
+		cl.frames = new MyList();
+		for (frame in frames) 
+		{
+			cl.frames.push(frame.clone());
+		}
+		cl.dummys = new MyList();
+		for (frameDummy in dummys) 
+		{
+			var dummys:MyList<Dummy> = new MyList();
+			for (dummy in frameDummy) 
+			{
+				dummys.push(dummy.clone());
+			}
+		}
+		cl.labels = new MyList();
+		for (label in labels) 
+		{
+			cl.labels.push(label.clone());
+		}
+		
+		return cl;
+	}
+	
+	
 }

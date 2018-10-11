@@ -17,9 +17,11 @@ import com.gEngine.display.IDrawContainer;
  * ...
  * @author Joaquin
  */
-class Poly implements IDraw
+class TexturePoly implements IDraw
 {
+	private var mTexture:Int;
 	var mVertexs:Array<Point>;
+	var mUv:Array<Point>;
 	var mBorder:Array<Point>;
 	public var color:Int;
 	public var borderColor:Int;
@@ -47,6 +49,7 @@ class Poly implements IDraw
 	
 	public function new() 
 	{
+		mTexture = -1;
 		minMax = new MinMax();
 	}
 	
@@ -58,7 +61,7 @@ class Poly implements IDraw
 	
 	public function render(batch:IPainter, transform:Matrix):Void 
 	{
-		batch.validateBatch( -1, mVertexs.length, DrawMode.Poly, blend);
+		batch.validateBatch( mTexture, mVertexs.length, DrawMode.Default, blend);
 		
 		x += offsetX+pivotX;
 		y += offsetY+pivotY;
@@ -76,40 +79,18 @@ class Poly implements IDraw
 	
 		var _tx = x* transform.a+ y *transform.c + transform.tx;
 		var _ty = x * transform.b + y * transform.d +transform.ty;
-		
-		
 
-		var red:Float = ((color >> 16) & 0xFF)/255;
-
-		var green:Float = ((color >> 8) & 0xFF)/255;
-
-		var blue:Float = (color & 0xFF)/255;
-
-
-		
+		var counter:Int = 0;
 		for (vertex in mVertexs) {
 			
 			batch.write( _tx + vertex.x * _1 + vertex.y * _3);
 			batch.write( _ty + vertex.x * _2 + vertex.y * _4);
-			batch.write(0);
-			batch.write(red);
-			batch.write(green);
-			batch.write(blue);
+			var uv = mUv[counter];
+			batch.write(uv.x);
+			batch.write(uv.y);
+			++counter;
 		}
-		red = ((borderColor >> 16) & 0xFF)/255;
-
-		green = ((borderColor >> 8) & 0xFF)/255;
-
-		blue = (borderColor & 0xFF)/255;
-		for (vertex in mBorder) {
-			
-			batch.write( _tx + vertex.x * _1 + vertex.y * _3);
-			batch.write( _ty + vertex.x * _2 + vertex.y * _4);
-			batch.write(0);
-			batch.write(red);
-			batch.write(green);
-			batch.write(blue);
-		}
+		
 		
 		x -= offsetX+pivotX;
 		y -= offsetY+pivotY;
@@ -138,7 +119,11 @@ class Poly implements IDraw
 	
 	public function texture():Int 
 	{
-		return -1;
+		return mTexture;
+	}
+	public function setTexture(aTexture:Int):Void
+	{
+		mTexture = aTexture;
 	}
 	
 	public function removeFromParent():Void 
@@ -146,65 +131,17 @@ class Poly implements IDraw
 		if (parent != null) parent.remove(this);
 	}
 	
-	public function setVertexs(aVertexs:Array<Point>):Void {
+	public function setVertexs(aVertexs:Array<Point>,aUvs:Array<Point>):Void {
 		minMax.reset();
 		for (vertex in aVertexs) 
 		{
 			minMax.mergeVec(new FastVector2(vertex.x, vertex.y));
 		}
-		var array:Array<Float> = new Array();
-		for (vertex in aVertexs) 
-		{
-			array.push(vertex.x);
-			array.push(vertex.y);
-		}
-		var res = Tess2.tesselate([array], null, ResultType.POLYGONS, 3);
-		var triangles = Tess2.convertResult(res.vertices, res.elements, ResultType.POLYGONS, 3);
-		var display = new Poly();
-		var points = new Array<Point>();
-		for(tri in triangles){
-			for (point in tri) {
-				points.push(new Point(point.x, point.y));	
-			}
-		}
-		mVertexs = points;
-		
-		
-		mBorder = new Array();
-		var vector1:Point = new Point();
-		var vector2:Point = new Point();
-		var interior:Point = new Point();
-		for (i in 0...aVertexs.length) 
-		{
-			var lastIndex = (i - 1) % (aVertexs.length);
-			if (lastIndex < 0) lastIndex = aVertexs.length - 1;
-			var last:Point = aVertexs[lastIndex ];
-			var next:Point = aVertexs[(i + 1) % (aVertexs.length)];
-			var current:Point = aVertexs[i];
-			vector1.setTo(last.x - current.x, last.y - current.y);
-			vector1.normalize();
-			vector2.setTo(next.x - current.x, next.y - current.y);
-			vector2.normalize();
-			
-			interior.setTo((vector1.x + vector2.x) / 2, (vector1.y + vector2.y) / 2);
-			interior.normalize();
-			interior.x *= borderWidth;
-			interior.y *= borderWidth;
-			interior.x += current.x;
-			interior.y += current.y;
-			
-			mBorder.push(interior.clone());
-			
-			mBorder.push(interior.clone());
-			mBorder.push(current.clone());
-			mBorder.push(next.clone());
-			
-			mBorder.push(interior.clone());
-			mBorder.push(next.clone());
-		}
-		mBorder.push(mBorder.shift());
+		mVertexs= aVertexs;
+		mUv = aUvs;
 		
 	}
+	
 	
 	
 	public function getDrawArea(aValue:MinMax):Void 

@@ -72,6 +72,8 @@ class BasicSprite implements IDraw
 	
 	private var mTextureId:Int =-1;
 	
+	private var dataUnique:Bool = false;
+	
 	/** Creates a regular polygon with the specified redius, number of edges, and color. */
 	public function new (aAnimationData:AnimationData)
 	{
@@ -767,6 +769,15 @@ class BasicSprite implements IDraw
 		return mTileSheetId;
 	}
 	
+	public function makeUnique()
+	{
+		mAnimationData = mAnimationData.clone();
+		dataUnique = true;
+	}
+	public function animationData():AnimationData {
+		if (!dataUnique) makeUnique();
+		return mAnimationData;
+	}
 	
 	public function set_skewX(aValue:Float):Float
 	{

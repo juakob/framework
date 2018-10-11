@@ -12,5 +12,11 @@ package com.gEngine ;
 		{
 			
 		}
+		public function clone():Label {
+			var cl:Label = new Label();
+			cl.name = name;
+			cl.frame = frame;
+			return cl;
+		}
 	}
 

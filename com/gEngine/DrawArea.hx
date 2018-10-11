@@ -18,4 +18,9 @@ class DrawArea
 		side = aSide;
 	}
 	
+	public function clone():DrawArea
+	{
+		return new DrawArea(x, y, up, side);
+	}
+	
 }

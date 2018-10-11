@@ -31,6 +31,7 @@ import kha.math.FastMatrix4;
  * ...
  * @author Joaquin
  */
+
 class Painter implements IPainter
 {
 	var vertexBuffer:VertexBuffer;
@@ -55,6 +56,7 @@ class Painter implements IPainter
 	
 	var cropArea:MinMax;
 	var useScissor:Bool;
+	public var filter:TextureFilter = TextureFilter.LinearFilter;
 	
 	public function new(aAutoDestroy:Bool = true, aBlend:Blend=null) 
 	{	
@@ -99,7 +101,7 @@ class Painter implements IPainter
 			g.setPipeline(pipeline);
 
 			setParameter(g);
-			g.setTextureParameters(mTextureID, TextureAddressing.Clamp, TextureAddressing.Clamp, TextureFilter.LinearFilter, TextureFilter.LinearFilter, MipMapFilter.NoMipFilter);
+			g.setTextureParameters(mTextureID, TextureAddressing.Clamp, TextureAddressing.Clamp, filter, filter, MipMapFilter.NoMipFilter);
 			
 			g.drawIndexedVertices(0, Std.int(vertexCount() * ratioIndexVertex)); 
 			
