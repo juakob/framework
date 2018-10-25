@@ -36,11 +36,16 @@ class Layer implements IDrawContainer
 	public var drawArea(default,set):MinMax;
 	public var length(get, null):Int;
 	
+	private var cosAng:FastFloat;
+	private var sinAng:FastFloat;
+	
 	public function new() 
 	{
 		mChildren = new MyList();
 		mTransformation = new Matrix();
-		
+		rotation = 0;
+		cosAng =1;
+		sinAng = 0;
 	}
 	
 	
@@ -51,8 +56,10 @@ class Layer implements IDrawContainer
 		com.debug.Profiler.startMeasure("renderLayer");
 		mTransformation.tx = x;
 		mTransformation.ty = y;
-		mTransformation.a = scaleX;
-		mTransformation.d = scaleY;
+		mTransformation.a = scaleX * cosAng;
+		mTransformation.b = scaleX * sinAng;
+		mTransformation.c = -scaleY * sinAng;
+		mTransformation.d = scaleY * cosAng;
 		if (!visible)
 		{
 			return;
@@ -221,7 +228,7 @@ class Layer implements IDrawContainer
 		}
 		transform = transform.multmat(FastMatrix3.translation(x, y));
 		transform = transform.multmat(FastMatrix3.scale(scaleX, scaleY));
-	//	transform = transform.multmat(FastMatrix3.rotation(rotation));
+		transform = transform.multmat(FastMatrix3.rotation(rotation));
 		return transform;
 	}
 	
@@ -235,12 +242,12 @@ class Layer implements IDrawContainer
 	
 	public function set_rotation(aValue:Float):FastFloat
 	{
-		//if (aValue != rotation)
-		//{
-			//rotation = aValue;
-			//sinAng = Math.sin(aValue);
-			//cosAng = Math.cos(aValue);
-		//}
+		if (aValue != rotation)
+		{
+			rotation = aValue;
+			sinAng = Math.sin(aValue);
+			cosAng = Math.cos(aValue);
+		}
 		return rotation;
 	}
 	

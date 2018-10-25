@@ -101,6 +101,8 @@ package com.gEngine ;
 				var drawArea:DrawArea = new DrawArea(frames.readFloat(), frames.readFloat(), frames.readFloat(), frames.readFloat());
 				currentFrame.drawArea = drawArea;
 				
+				currentFrame.canInterpolate = frames.readInt() == 1;
+				
 				frameLength = frames.readInt();
 				
 				currentFrame.vertexs = new MyList();

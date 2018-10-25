@@ -41,7 +41,7 @@ class BasicSprite implements IDraw
 	public var offsetX:FastFloat=0;
 	public var offsetY:FastFloat = 0;
 	
-	public var interpolateFrames:Bool;
+	public var interpolateFrames:Bool=true;
 	
 	private var mAnimationData:AnimationData;
 	
@@ -417,7 +417,7 @@ class BasicSprite implements IDraw
 		
 		var frame = mAnimationData.frames[CurrentFrame];
 		var vertexs:MyList<FastFloat>;
-		if (interpolateFrames && CurrentFrame<TotalFrames)
+		if (interpolateFrames &&   CurrentFrame<TotalFrames-1 && mAnimationData.frames[CurrentFrame+1].canInterpolate )
 		{
 			vertexs = interpolateFrame(CurrentFrame, mCurrentTime, frameRate, mAnimationData.frames);
 		}else {
@@ -733,9 +733,9 @@ class BasicSprite implements IDraw
 	private static var hInterpolated:MyList<FastFloat>=new MyList<FastFloat>();
 	private static inline function interpolateFrame(currentFrame:Int, deltaTime:Float, frameRate:Float, frames:MyList<Frame>):MyList<FastFloat>
 	{
-		hInterpolated.splice(0, hInterpolated.length);
 		var frameA = frames[currentFrame].vertexs;
 		var frameB = frames[currentFrame+1].vertexs;
+		hInterpolated.splice(0, hInterpolated.length);
 		var s:Float = deltaTime / frameRate;
 		var total:Int = frameA.length;
 		for (i in 0...total) 

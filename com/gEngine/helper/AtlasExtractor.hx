@@ -45,7 +45,9 @@ class AtlasExtractor
 
 		for (counter in 0...spritesCount)
 		{
-			textures.push([atlas.name+counter]);
+			var list:MyList<String> = new MyList();
+			list.push(atlas.name+counter);
+			textures.push(list);
 			dummys.push(new MyList());
 			var x = (counter%Std.int(image.width/ atlas.spriteWidth))*atlas.spriteWidth;
 			var y = Std.int(counter * atlas.spriteWidth / image.width)*atlas.spriteHeight;
@@ -65,8 +67,8 @@ class AtlasExtractor
 	}
 	public static function fromSparrow( atlas:AtlasInfo):Void
 	{
-		var text:Blob = Reflect.field(kha.Assets.blobs, atlas.data);
-		var data:Fast = new haxe.xml.Fast(Xml.parse(text.readUtf8String()).firstElement());
+		/* var text:Blob = Reflect.field(kha.Assets.blobs, atlas.data);
+		var data:Access = new Access(Xml.parse(text.toString()).firstElement());
 		var image:Image = Reflect.field(kha.Assets.images, atlas.image);
 		
 		var frames:MyList<Frame> = new MyList();
@@ -88,7 +90,9 @@ class AtlasExtractor
 			label.frame = counter;
 			names.push(label);
 			++counter;
-			textures.push([name]);
+			var names:MyList<String> = new MyList();
+			names.push(name);
+			textures.push(names);
 			dummys.push(new MyList());
 			
 			frames.push(createFrame(-Std.parseInt(texture.att.frameX), -Std.parseInt(texture.att.frameY), Std.parseInt(texture.att.width), Std.parseInt(texture.att.height), rotated));
@@ -103,7 +107,7 @@ class AtlasExtractor
 			atlas.bitmaps.push(bitmap);
 		}
 		
-		GEngine.i.addResource(atlas.name, frames, dummys, names, textures, maskBatch);
+		GEngine.i.addResource(atlas.name, frames, dummys, names, textures, maskBatch); */
 	}
 	public static function createFrame( x:Int, y:Int, width:Int, height:Int, rotated:Bool):Frame
 	{
@@ -113,12 +117,12 @@ class AtlasExtractor
 			height = temp;
 		}
 		var frame:Frame = new Frame();
-		frame.alphas = new Array();
-		frame.blurBatchs = new Array();
-		frame.colortTransform = new Array();
-		frame.vertexs = new Array();
-		frame.UVs = new Array();
-		frame.maskBatchs = new Array();
+		frame.alphas = new MyList();
+		frame.blurBatchs = new MyList();
+		frame.colortTransform = new MyList();
+		frame.vertexs = new MyList();
+		frame.UVs = new MyList();
+		frame.maskBatchs = new MyList();
 		frame.drawArea = new DrawArea(x , y , height / 2, width / 2);
 		
 		frame.UVs.push(0); frame.UVs.push(0);

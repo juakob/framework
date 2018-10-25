@@ -24,7 +24,7 @@ typedef Rename = { var original:String; var newName:String; };
 @:allow(com.gEngine.GEngine)
 class Resource
 {
-
+	public var keepData(default,default):Bool = false;
 	public function new() 
 	{
 		
@@ -85,20 +85,37 @@ class Resource
 				++counter;
 			}
 			//remove data
-			mTextures.splice(0, mTextures.length);
 			
-			for (animation in mAnimationsResources) 
-			{
-				Reflect.callMethod(Assets.blobs, Reflect.field(Assets.blobs, animation + "Unload"), []);
+			mTextures.splice(0, mTextures.length);
+			if(!keepData){
+				for (animation in mAnimationsResources) 
+				{
+					Reflect.callMethod(Assets.blobs, Reflect.field(Assets.blobs, animation + "Unload"), []);
+				}
 			}
 			mAnimationsResources.splice(0, mAnimationsResources.length);
-			for (image in mImageResources) 
-			{
-				Reflect.callMethod(Assets.images, Reflect.field(Assets.images, image + "Unload"), []);
+			if(!keepData){
+				for (image in mImageResources) 
+				{
+					Reflect.callMethod(Assets.images, Reflect.field(Assets.images, image + "Unload"), []);
+				}
 			}
 			mImageResources.splice(0, mImageResources.length);
 			
 			renameAnimations();
+		}
+		public function loadLocal(onFinish:Void->Void) {
+			mOnFinish = onFinish;
+			for (animation in mAnimationsResources) 
+			{
+				onAnimationLoad(Assets.blobs.get(animation));
+			}
+			for (sound in mSoundResources) 
+				{
+					SM.addSound(sound);
+				}
+				mOnFinish();
+			
 		}
 		public function load(onFinish:Void->Void):Void
 		{
@@ -147,12 +164,12 @@ class Resource
 		{
 			if (isAllLoaded())
 			{
-				trace("all loaded");
-				mOnFinish();
 				for (sound in mSoundResources) 
 				{
 					SM.addSound(sound);
 				}
+				mOnFinish();
+				
 			}
 		}
 		
@@ -174,7 +191,7 @@ class Resource
 				if (imageNotLoaded(image))
 				{
 					mImageResources.push(image);
-					loadImage(image);
+					if(!keepData) loadImage(image);
 				}
 			}
 			++mAnimationsLoaded;
@@ -200,17 +217,18 @@ class Resource
 		}
 		public function unload():Void
 		{
-			
-			for (sound in mSoundResources) 
-			{
-				Reflect.callMethod(Assets.sounds, Reflect.field(Assets.sounds, sound + "Unload"), []);
-			}
-			for (data in mDataResources) {
-				Reflect.callMethod(Assets.blobs, Reflect.field(Assets.blobs, data + "Unload"), []);
-			}
-			for (image in mImagesToKeep) 
-			{
-				Reflect.callMethod(Assets.images, Reflect.field(Assets.images, image + "Unload"), []);
+			if(!keepData){
+				for (sound in mSoundResources) 
+				{
+					Reflect.callMethod(Assets.sounds, Reflect.field(Assets.sounds, sound + "Unload"), []);
+				}
+				for (data in mDataResources) {
+					Reflect.callMethod(Assets.blobs, Reflect.field(Assets.blobs, data + "Unload"), []);
+				}
+				for (image in mImagesToKeep) 
+				{
+					Reflect.callMethod(Assets.images, Reflect.field(Assets.images, image + "Unload"), []);
+				}
 			}
 			mSoundResources.splice(0, mSoundResources.length);
 			mDataResources.splice(0, mDataResources.length);
@@ -278,8 +296,8 @@ class Resource
 }
 class TextureProxy
 {
-	public var animations:Array<String> = new Array();
-	public var atlas:Array<AtlasInfo> = new Array();
+	public var animations:MyList<String> = new MyList();
+	public var atlas:MyList<AtlasInfo> = new MyList();
 	public var color:Color=Color.fromFloats(1,1, 1, 1);
 	public var size:FastPoint;
 	public function new()

@@ -107,6 +107,8 @@ import kha.System;
 		
 		private function new(antiAlias:Int) 
 		{
+			clearColor = Color.fromFloats(0, 0, 0, 1);
+			
 			antiAliasing = antiAlias;
 			
 			PainterGarbage.init();
@@ -256,7 +258,9 @@ import kha.System;
 			
 			for (i in 0...names.length)
 			{
+				#if debugInfo
 				trace("animation loaded " + names[i]);
+				#end
 				mResources.addResource(names[i], frames[i], dummys[i], labels[i],textures[i],masks[i]);	
 			}
 			
@@ -337,6 +341,7 @@ import kha.System;
 				
 				
 			}
+		
 			++currentIndex;
 			
 			var imagesNames:MyList<String> = new MyList();
@@ -459,6 +464,7 @@ import kha.System;
 		public var blurX:ShBlurH;
 		public var blurY:ShBlurV;
 		
+		public var clearColor:Color;
 	
 		public function changeToBuffer()
 		{
@@ -567,7 +573,7 @@ import kha.System;
 			
 			// Begin rendering
 			g.begin();
-			if(clear)g.clear(Color.fromFloats(1,1,1,0));
+			if(clear)g.clear(clearColor);
 			g.end();
 			mStage.render(mSpritePainter);
 

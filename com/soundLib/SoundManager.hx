@@ -22,11 +22,11 @@ class SoundManager
 	private static var mMuteSounds:Bool = false;
 	private static var mMuteMusic:Bool = false;
 	
-	
+	public static var initied:Bool;
 	public static function init():Void
 	{
-	
 		map = new Map();
+		initied = true;
 	}
 	public static function addSound(aSound:String):Void
 	{
@@ -42,7 +42,7 @@ class SoundManager
 		//map.set(aSound, Assets.getSound(location + aSound+".ogg"));
 		//#end
 	}
-	public static function playFx(aSound:String):Void
+	public static function playFx(aSound:String):AudioChannel
 	{
 		#if debug
 		if (!map.exists(aSound)) {
@@ -51,16 +51,17 @@ class SoundManager
 		#end
 		if (!mMuteSounds)
 		{
-			Audio.play(map.get(aSound));
+			return Audio.play(map.get(aSound));
 		}
+		return null;
 	}
 	public static function playMusic(aSound:String,aPosition:Float=0):Void
 	{
-		#if debug
+		//#if debug
 		if (!map.exists(aSound)) {
-			throw "Sound not found";
+			throw "Sound not found " +aSound;
 		}
-		#end
+		//#end
 		if (music != null)
 		{
 			music.stop();
@@ -100,6 +101,14 @@ class SoundManager
 		if (music != null)
 		{
 			musicPosition = music.position;
+			music.pause();
+		}
+	}
+	public static function stopMusic():Void
+	{
+		if (music != null)
+		{
+			musicPosition = music.position;
 			music.stop();
 		}
 	}
@@ -110,9 +119,9 @@ class SoundManager
 	public static function unMuteMusic():Void
 	{
 		mMuteMusic = false;
-		if (musicName != null)
+		if (music != null)
 		{
-			playMusic(musicName,musicPosition);
+			music.play();
 		}
 	}
 	public static inline function  soundMuted():Bool

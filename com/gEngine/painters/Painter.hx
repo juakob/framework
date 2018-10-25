@@ -101,7 +101,7 @@ class Painter implements IPainter
 			g.setPipeline(pipeline);
 
 			setParameter(g);
-			g.setTextureParameters(mTextureID, TextureAddressing.Clamp, TextureAddressing.Clamp, filter, filter, MipMapFilter.NoMipFilter);
+			g.setTextureParameters(mTextureID, TextureAddressing.Clamp, TextureAddressing.Clamp, filter, filter,MipMapFilter.NoMipFilter);
 			
 			g.drawIndexedVertices(0, Std.int(vertexCount() * ratioIndexVertex)); 
 			

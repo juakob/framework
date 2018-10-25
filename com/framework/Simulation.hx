@@ -6,9 +6,13 @@ import com.gEngine.GEngine;
 import com.gEngine.helper.Screen;
 import com.helpers.CompilationConstatns;
 import com.soundLib.SoundManager.SM;
+import kha.Color;
 import kha.Framebuffer;
 import kha.Scheduler;
 import kha.System;
+import kha.graphics2.Graphics;
+import kha.math.FastMatrix2;
+import kha.math.FastMatrix3;
 
 
 import com.framework.utils.State;
@@ -26,11 +30,14 @@ class Simulation
 	
 	public static var i:Simulation;
 	
+	public var manualLoad(get, set):Bool;
+	var mManualLoad:Bool;
 	//////////////////////////////////////////////////////////////////////		
 	public function new(aInitialState:Class<State>) 
 	{
 		initialState=aInitialState;
 		i = this;
+		
 		/// Register services
 		mResources = new Resource();
 		mCurrentState = new State();
@@ -41,7 +48,14 @@ class Simulation
 		init();
 		
 	}
-	
+	function get_manualLoad():Bool {
+		return mManualLoad;
+	}
+	function set_manualLoad(aValue:Bool):Bool {
+		mManualLoad = aValue;
+		mResources.keepData = aValue;
+		return mManualLoad;
+	}
 	private function init():Void 
 	{
 		changeState(Type.createInstance(initialState, []));
@@ -80,25 +94,14 @@ class Simulation
 	private var mLastRealFrameTime:Float = 0;
 	private function onEnterFrame():Void 
 	{
-		Input.i.screenScale.setTo(CompilationConstatns.getWidth()/ System.windowWidth(0), CompilationConstatns.getHeight()/ System.windowHeight(0));
-		if (!mPause) {
-			var time = Scheduler.time();
+		Input.i.screenScale.setTo(CompilationConstatns.getWidth() / System.windowWidth(0), CompilationConstatns.getHeight() / System.windowHeight(0));
+		var time = Scheduler.time();
 			mFrameByFrameTime =  time- mLastFrameTime;
 			mLastFrameTime = time;
-			
-			
-			//if (mFrameByFrameTime <= 0||mFrameByFrameTime>0.06666)
-			//{
-			//	mFrameByFrameTime = 1 / 60;
-			//}
-			time = Scheduler.realTime();
+		if (!mPause) {
 			TimeManager.setDelta(mFrameByFrameTime, Scheduler.realTime());
-			mLastRealFrameTime = time;
-			update( mFrameByFrameTime );
-			
-		
-		/// Update services
-		Input.i.update();
+			update( 1/60 );
+			Input.i.update();
 		}
 	}
 	function onRender(aFramebuffers:Array<Framebuffer>) 
@@ -125,6 +128,19 @@ class Simulation
 		mCurrentState.render();
 		GEngine.i.draw(aFramebuffer);
 		mCurrentState.draw(aFramebuffer);
+		if (mPause) {
+			var g2:Graphics = aFramebuffer.g2;
+			g2.begin(false);
+			
+			g2.transformation = FastMatrix3.scale(0.75, 0.75);
+			g2.color = Color.fromFloats(0.5, 0.5, 0.5, 0.5);
+			g2.fillRect(0, 0, 1280, 720);
+			
+			g2.color = Color.fromFloats(1, 1, 1, 1);
+			g2.fillTriangle(485, 270, 740, 390, 485, 510);
+			
+			g2.end();
+		}
 	}
 	
 	//////////////////////////////////////////////////////////////////////
@@ -152,6 +168,9 @@ class Simulation
 			}
 			mCurrentState = state;
 			mCurrentState.load(mResources);
+			if (manualLoad) {
+				mResources.loadLocal(finishUpload);
+			}else
 			if (!mResources.isAllLoaded())
 			{
 				mResources.load(finishUpload);
@@ -178,10 +197,18 @@ class Simulation
 	public function pause():Void
 	{
 		mPause = true;
+		if (mCurrentState!=null)
+		{
+			mCurrentState.onDesactivate();
+		}
 	}
 	public function unpause():Void
 	{
 		mPause = false;
+		if (mCurrentState!=null)
+		{
+			mCurrentState.onActivate();
+		}
 	}
 	
 }

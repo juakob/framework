@@ -15,6 +15,7 @@ class Frame
 	public var maskBatchs:MyList<MaskBatch>;
 	public var drawArea:DrawArea;
 	public var blurBatchs:MyList<BlurBatch>;
+	public var canInterpolate:Bool;
 	public function new() 
 	{
 		
@@ -27,7 +28,7 @@ class Frame
 		cl.UVs = new MyList();
 		cl.alphas = new MyList();
 		cl.colortTransform = new MyList();
-	
+		cl.canInterpolate = canInterpolate;
 		cl.drawArea = drawArea.clone();	
 		
 		//todo clone this data

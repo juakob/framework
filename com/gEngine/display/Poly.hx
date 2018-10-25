@@ -96,20 +96,20 @@ class Poly implements IDraw
 			batch.write(green);
 			batch.write(blue);
 		}
-		red = ((borderColor >> 16) & 0xFF)/255;
-
-		green = ((borderColor >> 8) & 0xFF)/255;
-
-		blue = (borderColor & 0xFF)/255;
-		for (vertex in mBorder) {
-			
-			batch.write( _tx + vertex.x * _1 + vertex.y * _3);
-			batch.write( _ty + vertex.x * _2 + vertex.y * _4);
-			batch.write(0);
-			batch.write(red);
-			batch.write(green);
-			batch.write(blue);
-		}
+		//red = ((borderColor >> 16) & 0xFF)/255;
+//
+		//green = ((borderColor >> 8) & 0xFF)/255;
+//
+		//blue = (borderColor & 0xFF)/255;
+		//for (vertex in mBorder) {
+			//
+			//batch.write( _tx + vertex.x * _1 + vertex.y * _3);
+			//batch.write( _ty + vertex.x * _2 + vertex.y * _4);
+			//batch.write(0);
+			//batch.write(red);
+			//batch.write(green);
+			//batch.write(blue);
+		//}
 		
 		x -= offsetX+pivotX;
 		y -= offsetY+pivotY;
@@ -170,39 +170,39 @@ class Poly implements IDraw
 		mVertexs = points;
 		
 		
-		mBorder = new Array();
-		var vector1:Point = new Point();
-		var vector2:Point = new Point();
-		var interior:Point = new Point();
-		for (i in 0...aVertexs.length) 
-		{
-			var lastIndex = (i - 1) % (aVertexs.length);
-			if (lastIndex < 0) lastIndex = aVertexs.length - 1;
-			var last:Point = aVertexs[lastIndex ];
-			var next:Point = aVertexs[(i + 1) % (aVertexs.length)];
-			var current:Point = aVertexs[i];
-			vector1.setTo(last.x - current.x, last.y - current.y);
-			vector1.normalize();
-			vector2.setTo(next.x - current.x, next.y - current.y);
-			vector2.normalize();
-			
-			interior.setTo((vector1.x + vector2.x) / 2, (vector1.y + vector2.y) / 2);
-			interior.normalize();
-			interior.x *= borderWidth;
-			interior.y *= borderWidth;
-			interior.x += current.x;
-			interior.y += current.y;
-			
-			mBorder.push(interior.clone());
-			
-			mBorder.push(interior.clone());
-			mBorder.push(current.clone());
-			mBorder.push(next.clone());
-			
-			mBorder.push(interior.clone());
-			mBorder.push(next.clone());
-		}
-		mBorder.push(mBorder.shift());
+		//mBorder = new Array();
+		//var vector1:Point = new Point();
+		//var vector2:Point = new Point();
+		//var interior:Point = new Point();
+		//for (i in 0...aVertexs.length) 
+		//{
+			//var lastIndex = (i - 1) % (aVertexs.length);
+			//if (lastIndex < 0) lastIndex = aVertexs.length - 1;
+			//var last:Point = aVertexs[lastIndex ];
+			//var next:Point = aVertexs[(i + 1) % (aVertexs.length)];
+			//var current:Point = aVertexs[i];
+			//vector1.setTo(last.x - current.x, last.y - current.y);
+			//vector1.normalize();
+			//vector2.setTo(next.x - current.x, next.y - current.y);
+			//vector2.normalize();
+			//
+			//interior.setTo((vector1.x + vector2.x) / 2, (vector1.y + vector2.y) / 2);
+			//interior.normalize();
+			//interior.x *= borderWidth;
+			//interior.y *= borderWidth;
+			//interior.x += current.x;
+			//interior.y += current.y;
+			//
+			//mBorder.push(interior.clone());
+			//
+			//mBorder.push(interior.clone());
+			//mBorder.push(current.clone());
+			//mBorder.push(next.clone());
+			//
+			//mBorder.push(interior.clone());
+			//mBorder.push(next.clone());
+		//}
+		//mBorder.push(mBorder.shift());
 		
 	}
 	

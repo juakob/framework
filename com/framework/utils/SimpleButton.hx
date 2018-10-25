@@ -48,7 +48,7 @@ class SimpleButton extends Entity implements UIComponent
 		
 		if (sprite == null)
 		{
-		display = GEngine.i.getNewAnimation("dummy_blue");
+		display = GEngine.i.getNewAnimation("dummyblue");
 		aLayer.addChild(display);
 		}else {
 		display = sprite;	
@@ -127,16 +127,14 @@ class SimpleButton extends Entity implements UIComponent
 	}
 	function mouseInsideArea():Bool
 	{
-		var matrix = display.getTransformation().inverse();
-		var mousePos = matrix.multvec(new FastVector2(Input.inst.getMouseX(), Input.inst.getMouseY()));
-		return  mArea.contains(mousePos.x, mousePos.y);
+		return  mArea.contains(Input.inst.getMouseX(), Input.inst.getMouseY());
 	}
 	
 	
 	private function set_x(aX:Float):Float
 	{
 		display.x = aX;
-		
+		mArea.x = aX;
 		return aX;
 	}
 	private function get_x():Float
@@ -158,6 +156,7 @@ class SimpleButton extends Entity implements UIComponent
 	private function set_y(aY:Float):Float
 	{
 		display.y = aY;
+		mArea.y = aY;
 		return aY;
 	}
 	private function get_y():Float

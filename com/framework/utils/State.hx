@@ -3,6 +3,7 @@ package com.framework.utils;
 import com.framework.Simulation;
 import com.gEngine.GEngine;
 import kha.Canvas;
+import kha.Color;
 import kha.Framebuffer;
 
 
@@ -24,6 +25,9 @@ class State extends Entity
 	}
 	public function changeState(state:State):Void{
 		Simulation.i.changeState(state);
+	}
+	public function stageColor(r:Float=0,g:Float=0,b:Float=0,a:Float=1) {
+		GEngine.i.clearColor = Color.fromFloats(r, g, b, a);
 	}
 	public function draw(aFramebuffer:Canvas):Void
 	{
