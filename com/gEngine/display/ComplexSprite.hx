@@ -72,8 +72,14 @@ class ComplexSprite extends AnimationSprite
 		
 		
 		var frame = mAnimationData.frames[CurrentFrame];
+		var vertexs:MyList<FastFloat>;
+		if (interpolateFrames &&   CurrentFrame<TotalFrames-1 && mAnimationData.frames[CurrentFrame+1].canInterpolate )
+		{
+			vertexs = BasicSprite.interpolateFrame(CurrentFrame, mCurrentTime, frameRate, mAnimationData.frames);
+		}else {
+			 vertexs= frame.vertexs;
+		}
 		
-		var vertexs = frame.vertexs;
 		var uvs = frame.UVs;
 		var alphas = frame.alphas;
 		var colorTrans = frame.colortTransform;
@@ -110,7 +116,7 @@ class ComplexSprite extends AnimationSprite
 			}
 				if (mChildBatch.length >childCounter)
 			{
-				mChildStart = mChildBatch[childCounter].dummy.drawIndex;
+				mChildStart = mChildBatch[childCounter].dummy.drawIndex ;
 				var dif = mChildStart - normalCounter;
 				if (counter > dif||frame.maskBatchs.length == maskCounter) counter = dif;
 			}
