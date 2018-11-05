@@ -9,11 +9,11 @@ class Screen
 
 	public static inline function getWidth():Int
 	{
-		return 1280;
+		return kha.System.windowWidth();
 	}
 	public static inline function getHeight():Int
 	{
-		return 720;
+		return kha.System.windowHeight();
 	}
 	public function new() 
 	{

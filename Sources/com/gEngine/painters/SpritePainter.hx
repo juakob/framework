@@ -4,6 +4,8 @@ import com.gEngine.display.BlendMode;
 import com.gEngine.display.DrawMode;
 import com.helpers.MinMax;
 import kha.arrays.Float32Array;
+import kha.graphics4.MipMapFilter;
+import kha.graphics4.TextureFilter;
 import kha.graphics4.VertexBuffer;
 
 /**
@@ -21,7 +23,8 @@ class SpritePainter implements IPainter
 	
 	var painters:Array<Array<IPainter>>;
 	var renderArea:MinMax;
-	
+	public var filter:TextureFilter = TextureFilter.LinearFilter;
+	public var mipMapFilter:MipMapFilter = MipMapFilter.LinearMipFilter;
 	public function new(aAutoDelete:Bool) 
 	{
 		var defaultBlend:Blend = Blend.blendDefault();
@@ -33,6 +36,7 @@ class SpritePainter implements IPainter
 												new Painter(aAutoDelete, multipassBlend),
 												new Painter(aAutoDelete, AddBlend)
 											 ];
+		
 												
 		var alphaPainters:Array<IPainter> = [	
 												new PainterAlpha(aAutoDelete, defaultBlend), 
@@ -82,17 +86,21 @@ class SpritePainter implements IPainter
 	
 	public function render(clear:Bool = false):Void 
 	{
+		currentPainter.filter = filter;
+		currentPainter.mipMapFilter =  mipMapFilter;
 		currentPainter.render(clear);
 	}
 	
-	public function validateBatch(aTexture:Int, aSize:Int, aDrawMode:DrawMode,aBlend:BlendMode):Void 
+	public function validateBatch(aTexture:Int, aSize:Int, aDrawMode:DrawMode,aBlend:BlendMode,aTextureFilter:TextureFilter,aMipMapFilter:MipMapFilter):Void 
 	{
-		if (drawMode!=aDrawMode||blend!=aBlend)
+		if (drawMode!=aDrawMode||blend!=aBlend||filter!=aTextureFilter||mipMapFilter!=aMipMapFilter)
 		{
 			if (currentPainter.vertexCount() > 0)
 			{
 				if (renderArea != null)
 				{
+					currentPainter.filter = filter;
+					currentPainter.mipMapFilter =  mipMapFilter;
 					currentPainter.adjustRenderArea(renderArea);
 					currentPainter.render();
 					currentPainter.resetRenderArea();
@@ -105,11 +113,15 @@ class SpritePainter implements IPainter
 			blend = aBlend;
 			
 			currentPainter = painters[cast aDrawMode][cast aBlend];
+			filter = aTextureFilter;
+			currentPainter.filter = filter;
+			mipMapFilter =  aMipMapFilter;
+			currentPainter.mipMapFilter =  mipMapFilter;
 			currentPainter.textureID = aTexture;
 			
 			
 		}
-		currentPainter.validateBatch(aTexture, aSize, aDrawMode, aBlend);
+		currentPainter.validateBatch(aTexture, aSize, aDrawMode, aBlend,aTextureFilter,aMipMapFilter);
 		
 		
 	}
@@ -159,5 +171,6 @@ class SpritePainter implements IPainter
 	{
 		currentPainter.setVertexDataCounter(aData);
 	}
+	
 	
 }

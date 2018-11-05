@@ -413,6 +413,7 @@ import kha.System;
 			{
 				mResources.linkAnimationToTexture(animation,textureId, linker);
 			}
+			atlasImage.generateMipmaps(4);
 			return atlasImage;
 		}
 	

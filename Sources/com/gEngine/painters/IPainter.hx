@@ -6,6 +6,8 @@ import com.gEngine.painters.IPainter;
 import com.helpers.MinMax;
 import kha.arrays.Float32Array;
 import kha.graphics4.VertexBuffer;
+import kha.graphics4.MipMapFilter;
+import kha.graphics4.TextureFilter;
 
 /**
  * @author Joaquin
@@ -16,7 +18,7 @@ interface IPainter
    function start():Void;
    function finish():Void;
    function render(clear:Bool = false ):Void;
-   function validateBatch(aTexture:Int, aSize:Int,aDrawMode:DrawMode,aBlend:BlendMode):Void;
+   function validateBatch(aTexture:Int, aSize:Int,aDrawMode:DrawMode,aBlend:BlendMode,aTextureFilter:TextureFilter,aMipMapFilter:MipMapFilter):Void;
    function vertexCount():Int;
    function releaseTexture():Bool;
    function adjustRenderArea(aArea:MinMax):Void;
@@ -26,4 +28,6 @@ interface IPainter
    function setVertexDataCounter(aData:Int):Void;
    var textureID:Int;
    var resolution:Float;
+   var filter:TextureFilter;
+ var mipMapFilter:MipMapFilter;
 }

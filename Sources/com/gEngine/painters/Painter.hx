@@ -56,7 +56,9 @@ class Painter implements IPainter
 	
 	var cropArea:MinMax;
 	var useScissor:Bool;
-	public var filter:TextureFilter = TextureFilter.LinearFilter;
+	public var filter:TextureFilter = TextureFilter.PointFilter;
+	public var mipMapFilter:MipMapFilter = MipMapFilter.NoMipFilter;
+	
 	
 	public function new(aAutoDestroy:Bool = true, aBlend:Blend=null) 
 	{	
@@ -101,7 +103,7 @@ class Painter implements IPainter
 			g.setPipeline(pipeline);
 
 			setParameter(g);
-			g.setTextureParameters(mTextureID, TextureAddressing.Clamp, TextureAddressing.Clamp, filter, filter,MipMapFilter.NoMipFilter);
+			g.setTextureParameters(mTextureID, TextureAddressing.Clamp, TextureAddressing.Clamp, filter, filter,mipMapFilter);
 			
 			g.drawIndexedVertices(0, Std.int(vertexCount() * ratioIndexVertex)); 
 			
@@ -222,7 +224,7 @@ class Painter implements IPainter
 		
 		/* INTERFACE com.gEngine.painters.IPainter */
 		var mCustomBlend:Bool = false;
-		public function validateBatch(aTexture:Int, aSize:Int, aDrawMode:DrawMode, aBlend:BlendMode):Void 
+		public function validateBatch(aTexture:Int, aSize:Int, aDrawMode:DrawMode, aBlend:BlendMode,aTextureFilter:TextureFilter,aMipMapFilter:MipMapFilter):Void 
 		{
 			if (aTexture != textureID || ((counter + aSize*dataPerVertex) >= MAX_VERTEX_PER_BUFFER*dataPerVertex)  )
 			{

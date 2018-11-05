@@ -54,6 +54,9 @@ class ShapePainter implements IPainter
 	var buffer:Float32Array;
 	public var textureID:Int = -1;
 	
+	public var filter:TextureFilter = TextureFilter.LinearFilter;
+	public var mipMapFilter:MipMapFilter = MipMapFilter.NoMipFilter;
+	
 	
 	public function new(aAutoDestroy:Bool = true, aBlend:Blend=null) 
 	{	
@@ -236,7 +239,7 @@ class ShapePainter implements IPainter
 		
 		/* INTERFACE com.gEngine.painters.IPainter */
 		var mCustomBlend:Bool = false;
-		public function validateBatch(aTexture:Int, aSize:Int, aDrawMode:DrawMode, aBlend:BlendMode):Void 
+		public function validateBatch(aTexture:Int, aSize:Int, aDrawMode:DrawMode, aBlend:BlendMode,aTextureFilter:TextureFilter,aMipMapFilter:MipMapFilter):Void 
 		{
 				render();
 		}

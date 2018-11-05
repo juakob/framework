@@ -15,6 +15,8 @@ import com.helpers.Rectangle;
 import kha.Color;
 import kha.FastFloat;
 import kha.arrays.Float32Array;
+import kha.graphics4.MipMapFilter;
+import kha.graphics4.TextureFilter;
 import kha.math.FastMatrix3;
 import kha.math.FastVector2;
 import kha.math.Vector2;
@@ -73,6 +75,9 @@ class BasicSprite implements IDraw
 	private var mTextureId:Int =-1;
 	
 	private var dataUnique:Bool = false;
+	
+	public var textureFilter:TextureFilter = TextureFilter.LinearFilter;
+	public var mipMapFilter:MipMapFilter = MipMapFilter.LinearMipFilter;
 	
 	/** Creates a regular polygon with the specified redius, number of edges, and color. */
 	public function new (aAnimationData:AnimationData)
@@ -448,7 +453,7 @@ class BasicSprite implements IDraw
 					
 					
 					var maskBatch:MaskBatch = frame.maskBatchs[maskCounter];
-					painter.validateBatch(mTextureId, Std.int(maskBatch.vertex.length/2), DrawMode.Mask,blend);
+					painter.validateBatch(mTextureId, Std.int(maskBatch.vertex.length/2), DrawMode.Mask,blend,textureFilter,mipMapFilter);
 					--stuffToDraw;
 					var polygons:MyList<FastFloat> = maskBatch.vertex;
 					var polyUvs:MyList<FastFloat> = maskBatch.uvs;
@@ -579,7 +584,7 @@ class BasicSprite implements IDraw
 			if (colorTrans.length != 0 || colorTransform) drawMode = DrawMode.ColorTint;
 			
 			
-			painter.validateBatch(mTextureId, Std.int(frame.vertexs.length / 2 ), drawMode,blend);
+			painter.validateBatch(mTextureId, Std.int(frame.vertexs.length / 2 ), drawMode,blend,textureFilter,mipMapFilter);
 			
 			
 			if (colorTrans.length!=0||colorTransform)
