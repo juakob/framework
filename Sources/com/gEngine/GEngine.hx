@@ -195,7 +195,8 @@ import kha.System;
 			finalViewMatrixMirrorY = finalViewMatrixMirrorY.multmat(FastMatrix4.translation( -width / 2, height / 2, 0));
 			finalViewMatrixMirrorY = finalViewMatrixMirrorY.multmat(FastMatrix4.scale(1, -1, 1));
 			
-
+			scaleWidth = width / virtualWidth;
+			scaleHeigth = height / virtualHeight;
 			
 		}
 		public function createDefaultPainters():Void
@@ -522,8 +523,8 @@ import kha.System;
 		{
 			aPainter.textureID = aSource;
 			var tex = mTextures[aSource];
-			var texWidth = tex.realWidth*aSourceScale;
-			var texHeight = tex.realHeight*aSourceScale;
+			var texWidth = tex.realWidth*aSourceScale*1/scaleWidth;
+			var texHeight = tex.realHeight*aSourceScale*1/scaleHeigth;
 			
 			writeVertex(aPainter,x, y,texWidth,texHeight,aOutScale);
 
