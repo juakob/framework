@@ -49,10 +49,11 @@ class MinMax
 		var matrix:FastMatrix3 = new FastMatrix3(ts.a, ts.c, ts.tx, ts.b, ts.d, ts.ty, 0, 0, 1);
 		var fMin:FastVector2 = new FastVector2(min.x, min.y);
 		var fMax:FastVector2 = new FastVector2(max.x, max.y);
-		fMin = matrix.multvec(fMin);
-		fMax = matrix.multvec(fMax);
-		min.setTo(fMin.x, fMin.y);
-		max.setTo(fMax.x, fMax.y);
+		reset();
+		mergeVec(matrix.multvec(fMin));
+		mergeVec(matrix.multvec(fMax));
+		mergeVec(matrix.multvec(new FastVector2(fMin.x, fMax.y)));
+		mergeVec(matrix.multvec(new FastVector2(fMax.x, fMin.y)));
 	}
 	public function mergeRec(x:Float,y:Float,width:Float,height:Float):Void
 	{

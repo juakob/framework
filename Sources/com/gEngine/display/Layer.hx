@@ -53,7 +53,6 @@ class Layer implements IDrawContainer
 	
 	public function render(aPainter:IPainter, transform:Matrix):Void 
 	{
-		com.debug.Profiler.startMeasure("renderLayer");
 		mTransformation.tx = x;
 		mTransformation.ty = y;
 		mTransformation.a = scaleX * cosAng;
@@ -78,15 +77,12 @@ class Layer implements IDrawContainer
 		}
 		if (filter == null)
 		{
-			com.debug.Profiler.startMeasure("renderChildren");
 			for (child in mChildren) 
 			{
 				child.render(aPainter,mHlpMatrix);
 			}
-			com.debug.Profiler.endMeasure("renderChildren");
 		}else {
-			
-			filter.render(this, mChildren, aPainter, mHlpMatrix);
+			filter.render(this, mChildren, aPainter, mHlpMatrix,transform);
 			
 		}
 		if (drawArea != null)
@@ -94,7 +90,7 @@ class Layer implements IDrawContainer
 			aPainter.render();
 			aPainter.resetRenderArea();
 		}
-		com.debug.Profiler.endMeasure("renderLayer");
+
 	}
 	
 	var drawAreaTemp:MinMax = new MinMax();
@@ -107,8 +103,10 @@ class Layer implements IDrawContainer
 		}
 		mTransformation.tx = x;
 		mTransformation.ty = y;
-		mTransformation.a = scaleX;
-		mTransformation.d = scaleY;
+		mTransformation.a = scaleX * cosAng;
+		mTransformation.b = scaleX * sinAng;
+		mTransformation.c = -scaleY * sinAng;
+		mTransformation.d = scaleY * cosAng;
 		drawAreaTemp.transform(mTransformation);
 		aValue.merge(drawAreaTemp);
 	}

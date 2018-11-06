@@ -76,7 +76,7 @@ class Filter
 			//}
 		}
 	}
-	public function render(aLayer:Layer,aDisplay:MyList<IDraw>,aPainter:IPainter,aMatrix:Matrix):Void
+	public function render(aLayer:Layer,aDisplay:MyList<IDraw>,aPainter:IPainter,aMatrix:Matrix,aParentTransform:Matrix):Void
 	{
 		if (renderPass.length == 0)
 		{
@@ -94,17 +94,19 @@ class Filter
 		GEngine.i.currentCanvas().g2.end();
 		GEngine.i.currentCanvas().g2.disableScissor();
 		
-		if (cropScreen)
-		{
-		drawArea.reset();
-		}
+		
 		//aPainter.multipassBlend();
 		for (display in aDisplay) 
 		{
 			display.render(aPainter, aMatrix);
 		}
-		aLayer.getDrawArea(drawArea);
-		//drawArea.transform(aMatrix);	
+		if (cropScreen)
+		{
+			drawArea.reset();
+			aLayer.getDrawArea(drawArea);
+			drawArea.transform(aParentTransform);
+		}
+			
 		aPainter.render();
 		aPainter.finish();
 		//aPainter.defaultBlend();

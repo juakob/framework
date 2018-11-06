@@ -1,5 +1,6 @@
 package com.gEngine.shaders;
 
+import com.gEngine.display.Blend;
 import com.gEngine.painters.Painter;
 import kha.Shaders;
 import kha.graphics4.PipelineState;
@@ -11,9 +12,9 @@ import kha.graphics4.PipelineState;
 class ShTintRenderArea extends Painter
 {
 
-	public function new(aAutoDestroy:Bool=true) 
+	public function new(aAutoDestroy:Bool=true,blend:Blend) 
 	{
-		super(aAutoDestroy);
+		super(aAutoDestroy,blend);
 		
 	}
 	override function setShaders(aPipeline:PipelineState):Void 

@@ -1,11 +1,10 @@
 package com.helpers;
-import com.gEngine.painters.RenderTarget;
-import kha.Image;
 
 /**
  * ...
  * @author Joaquin
  */
+@:allow(com.gEngine.GEngine)
 class RenderTargetPool
 {
 	private var targets:Array<ImageProx>;
@@ -50,6 +49,7 @@ class RenderTargetPool
 			target.inUse = false;
 		}
 	}
+	
 }
 class ImageProx
 {

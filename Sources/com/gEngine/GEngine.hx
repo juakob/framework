@@ -33,6 +33,7 @@ import haxe.io.BytesInput;
 import kha.Canvas;
 import kha.Display;
 import kha.Shaders;
+import kha.Window;
 import kha.graphics4.BlendingFactor;
 import kha.graphics4.DepthStencilFormat;
 import kha.graphics4.PipelineState;
@@ -111,6 +112,8 @@ import kha.System;
 			
 			antiAliasing = antiAlias;
 			
+			Window.get(0).notifyOnResize(resize);
+			
 			PainterGarbage.init();
 			
 			renderTargetPool = new RenderTargetPool();
@@ -147,9 +150,9 @@ import kha.System;
 			shaderPipeline.compile();
 			
 		}
-		function createBuffer(aWidth:Int, aHeight:Int)
+		function createBuffer(aWidth:Int, aHeight:Int):Bool
 		{
-			if (width == aWidth && height == aHeight) return;
+			if (width == aWidth && height == aHeight) return false;
 			width = aWidth;
 			height = aHeight;
 			if (mTempBuffer != null) mTempBuffer.unload();
@@ -198,6 +201,8 @@ import kha.System;
 			scaleWidth = width / virtualWidth;
 			scaleHeigth = height / virtualHeight;
 			
+			return true;
+			
 		}
 		public function createDefaultPainters():Void
 		{
@@ -226,14 +231,19 @@ import kha.System;
 		
 		public function resize(availWidth:Int, availHeight:Int) 
 		{
+			if (availWidth == 0 || availWidth == 0) return;
 			Input.i.screenScale.setTo(virtualWidth / availWidth, virtualHeight / availHeight);
-			createBuffer(availWidth, availHeight);
+			if (createBuffer(availWidth, availHeight)) {	
+				adjustRenderTargets();
+				trace("resize " + availWidth + " , " + availHeight);
+			}
 		}
 	
 		public function addResources(data:Blob):Array<String>
 		{
 			var importer:Importer = new Importer();
 			importer.decompile(data);
+			
 			
 			var names:MyList<String> = importer.names;
 			var frames:MyList<MyList<Frame>> = importer.frameData;
@@ -555,6 +565,7 @@ import kha.System;
 		
 		public function draw(aFrameBuffer:Framebuffer,clear:Bool=true):Void
 		{
+			//if (aFrameBuffer.width != width || aFrameBuffer.height != height) resize(aFrameBuffer.width, aFrameBuffer.height);
 			#if debugInfo
 			var currentTime:Float = kha.Scheduler.realTime();
 			deltaTime = (currentTime - previousTime);
@@ -678,6 +689,13 @@ import kha.System;
 		public function releaseRenderTarget(aId:Int) 
 		{
 			renderTargetPool.release(aId);
+		}
+		public function adjustRenderTargets():Void
+		{
+			for (proxy in renderTargetPool.targets) {
+				mTextures[proxy.textureId].unload();
+				mTextures[proxy.textureId]= Image.createRenderTarget(width, height,null,DepthStencilFormat.NoDepthAndStencil,antiAliasing);
+			}
 		}
 		
 		private function sortArea(b1:Bitmap, b2:Bitmap):Int
